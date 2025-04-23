@@ -8,6 +8,7 @@ from config.settings import Settings
 from tauro.blueprints.autoridades.views import autoridades
 from tauro.blueprints.bitacoras.views import bitacoras
 from tauro.blueprints.distritos.views import distritos
+from tauro.blueprints.entradas_salidas.views import entradas_salidas
 from tauro.blueprints.modulos.views import modulos
 from tauro.blueprints.permisos.views import permisos
 from tauro.blueprints.roles.views import roles
@@ -29,6 +30,7 @@ def create_app():
     app.register_blueprint(autoridades)
     app.register_blueprint(bitacoras)
     app.register_blueprint(distritos)
+    app.register_blueprint(entradas_salidas)
     app.register_blueprint(modulos)
     app.register_blueprint(permisos)
     app.register_blueprint(roles)
