@@ -5,12 +5,12 @@ Universal Mixin
 from datetime import datetime
 
 from hashids import Hashids
-from hercules.extensions import database
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql.functions import now
 from sqlalchemy.types import CHAR
 
 from config.settings import get_settings
+from tauro.extensions import database
 
 settings = get_settings()
 hashids = Hashids(salt=settings.SALT, min_length=8)
