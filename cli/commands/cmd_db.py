@@ -73,7 +73,7 @@ def reiniciar(ctx):
 
 
 @click.command()
-def respaldar(inventarios: bool):
+def respaldar():
     """Respaldar"""
     respaldar_autoridades()
     respaldar_distritos()
