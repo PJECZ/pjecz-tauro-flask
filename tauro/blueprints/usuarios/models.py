@@ -53,7 +53,28 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
         return self.nombres + " " + self.apellido_paterno + " " + self.apellido_materno
 
     @property
-    def permissions(self):
+    def modulos_menu_principal(self):
+        """Elaborar listado con los modulos ordenados para el menu principal"""
+        if len(self.modulos_menu_principal_consultados) > 0:
+            return self.modulos_menu_principal_consultados
+        modulos = []
+        modulos_nombres = []
+        for usuario_rol in self.usuarios_roles:
+            if usuario_rol.estatus == "A":
+                for permiso in usuario_rol.rol.permisos:
+                    if (
+                        permiso.modulo.nombre not in modulos_nombres
+                        and permiso.estatus == "A"
+                        and permiso.nivel > 0
+                        and permiso.modulo.en_navegacion
+                    ):
+                        modulos.append(permiso.modulo)
+                        modulos_nombres.append(permiso.modulo.nombre)
+        self.modulos_menu_principal_consultados = sorted(modulos, key=lambda x: x.nombre_corto)
+        return self.modulos_menu_principal_consultados
+
+    @property
+    def permisos(self):
         """Entrega un diccionario con todos los permisos"""
         if len(self.permisos_consultados) > 0:
             return self.permisos_consultados
@@ -66,6 +87,22 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
                         if etiqueta not in self.permisos_consultados or permiso.nivel > self.permisos_consultados[etiqueta]:
                             self.permisos_consultados[etiqueta] = permiso.nivel
         return self.permisos_consultados
+
+    @classmethod
+    def find_by_identity(cls, identity):
+        """Encontrar a un usuario por su correo electrónico"""
+        return Usuario.query.filter(Usuario.email == identity).first()
+
+    @property
+    def is_active(self):
+        """¿Es activo?"""
+        return self.estatus == "A"
+
+    def authenticated(self, with_password=True, password=""):
+        """Ensure a user is authenticated, and optionally check their password."""
+        if self.id and with_password:
+            return pwd_context.verify(password, self.contrasena)
+        return True
 
     def can(self, modulo_nombre: str, permission: int):
         """¿Tiene permiso?"""
@@ -88,6 +125,11 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     def can_admin(self, modulo_nombre: str):
         """¿Tiene permiso para administrar?"""
         return self.can(modulo_nombre, Permiso.ADMINISTRAR)
+
+    def get_roles(self):
+        """Obtener roles"""
+        usuarios_roles = UsuarioRol.query.filter_by(usuario_id=self.id).filter_by(estatus="A").all()
+        return [usuario_rol.rol.nombre for usuario_rol in usuarios_roles]
 
     def __repr__(self):
         """Representación"""
