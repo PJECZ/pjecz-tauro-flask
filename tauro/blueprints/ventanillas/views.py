@@ -7,13 +7,15 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from lib.datatables import get_datatable_parameters, output_datatable_json
-from lib.safe_string import safe_string, safe_message
+from lib.safe_string import safe_string, safe_message, safe_clave
 
 from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
 from tauro.blueprints.permisos.models import Permiso
 from tauro.blueprints.usuarios.decorators import permission_required
 from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ventanillas.forms import VentanillaForm
+from tauro.blueprints.usuarios.models import Usuario
 
 MODULO = "VENTANILLAS"
 
@@ -39,8 +41,17 @@ def datatable_json():
         consulta = consulta.filter_by(estatus=request.form["estatus"])
     else:
         consulta = consulta.filter_by(estatus="A")
-    # if "persona_id" in request.form:
-    #     consulta = consulta.filter_by(persona_id=request.form["persona_id"])
+    if "clave" in request.form:
+        try:
+            clave = safe_clave(request.form["clave"])
+            if clave != "":
+                consulta = consulta.filter(Ventanilla.clave.contains(clave))
+        except ValueError:
+            pass
+    if "descripcion" in request.form:
+        descripcion = safe_string(request.form["descripcion"], save_enie=True)
+        if descripcion != "":
+            consulta = consulta.filter(Ventanilla.descripcion.contains(descripcion))
     # Luego filtrar por columnas de otras tablas
     # if "persona_rfc" in request.form:
     #     consulta = consulta.join(Persona)
@@ -54,9 +65,11 @@ def datatable_json():
         data.append(
             {
                 "detalle": {
-                    "nombre": resultado.nombre,
+                    "clave": resultado.clave,
                     "url": url_for("ventanillas.detail", ventanilla_id=resultado.id),
                 },
+                "descripcion": resultado.descripcion,
+                "habilitada": resultado.es_habilitada,
             }
         )
     # Entregar JSON
@@ -93,9 +106,59 @@ def detail(ventanilla_id):
     return render_template("ventanillas/detail.jinja2", ventanilla=ventanilla)
 
 
-# TODO: NEW
+@ventanillas.route("/ventanillas/nuevo", methods=["GET", "POST"])
+@permission_required(MODULO, Permiso.CREAR)
+def new():
+    """Nueva Ventanilla"""
+    form = VentanillaForm()
+    if form.validate_on_submit():
+        # Validar que la clave no se repita
+        clave = safe_clave(form.clave.data)
+        if Ventanilla.query.filter_by(clave=clave).first():
+            flash("La clave ya está en uso. Debe de ser única.", "warning")
+            return render_template("ventanillas/new.jinja2", form=form)
+        # Guardar
+        ventanilla = Ventanilla(
+            clave=safe_clave(form.clave.data),
+            descripcion=safe_string(form.descripcion.data),
+            usuario=Usuario.query.filter_by(nombres="NO DEFINIDO").first(),
+        )
+        ventanilla.save()
+        bitacora = Bitacora(
+            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+            usuario=current_user,
+            descripcion=safe_message(f"Nueva Ventanilla {ventanilla.clave}"),
+            url=url_for("ventanillas.detail", ventanilla_id=ventanilla.id),
+        )
+        bitacora.save()
+        flash(bitacora.descripcion, "success")
+        return redirect(bitacora.url)
+    return render_template("ventanillas/new.jinja2", form=form)
 
-# TODO: EDIT
+
+@ventanillas.route("/ventanillas/edicion/<int:ventanilla_id>", methods=["GET", "POST"])
+@permission_required(MODULO, Permiso.MODIFICAR)
+def edit(ventanilla_id):
+    """Editar Ventanilla"""
+    ventanilla = Ventanilla.query.get_or_404(ventanilla_id)
+    form = VentanillaForm()
+    if form.validate_on_submit():
+        ventanilla.clave = safe_clave(form.clave.data)
+        ventanilla.descripcion = safe_string(form.descripcion.data)
+        ventanilla.save()
+        bitacora = Bitacora(
+            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+            usuario=current_user,
+            descripcion=safe_message(f"Editado Ventanilla {ventanilla.clave}"),
+            url=url_for("ventanillas.detail", ventanilla_id=ventanilla.id),
+        )
+        bitacora.save()
+        flash(bitacora.descripcion, "success")
+        return redirect(bitacora.url)
+    form.clave.data = ventanilla.clave
+    form.descripcion.data = ventanilla.descripcion
+    form.es_habilitada.data = ventanilla.es_habilitada
+    return render_template("ventanillas/edit.jinja2", form=form, ventanilla=ventanilla)
 
 
 @ventanillas.route("/ventanillas/eliminar/<int:ventanilla_id>")

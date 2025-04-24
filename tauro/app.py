@@ -16,6 +16,7 @@ from tauro.blueprints.sistemas.views import sistemas
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios.views import usuarios
 from tauro.blueprints.usuarios_roles.views import usuarios_roles
+from tauro.blueprints.ventanillas.views import ventanillas
 from tauro.extensions import csrf, database, login_manager, moment
 
 
@@ -38,6 +39,7 @@ def create_app():
     app.register_blueprint(sistemas)
     app.register_blueprint(usuarios)
     app.register_blueprint(usuarios_roles)
+    app.register_blueprint(ventanillas)
 
     # Inicializar extensiones
     extensions(app)
