@@ -63,7 +63,6 @@ def alimentar_usuarios():
             apellido_paterno = safe_string(row["apellido_paterno"], save_enie=True)
             apellido_materno = safe_string(row["apellido_materno"], save_enie=True)
             puesto = safe_string(row["puesto"], save_enie=True)
-            workspace = safe_string(row["workspace"])
             estatus = row["estatus"]
             autoridad = Autoridad.query.filter_by(clave=autoridad_clave).first()
             if autoridad is None:
