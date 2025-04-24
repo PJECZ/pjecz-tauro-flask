@@ -40,10 +40,10 @@
             </div>
             <div class="col-md-3">
                 {% if current_user.can_view("BITACORAS") %}
-                    {# {{ detail.button_md(label='Bitácoras', url=url_for('bitacoras.list_active', usuario_id=usuario.id), icon='mdi:calendar-clock', color_class='btn-outline-secondary') }} #}
+                    {{ detail.button_md(label='Bitácoras', url=url_for('bitacoras.list_active', usuario_id=usuario.id), icon='mdi:calendar-clock', color_class='btn-outline-secondary') }}
                 {% endif %}
                 {% if current_user.can_view("ENTRADAS SALIDAS") %}
-                    {# {{ detail.button_md(label='Entradas-Salidas', url=url_for('entradas_salidas.list_active', usuario_id=usuario.id), icon='mdi:calendar-clock', color_class='btn-outline-secondary') }} #}
+                    {{ detail.button_md(label='Entradas-Salidas', url=url_for('entradas_salidas.list_active', usuario_id=usuario.id), icon='mdi:calendar-clock', color_class='btn-outline-secondary') }}
                 {% endif %}
             </div>
         </div>
