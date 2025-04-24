@@ -8,9 +8,9 @@
 {% block topbar_actions %}
     {% call topbar.page_buttons('Ventanilla ' + ventanilla.clave) %}
         {{ topbar.button_previous('Ventanillas', url_for('ventanillas.list_active')) }}
-        {# {% if current_user.can_edit('VENTANILLAS') %}
+        {% if current_user.can_edit('VENTANILLAS') %}
             {{ topbar.button_edit('Editar', url_for('ventanillas.edit', ventanilla_id=ventanilla.id)) }}
-        {% endif %} #}
+        {% endif %}
         {% if current_user.can_admin('VENTANILLAS') %}
             {% if ventanilla.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('ventanillas.delete', ventanilla_id=ventanilla.id)) }}{% endif %}
             {% if ventanilla.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('ventanillas.recover', ventanilla_id=ventanilla.id)) }}{% endif %}
@@ -21,14 +21,14 @@
 {% block content %}
     {% call detail.card(estatus=ventanilla.estatus) %}
         {{ detail.label_value_big('Clave', ventanilla.clave) }}
-        {{ detail.label_value('Está Activa', ventanilla.es_activa) }}
         {{ detail.label_value('Descripción', ventanilla.descripcion) }}
+        {{ detail.label_value('Está Habilitada', ventanilla.es_habilitada) }}
     {% endcall %}
 {% endblock %}
 
 {% block custom_javascript %}
     {% if current_user.can_admin('VENTANILLAS') %}
-        {% if ventanilla.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + ventanilla.clave + '?') }}{% endif %}
-        {% if ventanilla.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + ventanilla.clave + '?') }}{% endif %}
+        {% if ventanilla.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar la ventanilla ' + ventanilla.clave + '?') }}{% endif %}
+        {% if ventanilla.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar la ventanilla ' + ventanilla.clave + '?') }}{% endif %}
     {% endif %}
 {% endblock %}
