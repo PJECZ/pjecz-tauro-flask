@@ -32,7 +32,7 @@
                     {{ detail.label_value('Distrito', usuario.autoridad.distrito.nombre) }}
                 {% endif %}
                 {% if current_user.can_view("AUTORIDADES") %}
-                    {# {{ detail.label_value('Autoridad', usuario.autoridad.descripcion, url_for('autoridades.detail', autoridad_id=usuario.autoridad_id)) }} #}
+                    {{ detail.label_value('Autoridad', usuario.autoridad.descripcion, url_for('autoridades.detail', autoridad_id=usuario.autoridad_id)) }}
                 {% else %}
                     {{ detail.label_value('Autoridad', usuario.autoridad.descripcion) }}
                 {% endif %}
