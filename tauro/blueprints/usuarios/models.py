@@ -45,6 +45,7 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     usuarios_roles: Mapped[List["UsuarioRol"]] = relationship("UsuarioRol", back_populates="usuario")
 
     # Propiedades
+    modulos_menu_principal_consultados = []
     permisos_consultados = {}
 
     @property
@@ -54,7 +55,7 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
 
     @property
     def modulos_menu_principal(self):
-        """Elaborar listado con los modulos ordenados para el menu principal"""
+        """Elaborar listado con los módulos ordenados para el menu principal"""
         if len(self.modulos_menu_principal_consultados) > 0:
             return self.modulos_menu_principal_consultados
         modulos = []
