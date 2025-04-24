@@ -27,7 +27,7 @@
             <div class="col-md-6">
                 {{ detail.label_value('Nombre', usuario.nombre) }}
                 {% if current_user.can_view("DISTRITOS") %}
-                    {# {{ detail.label_value('Distrito', usuario.autoridad.distrito.nombre, url_for('distritos.detail', distrito_id=usuario.autoridad.distrito_id)) }} #}
+                    {{ detail.label_value('Distrito', usuario.autoridad.distrito.nombre, url_for('distritos.detail', distrito_id=usuario.autoridad.distrito_id)) }}
                 {% else %}
                     {{ detail.label_value('Distrito', usuario.autoridad.distrito.nombre) }}
                 {% endif %}
