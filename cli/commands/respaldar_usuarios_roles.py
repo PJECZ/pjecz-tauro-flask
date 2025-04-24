@@ -27,15 +27,12 @@ def respaldar_usuarios_roles():
             [
                 "usuario_id",
                 "autoridad_clave",
-                "oficina_id",
                 "email",
                 "nombres",
                 "apellido_paterno",
                 "apellido_materno",
-                "curp",
                 "puesto",
                 "roles",
-                "workspace",
                 "estatus",
             ]
         )
@@ -48,15 +45,12 @@ def respaldar_usuarios_roles():
                 [
                     usuario.id,
                     usuario.autoridad.clave,
-                    usuario.oficina_id,
                     usuario.email,
                     usuario.nombres,
                     usuario.apellido_paterno,
                     usuario.apellido_materno,
-                    usuario.curp,
                     usuario.puesto,
                     ",".join(roles_list),
-                    usuario.workspace,
                     usuario.estatus,
                 ]
             )
