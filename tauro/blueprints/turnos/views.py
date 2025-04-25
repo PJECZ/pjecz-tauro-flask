@@ -50,7 +50,7 @@ def datatable_json():
     #     consulta = consulta.join(Persona)
     #     consulta = consulta.filter(Persona.rfc.contains(safe_rfc(request.form["persona_rfc"], search_fragment=True)))
     # Ordenar y paginar
-    registros = consulta.order_by(Turno.id).offset(start).limit(rows_per_page).all()
+    registros = consulta.order_by(Turno.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
