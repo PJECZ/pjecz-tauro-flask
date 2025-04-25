@@ -106,6 +106,15 @@ def new():
     """Nuevo Turno"""
     form = TurnoForm()
     if form.validate_on_submit():
+        # Validar que existan valores NO DEFINIDO
+        usuario_no_definido = Usuario.query.filter_by(nombres="NO DEFINIDO").first()
+        if usuario_no_definido is None:
+            flash("ADVERTENCIA: Se necesita definir un usuario con nombre NO DEFINIDO", "warning")
+            return render_template("turnos/new.jinja2", form=form)
+        ventanilla_no_definido = Ventanilla.query.filter_by(clave="ND").first()
+        if ventanilla_no_definido is None:
+            flash("ADVERTENCIA: Se necesita definir una ventanilla con clave ND", "warning")
+            return render_template("turnos/new.jinja2", form=form)
         # Calcular el siguiente número - se reinicia la cuenta por día.
         fecha_hoy_inicio = datetime.combine(date.today(), time(0, 0, 0))
         turno_ultimo = Turno.query.filter(Turno.creado >= fecha_hoy_inicio).order_by(Turno.id.desc()).first()
@@ -114,8 +123,8 @@ def new():
             numero_turno = turno_ultimo.numero
         # Crear registro
         turno = Turno(
-            usuario=Usuario.query.filter_by(nombres="NO DEFINIDO").first(),
-            ventanilla=Ventanilla.query.filter_by(clave="ND").first(),
+            usuario=usuario_no_definido,
+            ventanilla=ventanilla_no_definido,
             numero=numero_turno + 1,
             tipo=form.tipo.data,
             inicio=datetime.now(),
