@@ -14,7 +14,7 @@ from tauro.extensions import database
 
 
 class Turno(database.Model, UniversalMixin):
-    """ Turno """
+    """Turno"""
 
     ESTADOS = {
         "EN_ESPERA": "En Espera",
@@ -30,7 +30,7 @@ class Turno(database.Model, UniversalMixin):
     }
 
     # Nombre de la tabla
-    __tablename__ = 'turnos'
+    __tablename__ = "turnos"
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -43,13 +43,19 @@ class Turno(database.Model, UniversalMixin):
 
     # Columnas
     numero: Mapped[int]
-    turno_solicitado: Mapped[str] = mapped_column(String(512))  # Es el ID del sistema externo que hace la petición de creación de un nuevo turno
+    clave: Mapped[str] = mapped_column(String(16))
+    # turno_solicitado: Mapped[str] = mapped_column(String(512))  # Es el ID del sistema externo que hace la petición de creación de un nuevo turno
     tipo: Mapped[str] = mapped_column(Enum(*TIPOS, name="turnos_tipos", native_enum=False), index=True)
     inicio: Mapped[datetime] = mapped_column(DateTime, default=now())
     termino: Mapped[datetime] = mapped_column(DateTime, default=now())
     estado: Mapped[str] = mapped_column(Enum(*ESTADOS, name="turnos_estados", native_enum=False), index=True)
     comentarios: Mapped[Optional[str]] = mapped_column(String(512))
 
+    @property
+    def clave_numero(self):
+        """Junta clave y número de turno"""
+        return self.clave + "-" + self.numero
+
     def __repr__(self):
-        """ Representación """
-        return f'<Turno {self.id}>'
+        """Representación"""
+        return f"<Turno {self.id}>"
