@@ -24,8 +24,8 @@ class Ventanilla(database.Model, UniversalMixin):
     # Clave foránea
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     usuario: Mapped["Usuario"] = relationship(back_populates="ventanillas")
-    # unidad_id: Mapped[int] = mapped_column(ForeignKey("unidades.id"))
-    # unidad: Mapped["Unidad"] = relationship(back_populates="ventanillas")
+    unidad_id: Mapped[int] = mapped_column(ForeignKey("unidades.id"))
+    unidad: Mapped["Unidad"] = relationship(back_populates="ventanillas")
 
     # Columnas
     clave: Mapped[str] = mapped_column(String(16), unique=True)
@@ -33,7 +33,7 @@ class Ventanilla(database.Model, UniversalMixin):
     descripcion: Mapped[Optional[str]] = mapped_column(String(256))
 
     # Hijos
-    # turnos: Mapped[List["Turno"]] = relationship(back_populates="ventanillas")
+    turnos: Mapped[List["Turno"]] = relationship(back_populates="ventanilla")
 
     def __repr__(self):
         """Representación"""
