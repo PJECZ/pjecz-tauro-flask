@@ -120,6 +120,7 @@ def new():
         # Guardar
         ventanilla = Ventanilla(
             clave=safe_clave(form.clave.data),
+            unidad_id=form.unidad.data,
             descripcion=safe_string(form.descripcion.data),
             usuario=Usuario.query.filter_by(nombres="NO DEFINIDO").first(),
         )

@@ -28,6 +28,11 @@ class Unidad(database.Model, UniversalMixin):
     # Hijos
     ventanillas: Mapped[List["Ventanilla"]] = relationship(back_populates="unidad")
 
+    @property
+    def clave_nombre(self):
+        """Junta clave y nombre de la unidad"""
+        return self.clave + " - " + self.nombre
+
     def __repr__(self):
         """Representación"""
         return f"<Unidad {self.id}>"
