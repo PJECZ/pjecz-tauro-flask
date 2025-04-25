@@ -13,6 +13,8 @@ from tauro.blueprints.modulos.views import modulos
 from tauro.blueprints.permisos.views import permisos
 from tauro.blueprints.roles.views import roles
 from tauro.blueprints.sistemas.views import sistemas
+from tauro.blueprints.turnos.views import turnos
+from tauro.blueprints.unidades.views import unidades
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios.views import usuarios
 from tauro.blueprints.usuarios_roles.views import usuarios_roles
@@ -37,6 +39,8 @@ def create_app():
     app.register_blueprint(permisos)
     app.register_blueprint(roles)
     app.register_blueprint(sistemas)
+    app.register_blueprint(turnos)
+    app.register_blueprint(unidades)
     app.register_blueprint(usuarios)
     app.register_blueprint(usuarios_roles)
     app.register_blueprint(ventanillas)

@@ -13,10 +13,10 @@ from tauro.extensions import database
 
 
 class Unidad(database.Model, UniversalMixin):
-    """ Unidad """
+    """Unidad"""
 
     # Nombre de la tabla
-    __tablename__ = 'unidades'
+    __tablename__ = "unidades"
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -26,8 +26,8 @@ class Unidad(database.Model, UniversalMixin):
     nombre: Mapped[str] = mapped_column(String(256))
 
     # Hijos
-    ventanillas: Mapped[List["Ventanilla"]] = relationship(back_populates="unidades")
+    ventanillas: Mapped[List["Ventanilla"]] = relationship(back_populates="unidad")
 
     def __repr__(self):
-        """ Representación """
-        return f'<Unidad {self.id}>'
+        """Representación"""
+        return f"<Unidad {self.id}>"
