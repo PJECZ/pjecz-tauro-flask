@@ -43,7 +43,7 @@ class Turno(database.Model, UniversalMixin):
 
     # Columnas
     numero: Mapped[int]
-    clave: Mapped[str] = mapped_column(String(16))
+    # clave: Mapped[str] = mapped_column(String(16))
     # turno_solicitado: Mapped[str] = mapped_column(String(512))  # Es el ID del sistema externo que hace la petición de creación de un nuevo turno
     tipo: Mapped[str] = mapped_column(Enum(*TIPOS, name="turnos_tipos", native_enum=False), index=True)
     inicio: Mapped[datetime] = mapped_column(DateTime, default=now())

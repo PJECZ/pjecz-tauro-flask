@@ -16,6 +16,7 @@ from tauro.blueprints.usuarios.decorators import permission_required
 from tauro.blueprints.ventanillas.models import Ventanilla
 from tauro.blueprints.ventanillas.forms import VentanillaForm
 from tauro.blueprints.usuarios.models import Usuario
+from tauro.blueprints.unidades.models import Unidad
 
 MODULO = "VENTANILLAS"
 
@@ -117,9 +118,12 @@ def new():
         if Ventanilla.query.filter_by(clave=clave).first():
             flash("La clave ya está en uso. Debe de ser única.", "warning")
             return render_template("ventanillas/new.jinja2", form=form)
+        # Validar unidad
+        unidad = Unidad.query.get_or_404(form.unidad.data)
         # Guardar
         ventanilla = Ventanilla(
             clave=safe_clave(form.clave.data),
+            unidad_id=unidad.id,
             descripcion=safe_string(form.descripcion.data),
             usuario=Usuario.query.filter_by(nombres="NO DEFINIDO").first(),
         )
@@ -143,7 +147,10 @@ def edit(ventanilla_id):
     ventanilla = Ventanilla.query.get_or_404(ventanilla_id)
     form = VentanillaForm()
     if form.validate_on_submit():
+        # Validar unidad
+        unidad = Unidad.query.get_or_404(form.unidad.data)
         ventanilla.clave = safe_clave(form.clave.data)
+        ventanilla.unidad = unidad
         ventanilla.descripcion = safe_string(form.descripcion.data)
         ventanilla.save()
         bitacora = Bitacora(
@@ -156,6 +163,7 @@ def edit(ventanilla_id):
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
     form.clave.data = ventanilla.clave
+    form.unidad.data = ventanilla.unidad.id
     form.descripcion.data = ventanilla.descripcion
     form.es_habilitada.data = ventanilla.es_habilitada
     return render_template("ventanillas/edit.jinja2", form=form, ventanilla=ventanilla)

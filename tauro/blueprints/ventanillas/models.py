@@ -35,6 +35,11 @@ class Ventanilla(database.Model, UniversalMixin):
     # Hijos
     turnos: Mapped[List["Turno"]] = relationship(back_populates="ventanilla")
 
+    @property
+    def clave_descripcion(self):
+        """Junta clave y descripcion de una ventanilla"""
+        return self.clave + " - " + self.descripcion
+
     def __repr__(self):
         """Representación"""
         return f"<Ventanilla {self.id}>"

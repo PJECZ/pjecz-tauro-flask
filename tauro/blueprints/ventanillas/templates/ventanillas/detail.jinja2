@@ -21,6 +21,7 @@
 {% block content %}
     {% call detail.card(estatus=ventanilla.estatus) %}
         {{ detail.label_value_big('Clave', ventanilla.clave) }}
+        {{ detail.label_value('Unidad', ventanilla.unidad.clave_nombre, url_for("unidades.detail", unidad_id=ventanilla.unidad.id)) }}
         {{ detail.label_value('Descripción', ventanilla.descripcion) }}
         {{ detail.label_value('Está Habilitada', ventanilla.es_habilitada) }}
     {% endcall %}
