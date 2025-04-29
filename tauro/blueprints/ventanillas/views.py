@@ -42,17 +42,10 @@ def datatable_json():
         consulta = consulta.filter_by(estatus=request.form["estatus"])
     else:
         consulta = consulta.filter_by(estatus="A")
-    if "clave" in request.form:
-        try:
-            clave = safe_clave(request.form["clave"])
-            if clave != "":
-                consulta = consulta.filter(Ventanilla.clave.contains(clave))
-        except ValueError:
-            pass
-    if "descripcion" in request.form:
-        descripcion = safe_string(request.form["descripcion"], save_enie=True)
-        if descripcion != "":
-            consulta = consulta.filter(Ventanilla.descripcion.contains(descripcion))
+    if "nombre" in request.form:
+        nombre = safe_string(request.form["nombre"], save_enie=True)
+        if nombre != "":
+            consulta = consulta.filter(Ventanilla.nombre.contains(nombre))
     # Luego filtrar por columnas de otras tablas
     # if "persona_rfc" in request.form:
     #     consulta = consulta.join(Persona)
@@ -66,11 +59,11 @@ def datatable_json():
         data.append(
             {
                 "detalle": {
-                    "clave": resultado.clave,
+                    "id": resultado.id,
                     "url": url_for("ventanillas.detail", ventanilla_id=resultado.id),
                 },
-                "descripcion": resultado.descripcion,
-                "habilitada": resultado.es_habilitada,
+                "nombre": resultado.nombre,
+                "es_activo": resultado.es_activo,
             }
         )
     # Entregar JSON
@@ -114,24 +107,20 @@ def new():
     form = VentanillaForm()
     if form.validate_on_submit():
         # Validar que la clave no se repita
-        clave = safe_clave(form.clave.data)
-        if Ventanilla.query.filter_by(clave=clave).first():
-            flash("La clave ya está en uso. Debe de ser única.", "warning")
+        nombre = safe_string(form.nombre.data)
+        if Ventanilla.query.filter_by(nombre=nombre).first():
+            flash("El nombre ya está en uso. Debe de ser único.", "warning")
             return render_template("ventanillas/new.jinja2", form=form)
-        # Validar unidad
-        unidad = Unidad.query.get_or_404(form.unidad.data)
         # Guardar
         ventanilla = Ventanilla(
-            clave=safe_clave(form.clave.data),
-            unidad_id=unidad.id,
-            descripcion=safe_string(form.descripcion.data),
-            usuario=Usuario.query.filter_by(nombres="NO DEFINIDO").first(),
+            nombre=safe_string(form.nombre.data),
+            es_activo=form.es_activo.data,
         )
         ventanilla.save()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Nueva Ventanilla {ventanilla.clave}"),
+            descripcion=safe_message(f"Nueva Ventanilla {ventanilla.nombre}"),
             url=url_for("ventanillas.detail", ventanilla_id=ventanilla.id),
         )
         bitacora.save()
@@ -147,25 +136,20 @@ def edit(ventanilla_id):
     ventanilla = Ventanilla.query.get_or_404(ventanilla_id)
     form = VentanillaForm()
     if form.validate_on_submit():
-        # Validar unidad
-        unidad = Unidad.query.get_or_404(form.unidad.data)
-        ventanilla.clave = safe_clave(form.clave.data)
-        ventanilla.unidad = unidad
-        ventanilla.descripcion = safe_string(form.descripcion.data)
+        ventanilla.nombre = safe_string(form.nombre.data)
+        ventanilla.es_activo = form.es_activo.data
         ventanilla.save()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Editado Ventanilla {ventanilla.clave}"),
+            descripcion=safe_message(f"Editado Ventanilla {ventanilla.nombre}"),
             url=url_for("ventanillas.detail", ventanilla_id=ventanilla.id),
         )
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
-    form.clave.data = ventanilla.clave
-    form.unidad.data = ventanilla.unidad.id
-    form.descripcion.data = ventanilla.descripcion
-    form.es_habilitada.data = ventanilla.es_habilitada
+    form.nombre.data = ventanilla.nombre
+    form.es_activo.data = ventanilla.es_activo
     return render_template("ventanillas/edit.jinja2", form=form, ventanilla=ventanilla)
 
 

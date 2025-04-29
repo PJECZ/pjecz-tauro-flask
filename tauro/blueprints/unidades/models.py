@@ -26,7 +26,7 @@ class Unidad(database.Model, UniversalMixin):
     nombre: Mapped[str] = mapped_column(String(256))
 
     # Hijos
-    ventanillas: Mapped[List["Ventanilla"]] = relationship(back_populates="unidad")
+    # ventanillas: Mapped[List["Ventanilla"]] = relationship(back_populates="unidad")
 
     @property
     def clave_nombre(self):

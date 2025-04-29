@@ -38,8 +38,8 @@ class Turno(database.Model, UniversalMixin):
     # Clave foránea
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     usuario: Mapped["Usuario"] = relationship(back_populates="turnos")
-    ventanilla_id: Mapped[int] = mapped_column(ForeignKey("ventanillas.id"))
-    ventanilla: Mapped["Ventanilla"] = relationship(back_populates="turnos")
+    # ventanilla_id: Mapped[int] = mapped_column(ForeignKey("ventanillas.id"))
+    # ventanilla: Mapped["Ventanilla"] = relationship(back_populates="turnos")
 
     # Columnas
     numero: Mapped[int]
