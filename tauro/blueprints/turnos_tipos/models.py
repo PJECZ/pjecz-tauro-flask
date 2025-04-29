@@ -1,5 +1,5 @@
 """
-Turnos_Estados, modelos
+Turnos-Tipos, modelos
 """
 
 from typing import List, Optional
@@ -11,11 +11,11 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class Turno_Estado(database.Model, UniversalMixin):
-    """Turno_Estado"""
+class Turno_Tipo(database.Model, UniversalMixin):
+    """Turno_Tipo"""
 
     # Nombre de la tabla
-    __tablename__ = "turnos_estados"
+    __tablename__ = "turnos_tipos"
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -26,4 +26,4 @@ class Turno_Estado(database.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<Turno_Estado {self.id}>"
+        return f"<Turno_Tipo {self.id}>"
