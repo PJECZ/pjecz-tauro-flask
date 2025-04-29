@@ -24,6 +24,9 @@ class Ventanilla(database.Model, UniversalMixin):
     nombre: Mapped[Optional[str]] = mapped_column(String(256))
     es_activo: Mapped[bool] = mapped_column(default=True)
 
+    # Hijos
+    usuarios: Mapped[List["Usuario"]] = relationship(back_populates="ventanilla")
+
     def __repr__(self):
         """Representación"""
         return f"<Ventanilla {self.id}>"

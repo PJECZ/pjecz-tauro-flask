@@ -5,6 +5,7 @@ Flask App
 from flask import Flask
 
 from config.settings import Settings
+from tauro.blueprints.api_keys.views import api_keys
 from tauro.blueprints.bitacoras.views import bitacoras
 from tauro.blueprints.entradas_salidas.views import entradas_salidas
 from tauro.blueprints.modulos.views import modulos
@@ -31,6 +32,7 @@ def create_app():
     app.config.from_object(Settings())
 
     # Registrar blueprints
+    app.register_blueprint(api_keys)
     app.register_blueprint(bitacoras)
     app.register_blueprint(entradas_salidas)
     app.register_blueprint(modulos)

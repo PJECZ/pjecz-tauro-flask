@@ -25,6 +25,12 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
 
+    # Clave foránea
+    unidad_id: Mapped[int] = mapped_column(ForeignKey("unidades.id"))
+    unidad: Mapped["Unidad"] = relationship(back_populates="usuarios")
+    ventanilla_id: Mapped[int] = mapped_column(ForeignKey("ventanillas.id"))
+    ventanilla: Mapped["Ventanilla"] = relationship(back_populates="usuarios")
+
     # Columnas
     email: Mapped[str] = mapped_column(String(256), unique=True, index=True)
     nombres: Mapped[str] = mapped_column(String(256))
@@ -37,7 +43,6 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     entradas_salidas: Mapped[List["EntradaSalida"]] = relationship("EntradaSalida", back_populates="usuario")
     turnos: Mapped[List["Turno"]] = relationship(back_populates="usuario")
     usuarios_roles: Mapped[List["UsuarioRol"]] = relationship("UsuarioRol", back_populates="usuario")
-    # ventanillas: Mapped[List["Ventanilla"]] = relationship("Ventanilla", back_populates="usuario")
 
     # Propiedades
     modulos_menu_principal_consultados = []

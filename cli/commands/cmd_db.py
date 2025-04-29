@@ -23,6 +23,9 @@ from cli.commands.respaldar_turnos_tipos import respaldar_turnos_tipos
 from tauro.app import create_app
 from tauro.extensions import database
 
+from tauro.blueprints.unidades.models import Unidad
+from tauro.blueprints.ventanillas.models import Ventanilla
+
 app = create_app()
 app.app_context().push()
 database.app = app
@@ -56,6 +59,9 @@ def alimentar():
     alimentar_modulos()
     alimentar_roles()
     alimentar_permisos()
+    # Alimentar unidades y ventanillas NO DEFINIDO
+    Unidad(clave="ND", nombre="NO DEFINIDO").save()
+    Ventanilla(nombre="NO DEFINIDO").save()
     alimentar_usuarios()
     alimentar_usuarios_roles()
     alimentar_turnos_estados()
