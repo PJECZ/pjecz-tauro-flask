@@ -13,9 +13,11 @@ from cli.commands.alimentar_permisos import alimentar_permisos
 from cli.commands.alimentar_roles import alimentar_roles
 from cli.commands.alimentar_usuarios import alimentar_usuarios
 from cli.commands.alimentar_usuarios_roles import alimentar_usuarios_roles
+from cli.commands.alimentar_turnos_estados import alimentar_turnos_estados
 from cli.commands.respaldar_modulos import respaldar_modulos
 from cli.commands.respaldar_roles_permisos import respaldar_roles_permisos
 from cli.commands.respaldar_usuarios_roles import respaldar_usuarios_roles
+from cli.commands.respaldar_turnos_estados import respaldar_turnos_estados
 from tauro.app import create_app
 from tauro.extensions import database
 
@@ -54,6 +56,7 @@ def alimentar():
     alimentar_permisos()
     alimentar_usuarios()
     alimentar_usuarios_roles()
+    alimentar_turnos_estados()
     click.echo("Termina alimentar.")
 
 
@@ -71,6 +74,7 @@ def respaldar():
     respaldar_modulos()
     respaldar_roles_permisos()
     respaldar_usuarios_roles()
+    respaldar_turnos_estados()
     click.echo("Termina respaldar.")
 
 
