@@ -25,18 +25,11 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    # Clave foránea
-    autoridad_id: Mapped[int] = mapped_column(ForeignKey("autoridades.id"))
-    autoridad: Mapped["Autoridad"] = relationship(back_populates="usuarios")
-
     # Columnas
     email: Mapped[str] = mapped_column(String(256), unique=True, index=True)
     nombres: Mapped[str] = mapped_column(String(256))
     apellido_paterno: Mapped[str] = mapped_column(String(256))
     apellido_materno: Mapped[str] = mapped_column(String(256))
-    puesto: Mapped[str] = mapped_column(String(256))
-    api_key: Mapped[Optional[str]] = mapped_column(String(128))
-    api_key_expiracion: Mapped[Optional[datetime]]
     contrasena: Mapped[Optional[str]] = mapped_column(String(256))
 
     # Hijos

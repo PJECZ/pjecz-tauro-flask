@@ -12,9 +12,6 @@
             {{ topbar.button_edit('Editar', url_for('usuarios.edit', usuario_id=usuario.id)) }}
         {% endif %}
         {% if current_user.can_admin('USUARIOS') %}
-            {% if usuario.estatus == 'A' %}
-                {{ topbar.button('API Key', url_for('usuarios.view_api_key', usuario_id=usuario.id), 'mdi:key') }}
-            {% endif %}
             {% if usuario.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('usuarios.delete', usuario_id=usuario.id)) }}{% endif %}
             {% if usuario.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('usuarios.recover', usuario_id=usuario.id)) }}{% endif %}
         {% endif %}
@@ -26,17 +23,6 @@
         <div class="row">
             <div class="col-md-6">
                 {{ detail.label_value('Nombre', usuario.nombre) }}
-                {% if current_user.can_view("DISTRITOS") %}
-                    {{ detail.label_value('Distrito', usuario.autoridad.distrito.nombre, url_for('distritos.detail', distrito_id=usuario.autoridad.distrito_id)) }}
-                {% else %}
-                    {{ detail.label_value('Distrito', usuario.autoridad.distrito.nombre) }}
-                {% endif %}
-                {% if current_user.can_view("AUTORIDADES") %}
-                    {{ detail.label_value('Autoridad', usuario.autoridad.descripcion, url_for('autoridades.detail', autoridad_id=usuario.autoridad_id)) }}
-                {% else %}
-                    {{ detail.label_value('Autoridad', usuario.autoridad.descripcion) }}
-                {% endif %}
-                {{ detail.label_value('Puesto', usuario.puesto) }}
             </div>
             <div class="col-md-3">
                 {% if current_user.can_view("BITACORAS") %}
