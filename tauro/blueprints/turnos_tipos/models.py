@@ -24,6 +24,9 @@ class Turno_Tipo(database.Model, UniversalMixin):
     nombre: Mapped[str] = mapped_column(String(256), unique=True)
     es_activo: Mapped[bool] = mapped_column(default=True)
 
+    # Hijos
+    turnos: Mapped[List["Turno"]] = relationship(back_populates="turno_tipo")
+
     def __repr__(self):
         """Representación"""
         return f"<Turno_Tipo {self.id}>"
