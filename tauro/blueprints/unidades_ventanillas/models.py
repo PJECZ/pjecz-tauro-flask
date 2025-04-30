@@ -2,9 +2,7 @@
 Unidades_Ventanillas, modelos
 """
 
-from typing import List, Optional
-
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from lib.universal_mixin import UniversalMixin

@@ -26,6 +26,7 @@ class Turno_Tipo(database.Model, UniversalMixin):
 
     # Hijos
     turnos: Mapped[List["Turno"]] = relationship(back_populates="turno_tipo")
+    usuarios_turnos_tipos: Mapped[List["Usuario_Turno_Tipo"]] = relationship(back_populates="turno_tipo")
 
     def __repr__(self):
         """Representación"""
