@@ -12,8 +12,8 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class API_Key(database.Model, UniversalMixin):
-    """API_Key"""
+class APIKey(database.Model, UniversalMixin):
+    """APIKey"""
 
     # Nombre de la tabla
     __tablename__ = "api_keys"
@@ -22,10 +22,10 @@ class API_Key(database.Model, UniversalMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Columnas
-    api_key: Mapped[Optional[str]] = mapped_column(String(128))
-    api_key_expiracion: Mapped[Optional[datetime]]
+    api_key: Mapped[str] = mapped_column(String(128))
+    api_key_expiracion: Mapped[datetime]
     es_activo: Mapped[bool] = mapped_column(default=False)
 
     def __repr__(self):
         """Representación"""
-        return f"<API_Key {self.id}>"
+        return f"<APIKey {self.id}>"

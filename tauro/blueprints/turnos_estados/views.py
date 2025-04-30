@@ -13,7 +13,7 @@ from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
 from tauro.blueprints.permisos.models import Permiso
 from tauro.blueprints.usuarios.decorators import permission_required
-from tauro.blueprints.turnos_estados.models import Turno_Estado
+from tauro.blueprints.turnos_estados.models import TurnoEstado
 
 MODULO = "TURNOS_ESTADOS"
 

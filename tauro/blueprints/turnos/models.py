@@ -26,9 +26,9 @@ class Turno(database.Model, UniversalMixin):
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     usuario: Mapped["Usuario"] = relationship(back_populates="turnos")
     turno_estado_id: Mapped[int] = mapped_column(ForeignKey("turnos_estados.id"))
-    turno_estado: Mapped["Turno_Estado"] = relationship(back_populates="turnos")
+    turno_estado: Mapped["TurnoEstado"] = relationship(back_populates="turnos")
     turno_tipo_id: Mapped[int] = mapped_column(ForeignKey("turnos_tipos.id"))
-    turno_tipo: Mapped["Turno_Tipo"] = relationship(back_populates="turnos")
+    turno_tipo: Mapped["TurnoTipo"] = relationship(back_populates="turnos")
     ventanilla_id: Mapped[int] = mapped_column(ForeignKey("ventanillas.id"))
     ventanilla: Mapped["Ventanilla"] = relationship(back_populates="turnos")
 

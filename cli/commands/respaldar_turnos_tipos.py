@@ -8,7 +8,7 @@ from pathlib import Path
 
 import click
 
-from tauro.blueprints.turnos_tipos.models import Turno_Tipo
+from tauro.blueprints.turnos_tipos.models import TurnoTipo
 
 TURNOS_TIPOS_CSV = "seed/turnos_tipos.csv"
 
@@ -31,7 +31,7 @@ def respaldar_turnos_tipos():
                 "estatus",
             ]
         )
-        for turno_tipo in Turno_Tipo.query.order_by(Turno_Tipo.id).all():
+        for turno_tipo in TurnoTipo.query.order_by(TurnoTipo.id).all():
             respaldo.writerow(
                 [
                     turno_tipo.id,

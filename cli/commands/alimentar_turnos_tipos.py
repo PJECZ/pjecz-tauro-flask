@@ -9,7 +9,7 @@ from pathlib import Path
 import click
 
 from lib.safe_string import safe_string
-from tauro.blueprints.turnos_tipos.models import Turno_Tipo
+from tauro.blueprints.turnos_tipos.models import TurnoTipo
 
 TURNOS_TIPOS_CSV = "seed/turnos_tipos.csv"
 
@@ -35,7 +35,7 @@ def alimentar_turnos_tipos():
             if turno_tipo_id != contador + 1:
                 click.echo(click.style(f"  AVISO: turno_tipo_id {turno_tipo_id} no es consecutivo", fg="red"))
                 sys.exit(1)
-            Turno_Tipo(
+            TurnoTipo(
                 nombre=nombre,
                 es_activo=es_activo,
                 estatus=estatus,

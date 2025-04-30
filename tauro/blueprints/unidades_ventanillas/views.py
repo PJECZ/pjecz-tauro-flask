@@ -13,7 +13,7 @@ from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
 from tauro.blueprints.permisos.models import Permiso
 from tauro.blueprints.usuarios.decorators import permission_required
-from tauro.blueprints.unidades_ventanillas.models import Unidad_Ventanilla
+from tauro.blueprints.unidades_ventanillas.models import UnidadVentanilla
 
 MODULO = "UNIDADES VENTANILLAS"
 

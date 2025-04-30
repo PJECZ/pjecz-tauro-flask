@@ -11,8 +11,8 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class Turno_Tipo(database.Model, UniversalMixin):
-    """Turno_Tipo"""
+class TurnoTipo(database.Model, UniversalMixin):
+    """TurnoTipo"""
 
     # Nombre de la tabla
     __tablename__ = "turnos_tipos"
@@ -26,8 +26,8 @@ class Turno_Tipo(database.Model, UniversalMixin):
 
     # Hijos
     turnos: Mapped[List["Turno"]] = relationship(back_populates="turno_tipo")
-    usuarios_turnos_tipos: Mapped[List["Usuario_Turno_Tipo"]] = relationship(back_populates="turno_tipo")
+    usuarios_turnos_tipos: Mapped[List["UsuarioTurnoTipo"]] = relationship(back_populates="turno_tipo")
 
     def __repr__(self):
         """Representación"""
-        return f"<Turno_Tipo {self.id}>"
+        return f"<TurnoTipo {self.id}>"

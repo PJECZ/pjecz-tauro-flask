@@ -42,7 +42,7 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     bitacoras: Mapped[List["Bitacora"]] = relationship("Bitacora", back_populates="usuario")
     entradas_salidas: Mapped[List["EntradaSalida"]] = relationship("EntradaSalida", back_populates="usuario")
     turnos: Mapped[List["Turno"]] = relationship(back_populates="usuario")
-    usuarios_turnos_tipos: Mapped[List["Usuario_Turno_Tipo"]] = relationship("Usuario_Turno_Tipo", back_populates="usuario")
+    usuarios_turnos_tipos: Mapped[List["UsuarioTurnoTipo"]] = relationship("UsuarioTurnoTipo", back_populates="usuario")
     usuarios_roles: Mapped[List["UsuarioRol"]] = relationship("UsuarioRol", back_populates="usuario")
 
     # Propiedades

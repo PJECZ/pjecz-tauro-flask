@@ -9,8 +9,8 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class Usuario_Turno_Tipo(database.Model, UniversalMixin):
-    """Usuario_Turno_Tipo"""
+class UsuarioTurnoTipo(database.Model, UniversalMixin):
+    """UsuarioTurnoTipo"""
 
     # Nombre de la tabla
     __tablename__ = "usuarios_turnos_tipos"
@@ -22,7 +22,7 @@ class Usuario_Turno_Tipo(database.Model, UniversalMixin):
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     usuario: Mapped["Usuario"] = relationship(back_populates="usuarios_turnos_tipos")
     turno_tipo_id: Mapped[int] = mapped_column(ForeignKey("turnos_tipos.id"))
-    turno_tipo: Mapped["Turno_Tipo"] = relationship(back_populates="usuarios_turnos_tipos")
+    turno_tipo: Mapped["TurnoTipo"] = relationship(back_populates="usuarios_turnos_tipos")
 
     # Columnas
     es_activo: Mapped[bool] = mapped_column(default=True)

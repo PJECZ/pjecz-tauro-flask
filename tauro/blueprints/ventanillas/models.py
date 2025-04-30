@@ -21,12 +21,12 @@ class Ventanilla(database.Model, UniversalMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Columnas
-    nombre: Mapped[Optional[str]] = mapped_column(String(256))
+    nombre: Mapped[str] = mapped_column(String(256))
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos
     turnos: Mapped[List["Turno"]] = relationship(back_populates="ventanilla")
-    unidades_ventanillas: Mapped[List["Unidad_Ventanilla"]] = relationship(back_populates="ventanilla")
+    unidades_ventanillas: Mapped[List["UnidadVentanilla"]] = relationship(back_populates="ventanilla")
     usuarios: Mapped[List["Usuario"]] = relationship(back_populates="ventanilla")
 
     def __repr__(self):

@@ -9,8 +9,8 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class Unidad_Ventanilla(database.Model, UniversalMixin):
-    """Unidad_Ventanilla"""
+class UnidadVentanilla(database.Model, UniversalMixin):
+    """UnidadVentanilla"""
 
     # Nombre de la tabla
     __tablename__ = "unidades_ventanillas"
@@ -29,4 +29,4 @@ class Unidad_Ventanilla(database.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<Unidad_Ventanilla {self.id}>"
+        return f"<UnidadVentanilla {self.id}>"

@@ -11,8 +11,8 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class Turno_Estado(database.Model, UniversalMixin):
-    """Turno_Estado"""
+class TurnoEstado(database.Model, UniversalMixin):
+    """TurnoEstado"""
 
     # Nombre de la tabla
     __tablename__ = "turnos_estados"
@@ -29,4 +29,4 @@ class Turno_Estado(database.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<Turno_Estado {self.id}>"
+        return f"<TurnoEstado {self.id}>"
