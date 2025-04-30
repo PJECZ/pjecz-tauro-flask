@@ -5,18 +5,21 @@ Flask App
 from flask import Flask
 
 from config.settings import Settings
-from tauro.blueprints.autoridades.views import autoridades
+from tauro.blueprints.api_keys.views import api_keys
 from tauro.blueprints.bitacoras.views import bitacoras
-from tauro.blueprints.distritos.views import distritos
 from tauro.blueprints.entradas_salidas.views import entradas_salidas
 from tauro.blueprints.modulos.views import modulos
 from tauro.blueprints.permisos.views import permisos
 from tauro.blueprints.roles.views import roles
 from tauro.blueprints.sistemas.views import sistemas
 from tauro.blueprints.turnos.views import turnos
+from tauro.blueprints.turnos_estados.views import turnos_estados
+from tauro.blueprints.turnos_tipos.views import turnos_tipos
 from tauro.blueprints.unidades.views import unidades
+from tauro.blueprints.unidades_ventanillas.views import unidades_ventanillas
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios.views import usuarios
+from tauro.blueprints.usuarios_turnos_tipos.views import usuarios_turnos_tipos
 from tauro.blueprints.usuarios_roles.views import usuarios_roles
 from tauro.blueprints.ventanillas.views import ventanillas
 from tauro.extensions import csrf, database, login_manager, moment
@@ -31,17 +34,19 @@ def create_app():
     app.config.from_object(Settings())
 
     # Registrar blueprints
-    app.register_blueprint(autoridades)
+    app.register_blueprint(api_keys)
     app.register_blueprint(bitacoras)
-    app.register_blueprint(distritos)
     app.register_blueprint(entradas_salidas)
     app.register_blueprint(modulos)
     app.register_blueprint(permisos)
     app.register_blueprint(roles)
     app.register_blueprint(sistemas)
     app.register_blueprint(turnos)
-    app.register_blueprint(unidades)
+    app.register_blueprint(turnos_estados)
+    app.register_blueprint(turnos_tipos)
     app.register_blueprint(usuarios)
+    app.register_blueprint(usuarios_turnos_tipos)
+    app.register_blueprint(unidades_ventanillas)
     app.register_blueprint(usuarios_roles)
     app.register_blueprint(ventanillas)
 

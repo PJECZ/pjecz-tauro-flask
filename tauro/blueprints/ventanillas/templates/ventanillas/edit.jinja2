@@ -2,20 +2,18 @@
 {% import 'macros/form.jinja2' as f with context %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Editar Ventanilla {{ ventanilla.clave }}{% endblock %}
+{% block title %}Editar Ventanilla {{ ventanilla.nombre }}{% endblock %}
 
 {% block topbar_actions %}
-    {{ topbar.page('Editar ' + ventanilla.clave) }}
+    {{ topbar.page('Editar ' + ventanilla.nombre) }}
 {% endblock %}
 
 {% block content %}
     {% call f.card() %}
         {% set form_kwargs = {'ventanilla_id': ventanilla.id} %}
         {% call f.form_tag('ventanillas.edit', fid='ventanilla_form', **form_kwargs) %}
-            {% call f.form_group(form.clave) %}{% endcall %}
-            {% call f.form_group(form.unidad) %}{% endcall %}
-            {% call f.form_group(form.descripcion) %}{% endcall %}
-            {% call f.form_group(form.es_habilitada) %}{% endcall %}
+            {% call f.form_group(form.nombre) %}{% endcall %}
+            {% call f.form_group(form.es_activo) %}{% endcall %}
             {% call f.form_group(form.guardar) %}{% endcall %}
         {% endcall %}
     {% endcall %}

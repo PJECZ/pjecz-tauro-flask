@@ -14,9 +14,7 @@ from lib.datatables import get_datatable_parameters, output_datatable_json
 from lib.pwgen import generar_api_key, generar_contrasena
 from lib.safe_next_url import safe_next_url
 from lib.safe_string import CONTRASENA_REGEXP, EMAIL_REGEXP, TOKEN_REGEXP, safe_email, safe_message, safe_string
-from tauro.blueprints.autoridades.models import Autoridad
 from tauro.blueprints.bitacoras.models import Bitacora
-from tauro.blueprints.distritos.models import Distrito
 from tauro.blueprints.entradas_salidas.models import EntradaSalida
 from tauro.blueprints.modulos.models import Modulo
 from tauro.blueprints.permisos.models import Permiso
@@ -109,11 +107,6 @@ def datatable_json():
         consulta = consulta.filter(Usuario.estatus == request.form["estatus"])
     else:
         consulta = consulta.filter(Usuario.estatus == "A")
-    # Filtrar por autoridad_id u autoridad_id_diferente_a
-    if "autoridad_id" in request.form:
-        consulta = consulta.filter(Usuario.autoridad_id == request.form["autoridad_id"])
-    elif "autoridad_id_diferente_a" in request.form:
-        consulta = consulta.filter(Usuario.autoridad_id != request.form["autoridad_id_diferente_a"])
     # Filtrar por las columnas de texto de Usuario
     if "nombres" in request.form:
         consulta = consulta.filter(Usuario.nombres.contains(safe_string(request.form["nombres"])))
@@ -121,8 +114,6 @@ def datatable_json():
         consulta = consulta.filter(Usuario.apellido_paterno.contains(safe_string(request.form["apellido_paterno"])))
     if "apellido_materno" in request.form:
         consulta = consulta.filter(Usuario.apellido_materno.contains(safe_string(request.form["apellido_materno"])))
-    if "puesto" in request.form:
-        consulta = consulta.filter(Usuario.puesto.contains(safe_string(request.form["puesto"])))
     if "email" in request.form:
         consulta = consulta.filter(Usuario.email.contains(safe_email(request.form["email"], search_fragment=True)))
     # Ordenar y paginar
@@ -138,88 +129,10 @@ def datatable_json():
                     "url": url_for("usuarios.detail", usuario_id=resultado.id),
                 },
                 "nombre": resultado.nombre,
-                "puesto": resultado.puesto,
-                "autoridad": {
-                    "clave": resultado.autoridad.clave,
-                    "url": (
-                        url_for("autoridades.detail", autoridad_id=resultado.autoridad_id)
-                        if current_user.can_view("AUTORIDADES")
-                        else ""
-                    ),
-                },
             }
         )
     # Entregar JSON
     return output_datatable_json(draw, total, data)
-
-
-@usuarios.route("/usuarios/api_key_request/<int:usuario_id>", methods=["GET", "POST"])
-@login_required
-@permission_required(MODULO, Permiso.ADMINISTRAR)
-def request_api_key_json(usuario_id):
-    """Solicitar API Key"""
-
-    # Consultar usuario
-    usuario = Usuario.query.get_or_404(usuario_id)
-    if usuario.estatus != "A":
-        return {
-            "success": False,
-            "message": "El usuario no está activo",
-            "api_key": "",
-            "api_key_expiracion": "",
-        }
-
-    # Si se recibe action con clean, se va a limpiar
-    if "action" in request.form and request.form["action"] == "clean":
-        usuario.api_key = ""
-        usuario.api_key_expiracion = datetime(year=2000, month=1, day=1)
-        usuario.save()
-        mensaje = f"La API Key de {usuario.email} fue eliminada"
-        bitacora = Bitacora(
-            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
-            usuario=current_user,
-            descripcion=mensaje,
-            url=url_for("usuarios.detail", usuario_id=usuario.id),
-        )
-        bitacora.save()
-        return {
-            "success": True,
-            "message": mensaje,
-            "api_key": usuario.api_key,
-            "api_key_expiracion": usuario.api_key_expiracion,
-        }
-
-    # Si se recibe action con new, se va a crear una nueva
-    if "action" in request.form and request.form["action"] == "new":
-        if "days" in request.form:
-            days = int(request.form["days"])
-        else:
-            days = 90
-        usuario.api_key = generar_api_key(usuario.id, usuario.email)
-        usuario.api_key_expiracion = datetime.now() + timedelta(days=days)
-        usuario.save()
-        mensaje = f"Nueva API Key para {usuario.email} con expiración en {days} días"
-        bitacora = Bitacora(
-            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
-            usuario=current_user,
-            descripcion=mensaje,
-            url=url_for("usuarios.detail", usuario_id=usuario.id),
-        )
-        bitacora.save()
-        return {
-            "success": True,
-            "message": mensaje,
-            "api_key": usuario.api_key,
-            "api_key_expiracion": usuario.api_key_expiracion,
-        }
-
-    # Si no se recibe nada, entregar la actual
-    return {
-        "success": True,
-        "message": "Se ha entregado la API Key a la interfaz",
-        "api_key": usuario.api_key,
-        "api_key_expiracion": usuario.api_key_expiracion,
-    }
 
 
 @usuarios.route("/usuarios")
@@ -257,34 +170,6 @@ def detail(usuario_id):
     return render_template("usuarios/detail.jinja2", usuario=usuario)
 
 
-@usuarios.route("/usuarios/api_key/<int:usuario_id>")
-@login_required
-@permission_required(MODULO, Permiso.ADMINISTRAR)
-def view_api_key(usuario_id):
-    """Ver API Key"""
-
-    # Consultar usuario
-    usuario = Usuario.query.get_or_404(usuario_id)
-    if usuario.estatus != "A":
-        flash("El usuario no está activo.", "warning")
-        return redirect(url_for("usuarios.detail", usuario_id=usuario.id))
-
-    # Juntar los permisos por nivel
-    permisos_por_nivel = {1: [], 2: [], 3: [], 4: []}
-    for etiqueta, nivel in usuario.permisos.items():
-        permisos_por_nivel[nivel].append(etiqueta)
-
-    # Mostrar api_key.jinja2
-    return render_template(
-        "usuarios/api_key.jinja2",
-        usuario=usuario,
-        permisos_en_nivel_1=sorted(permisos_por_nivel[1]),
-        permisos_en_nivel_2=sorted(permisos_por_nivel[2]),
-        permisos_en_nivel_3=sorted(permisos_por_nivel[3]),
-        permisos_en_nivel_4=sorted(permisos_por_nivel[4]),
-    )
-
-
 @usuarios.route("/usuarios/nuevo", methods=["GET", "POST"])
 @login_required
 @permission_required(MODULO, Permiso.CREAR)
@@ -302,14 +187,10 @@ def new():
         # Guardar
         if es_valido:
             usuario = Usuario(
-                autoridad_id=form.autoridad.data,
                 email=email,
                 nombres=safe_string(form.nombres.data, save_enie=True),
                 apellido_paterno=safe_string(form.apellido_paterno.data, save_enie=True),
                 apellido_materno=safe_string(form.apellido_materno.data, save_enie=True),
-                puesto=safe_string(form.puesto.data),
-                api_key="",
-                api_key_expiracion=datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0),
                 contrasena=generar_contrasena(),
             )
             usuario.save()
@@ -322,17 +203,8 @@ def new():
             bitacora.save()
             flash(bitacora.descripcion, "success")
             return redirect(bitacora.url)
-    # Consultar el distrito por defecto con clave ND
-    distrito_por_defecto_id = 1
-    distrito_por_defecto = Distrito.query.filter_by(clave="ND").first()
-    if distrito_por_defecto is not None:
-        distrito_por_defecto_id = distrito_por_defecto.id
     # Entregar
-    return render_template(
-        "usuarios/new.jinja2",
-        form=form,
-        distrito_por_defecto_id=distrito_por_defecto_id,
-    )
+    return render_template("usuarios/new.jinja2", form=form)
 
 
 @usuarios.route("/usuarios/edicion/<int:usuario_id>", methods=["GET", "POST"])
@@ -353,12 +225,10 @@ def edit(usuario_id):
                 flash("La e-mail ya está en uso. Debe de ser único.", "warning")
         # Si es valido actualizar
         if es_valido:
-            usuario.autoridad_id = form.autoridad.data  # Combo select distrito-autoridad
             usuario.email = email
             usuario.nombres = safe_string(form.nombres.data, save_enie=True)
             usuario.apellido_paterno = safe_string(form.apellido_paterno.data, save_enie=True)
             usuario.apellido_materno = safe_string(form.apellido_materno.data, save_enie=True)
-            usuario.puesto = safe_string(form.puesto.data)
             usuario.save()
             bitacora = Bitacora(
                 modulo=Modulo.query.filter_by(nombre=MODULO).first(),
@@ -375,7 +245,6 @@ def edit(usuario_id):
     form.nombres.data = usuario.nombres
     form.apellido_paterno.data = usuario.apellido_paterno
     form.apellido_materno.data = usuario.apellido_materno
-    form.puesto.data = usuario.puesto
     return render_template("usuarios/edit.jinja2", form=form, usuario=usuario)
 
 

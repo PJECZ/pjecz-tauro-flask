@@ -18,7 +18,7 @@ from pydantic_settings import BaseSettings
 load_dotenv()
 
 PROJECT_ID = os.getenv("PROJECT_ID", "")  # Por defecto está vacío, esto significa estamos en modo local
-SERVICE_PREFIX = os.getenv("SERVICE_PREFIX", "pjecz_hercules_flask")
+SERVICE_PREFIX = os.getenv("SERVICE_PREFIX", "pjecz_tauro_flask")
 
 
 class Settings(BaseSettings):

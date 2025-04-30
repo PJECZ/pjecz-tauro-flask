@@ -59,8 +59,6 @@
                 <tr>
                     <th>Correo electrónico</th>
                     <th>Nombre completo</th>
-                    <th>Puesto</th>
-                    <th>Autoridad</th>
                 </tr>
             </thead>
         </table>
@@ -78,9 +76,7 @@
         configDTUsuarios['ajax']['data'] = {{ filtros }};
         configDTUsuarios['columns'] = [
             { data: "detalle" },
-            { data: "nombre" },
-            { data: "puesto" },
-            { data: "autoridad" }
+            { data: "nombre" }
         ];
         configDTUsuarios['columnDefs'] = [
             {
@@ -91,23 +87,13 @@
                 }
             },
             {
-                targets: [1, 2], // nombre, puesto
+                targets: 1, // nombre
                 data: null,
                 render: function(data, type, row, meta) {
                     if (data.length > 24) {
                         return '<span title="' + data + '">' + data.substring(0, 24) + '…</span>';
                     }
                     return data;
-                }
-            },
-            {
-                targets: 3, // autoridad
-                data: null,
-                render: function(data, type, row, meta) {
-                    if (data.url === "") {
-                        return data.clave;
-                    }
-                    return '<a href="' + data.url + '">' + data.clave + '</a>';
                 }
             }
         ];

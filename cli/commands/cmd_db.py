@@ -8,20 +8,23 @@ import sys
 import click
 from dotenv import load_dotenv
 
-from cli.commands.alimentar_autoridades import alimentar_autoridades
-from cli.commands.alimentar_distritos import alimentar_distritos, eliminar_distritos_sin_autoridades
 from cli.commands.alimentar_modulos import alimentar_modulos
 from cli.commands.alimentar_permisos import alimentar_permisos
 from cli.commands.alimentar_roles import alimentar_roles
 from cli.commands.alimentar_usuarios import alimentar_usuarios
 from cli.commands.alimentar_usuarios_roles import alimentar_usuarios_roles
-from cli.commands.respaldar_autoridades import respaldar_autoridades
-from cli.commands.respaldar_distritos import respaldar_distritos
+from cli.commands.alimentar_turnos_estados import alimentar_turnos_estados
+from cli.commands.alimentar_turnos_tipos import alimentar_turnos_tipos
 from cli.commands.respaldar_modulos import respaldar_modulos
 from cli.commands.respaldar_roles_permisos import respaldar_roles_permisos
 from cli.commands.respaldar_usuarios_roles import respaldar_usuarios_roles
+from cli.commands.respaldar_turnos_estados import respaldar_turnos_estados
+from cli.commands.respaldar_turnos_tipos import respaldar_turnos_tipos
 from tauro.app import create_app
 from tauro.extensions import database
+
+from tauro.blueprints.unidades.models import Unidad
+from tauro.blueprints.ventanillas.models import Ventanilla
 
 app = create_app()
 app.app_context().push()
@@ -56,11 +59,13 @@ def alimentar():
     alimentar_modulos()
     alimentar_roles()
     alimentar_permisos()
-    alimentar_distritos()
-    alimentar_autoridades()
-    eliminar_distritos_sin_autoridades()
+    # Alimentar unidades y ventanillas NO DEFINIDO
+    Unidad(clave="ND", nombre="NO DEFINIDO").save()
+    Ventanilla(nombre="NO DEFINIDO").save()
     alimentar_usuarios()
     alimentar_usuarios_roles()
+    alimentar_turnos_estados()
+    alimentar_turnos_tipos()
     click.echo("Termina alimentar.")
 
 
@@ -75,11 +80,11 @@ def reiniciar(ctx):
 @click.command()
 def respaldar():
     """Respaldar"""
-    respaldar_autoridades()
-    respaldar_distritos()
     respaldar_modulos()
     respaldar_roles_permisos()
     respaldar_usuarios_roles()
+    respaldar_turnos_estados()
+    respaldar_turnos_tipos()
     click.echo("Termina respaldar.")
 
 

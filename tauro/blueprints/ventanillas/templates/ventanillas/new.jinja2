@@ -11,9 +11,8 @@
 {% block content %}
     {% call f.card() %}
         {% call f.form_tag('ventanillas.new', fid='ventanilla_form') %}
-            {% call f.form_group(form.clave) %}{% endcall %}
-            {% call f.form_group(form.unidad) %}{% endcall %}
-            {% call f.form_group(form.descripcion) %}{% endcall %}
+            {% call f.form_group(form.nombre) %}{% endcall %}
+            {% call f.form_group(form.es_activo) %}{% endcall %}
             {% call f.form_group(form.guardar) %}{% endcall %}
         {% endcall %}
     {% endcall %}

@@ -22,16 +22,10 @@
         <div class="row">
             <div class="col">
                 <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosVentanilla.buscar(); return false;">
-                    <div class="col-4">
-                        <div class="form-floating">
-                            <input id="filtroClave" type="text" class="form-control" aria-label="Clave" style="text-transform: uppercase;">
-                            <label for="filtroClave">Clave</label>
-                        </div>
-                    </div>
                     <div class="col-6">
                         <div class="form-floating">
-                            <input id="filtroDescripcion" type="text" class="form-control" aria-label="Descripción" style="text-transform: uppercase;">
-                            <label for="filtroDescripcion">Descripción</label>
+                            <input id="filtroNombre" type="text" class="form-control" aria-label="Nombre" style="text-transform: uppercase;">
+                            <label for="filtroNombre">Nombre</label>
                         </div>
                     </div>
                     <div class="col-2 text-end">
@@ -45,9 +39,9 @@
         <table id="ventanillas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th>Clave</th>
-                    <th>Descripción</th>
-                    <th>Habilitada</th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Está Activa</th>
                 </tr>
             </thead>
         </table>
@@ -65,22 +59,21 @@
         configDataTable['ajax']['data'] = {{ filtros }};
         configDataTable['columns'] = [
             { data: 'detalle' },
-            { data: 'descripcion' },
-            { data: 'habilitada' }
+            { data: 'nombre' },
+            { data: 'es_activo' }
         ];
         configDataTable['columnDefs'] = [
             {
                 targets: 0, // detalle
                 data: null,
                 render: function(data, type, row, meta) {
-                    return '<a href="' + data.url + '">' + data.clave + '</a>';
+                    return '<a href="' + data.url + '">' + data.id + '</a>';
                 }
             }
         ];
         // Filtros ventanillas
         const filtrosVentanilla = new FiltrosDataTable('#ventanillas_datatable', configDataTable);
-        filtrosVentanilla.agregarInput('filtroClave', 'clave');
-        filtrosVentanilla.agregarInput('filtroDescripcion', 'descripcion');
+        filtrosVentanilla.agregarInput('filtroNombre', 'nombre');
         filtrosVentanilla.precargar();
     </script>
 {% endblock %}

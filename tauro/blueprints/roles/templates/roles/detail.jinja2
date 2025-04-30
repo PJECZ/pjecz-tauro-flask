@@ -111,7 +111,6 @@
                         <th>ID</th>
                         <th>Correo electrónico</th>
                         <th>Nombre completo</th>
-                        <th>Puesto</th>
                         <th>Estatus</th>
                     </tr>
                 </thead>
@@ -182,7 +181,6 @@
                 { data: "detalle" },
                 { data: "usuario" },
                 { data: "usuario_nombre" },
-                { data: "usuario_puesto" },
                 { data: "toggle_estatus" }
             ];
             configDTUsuariosRoles['columnDefs'] = [
@@ -205,14 +203,14 @@
                     }
                 },
                 {
-                    targets: [2, 3], // usuario_nombre, usuario_puesto
+                    targets: 2, // usuario_nombre
                     data: null,
                     render: function(data, type, row, meta) {
                         return (data.length > 32 ? data.substring(0, 32) + '…' : data);
                     }
                 },
                 {
-                    targets: 4, // toggle_estatus
+                    targets: 3, // toggle_estatus
                     data: null,
                     render: function(data, type, row, meta) {
                         if (data.url === '') return data.estatus;
