@@ -27,7 +27,7 @@ class Unidad(database.Model, UniversalMixin):
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos
-    # ventanillas: Mapped[List["Ventanilla"]] = relationship(back_populates="unidad")
+    unidades_ventanillas: Mapped[List["Unidad_Ventanilla"]] = relationship(back_populates="unidad")
     usuarios: Mapped[List["Usuario"]] = relationship(back_populates="unidad")
 
     @property

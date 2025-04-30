@@ -26,6 +26,7 @@ class Ventanilla(database.Model, UniversalMixin):
 
     # Hijos
     turnos: Mapped[List["Turno"]] = relationship(back_populates="ventanilla")
+    unidades_ventanillas: Mapped[List["Unidad_Ventanilla"]] = relationship(back_populates="ventanilla")
     usuarios: Mapped[List["Usuario"]] = relationship(back_populates="ventanilla")
 
     def __repr__(self):
