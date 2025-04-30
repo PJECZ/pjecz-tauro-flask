@@ -15,7 +15,7 @@ from tauro.blueprints.permisos.models import Permiso
 from tauro.blueprints.usuarios.decorators import permission_required
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 
-MODULO = "TURNOS_TIPOS"
+MODULO = "TURNOS TIPOS"
 
 turnos_tipos = Blueprint("turnos_tipos", __name__, template_folder="templates")
 

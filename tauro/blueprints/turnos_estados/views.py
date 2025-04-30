@@ -15,7 +15,7 @@ from tauro.blueprints.permisos.models import Permiso
 from tauro.blueprints.usuarios.decorators import permission_required
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 
-MODULO = "TURNOS_ESTADOS"
+MODULO = "TURNOS ESTADOS"
 
 turnos_estados = Blueprint("turnos_estados", __name__, template_folder="templates")
 
