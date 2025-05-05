@@ -1,0 +1,21 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Editar API Key {{ api_key.id | string }}{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Editar ' + api_key.id | string) }}
+{% endblock %}
+
+{% block content %}
+    {% call f.card() %}
+        {% set form_kwargs = {'api_key_id': api_key.id} %}
+        {% call f.form_tag('api_keys.edit', fid='api_key_form', **form_kwargs) %}
+            {% call f.form_group(form.api_key) %}{% endcall %}
+            {% call f.form_group(form.api_key_expiracion) %}{% endcall %}
+            {% call f.form_group(form.es_activo) %}{% endcall %}
+            {% call f.form_group(form.guardar) %}{% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}

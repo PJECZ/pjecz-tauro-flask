@@ -1,0 +1,35 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}API Key {{ api_key.id | string }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('API Key ' + api_key.id | string) %}
+        {{ topbar.button_previous('API Keys', url_for('api_keys.list_active')) }}
+        {% if current_user.can_edit('API KEYS') %}
+            {{ topbar.button_edit('Editar', url_for('api_keys.edit', api_key_id=api_key.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('API KEYS') %}
+            {% if api_key.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('api_keys.delete', api_key_id=api_key.id)) }}{% endif %}
+            {% if api_key.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('api_keys.recover', api_key_id=api_key.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=api_key.estatus) %}
+        {{ detail.label_value('API Key', api_key.api_key) }}
+        {{ detail.label_value('Fecha de Expiración', api_key.api_key_expiracion) }}
+        {{ detail.label_value('Activo', api_key.es_activo) }}
+        {{ detail.label_value('Creado', moment(api_key.creado, local=False).format('DD MMM YYYY HH:mm')) }}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('API KEYS') %}
+        {% if api_key.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar la API Key?') }}{% endif %}
+        {% if api_key.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar la API Key?') }}{% endif %}
+    {% endif %}
+{% endblock %}
