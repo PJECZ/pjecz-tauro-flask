@@ -10,7 +10,7 @@
             {{ topbar.button('Turnos Estados', url_for('turnos_estados.list_active'), 'mdi:rhombus-split') }}
         {% endif %}
         {% if current_user.can_view('TURNOS TIPOS') %}
-            {{ topbar.button('Turnos Tipos', '#', 'mdi:shape') }}
+            {{ topbar.button('Turnos Tipos', url_for('turnos_tipos.list_active'), 'mdi:shape') }}
         {% endif %}
         {% if current_user.can_admin('TURNOS') %}
             {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('turnos.list_inactive')) }}{% endif %}

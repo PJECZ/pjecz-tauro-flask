@@ -1,0 +1,20 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Editar Turno Tipo {{ turno_tipo.id | string }}{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Editar ' + turno_tipo.id | string) }}
+{% endblock %}
+
+{% block content %}
+    {% call f.card() %}
+        {% set form_kwargs = {'turno_tipo_id': turno_tipo.id} %}
+        {% call f.form_tag('turnos_tipos.edit', fid='turno_tipo_form', **form_kwargs) %}
+            {% call f.form_group(form.nombre) %}{% endcall %}
+            {% call f.form_group(form.es_activo) %}{% endcall %}
+            {% call f.form_group(form.guardar) %}{% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}

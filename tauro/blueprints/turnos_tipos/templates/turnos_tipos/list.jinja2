@@ -9,25 +9,25 @@
         {% if current_user.can_view('TURNOS') %}
             {{ topbar.button('Turnos', url_for('turnos.list_active'), 'mdi:ticket') }}
         {% endif %}
-        {% if current_user.can_view('TURNOS TIPOS') %}
-            {{ topbar.button('Turnos Tipos', url_for('turnos_tipos.list_active'), 'mdi:shape') }}
+        {% if current_user.can_view('TURNOS ESTADOS') %}
+            {{ topbar.button('Turnos Estados', url_for('turnos_estados.list_active'), 'mdi:rhombus-split') }}
         {% endif %}
-        {% if current_user.can_admin('TURNOS ESTADOS') %}
-            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('turnos_estados.list_inactive')) }}{% endif %}
-            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('turnos_estados.list_active')) }}{% endif %}
+        {% if current_user.can_admin('TURNOS TIPOS') %}
+            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('turnos_tipos.list_inactive')) }}{% endif %}
+            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('turnos_tipos.list_active')) }}{% endif %}
         {% endif %}
-        {% if current_user.can_insert('TURNOS ESTADOS') %}
-            {{ topbar.button_new('Nuevo Turno Estado', url_for('turnos_estados.new')) }}
+        {% if current_user.can_insert('TURNOS TIPOS') %}
+            {{ topbar.button_new('Nuevo Turno Tipo', url_for('turnos_tipos.new')) }}
         {% endif %}
     {% endcall %}
 {% endblock %}
 
 {% block content %}
     {% call list.card() %}
-        <!-- Filtros turnosEstados -->
+        <!-- Filtros turnosTipos -->
         <div class="row">
             <div class="col">
-                <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosTurnosEstados.buscar(); return false;">
+                <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosTurnosTipos.buscar(); return false;">
                     <div class="col-6">
                         <div class="form-floating">
                             <input id="filtroNombre" type="text" class="form-control" aria-label="Nombre" style="text-transform: uppercase;">
@@ -35,14 +35,14 @@
                         </div>
                     </div>
                     <div class="col-2 text-end">
-                        <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosTurnosEstados.buscar(); return false;" id="button-buscar"><span class="iconify" data-icon="mdi:magnify"></span></button>
-                        <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosTurnosEstados.limpiar();" id="button-limpiar"><span class="iconify" data-icon="mdi:broom"></span></button>
+                        <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosTurnosTipos.buscar(); return false;" id="button-buscar"><span class="iconify" data-icon="mdi:magnify"></span></button>
+                        <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosTurnosTipos.limpiar();" id="button-limpiar"><span class="iconify" data-icon="mdi:broom"></span></button>
                     </div>
                 </form>
             </div>
         </div>
-        <!-- DataTable turnosEstados -->
-        <table id="turnos_estados_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+        <!-- DataTable turnosTipos -->
+        <table id="turnos_tipos_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -57,10 +57,10 @@
     <script src="/static/js/datatables-constructor.js"></script>
     <script src="/static/js/datatables-filtros.js"></script>
     <script>
-        // DataTable turnosEstados
+        // DataTable turnosTipos
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDataTable = constructorDataTable.config();
-        configDataTable['ajax']['url'] = '/turnos_estados/datatable_json';
+        configDataTable['ajax']['url'] = '/turnos_tipos/datatable_json';
         configDataTable['ajax']['data'] = {{ filtros }};
         configDataTable['columns'] = [
             { data: 'detalle' },
@@ -75,9 +75,9 @@
                 }
             }
         ];
-        // Filtros turnosEstados
-        const filtrosTurnosEstados = new FiltrosDataTable('#turnos_estados_datatable', configDataTable);
-        filtrosTurnosEstados.agregarInput('filtroNombre', 'nombre');
-        filtrosTurnosEstados.precargar();
+        // Filtros turnosTipos
+        const filtrosTurnosTipos = new FiltrosDataTable('#turnos_tipos_datatable', configDataTable);
+        filtrosTurnosTipos.agregarInput('filtroNombre', 'nombre');
+        filtrosTurnosTipos.precargar();
     </script>
 {% endblock %}
