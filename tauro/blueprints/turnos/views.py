@@ -126,7 +126,7 @@ def new():
             usuario=usuario_no_definido,
             ventanilla=ventanilla_no_definido,
             numero=numero_turno + 1,
-            tipo=form.tipo.data,
+            turno_tipo=form.turno_tipo.data,
             inicio=datetime.now(),
             estado="EN_ESPERA",
             comentarios=safe_string(form.comentarios.data),
