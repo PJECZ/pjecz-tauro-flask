@@ -22,6 +22,7 @@
     {% call detail.card(estatus=unidad.estatus) %}
         {{ detail.label_value_big('Clave', unidad.clave) }}
         {{ detail.label_value('Nombre', unidad.nombre) }}
+        {{ detail.label_value('Activo', unidad.es_activo) }}
     {% endcall %}
 {% endblock %}
 

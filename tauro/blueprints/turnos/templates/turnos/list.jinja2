@@ -6,6 +6,12 @@
 
 {% block topbar_actions %}
     {% call topbar.page_buttons(titulo) %}
+        {% if current_user.can_view('TURNOS ESTADOS') %}
+            {{ topbar.button('Turnos Estados', url_for('turnos_estados.list_active'), 'mdi:rhombus-split') }}
+        {% endif %}
+        {% if current_user.can_view('TURNOS TIPOS') %}
+            {{ topbar.button('Turnos Tipos', url_for('turnos_tipos.list_active'), 'mdi:shape') }}
+        {% endif %}
         {% if current_user.can_admin('TURNOS') %}
             {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('turnos.list_inactive')) }}{% endif %}
             {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('turnos.list_active')) }}{% endif %}
@@ -48,7 +54,7 @@
                     <th>Número</th>
                     <th>Tipo</th>
                     <th>Ventanilla</th>
-                    <th>Estatus</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
         </table>
