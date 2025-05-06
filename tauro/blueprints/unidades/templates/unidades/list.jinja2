@@ -47,6 +47,7 @@
                 <tr>
                     <th>Clave</th>
                     <th>Nombre</th>
+                    <th>Activo</th>
                 </tr>
             </thead>
         </table>
@@ -64,7 +65,8 @@
         configDataTable['ajax']['data'] = {{ filtros }};
         configDataTable['columns'] = [
             { data: 'detalle' },
-            { data: 'nombre' }
+            { data: 'nombre' },
+            { data: 'es_activo' }
         ];
         configDataTable['columnDefs'] = [
             {

@@ -64,6 +64,7 @@ def datatable_json():
                     "url": url_for("unidades.detail", unidad_id=resultado.id),
                 },
                 "nombre": resultado.nombre,
+                "es_activo": resultado.es_activo,
             }
         )
     # Entregar JSON
@@ -115,6 +116,7 @@ def new():
         unidad = Unidad(
             clave=safe_clave(form.clave.data),
             nombre=safe_string(form.nombre.data),
+            es_activo=form.es_activo.data,
         )
         unidad.save()
         bitacora = Bitacora(
@@ -148,6 +150,7 @@ def edit(unidad_id):
         if es_valido:
             unidad.clave = safe_clave(form.clave.data)
             unidad.nombre = safe_string(form.nombre.data)
+            unidad.es_activo = form.es_activo.data
             unidad.save()
             bitacora = Bitacora(
                 modulo=Modulo.query.filter_by(nombre=MODULO).first(),
@@ -160,6 +163,7 @@ def edit(unidad_id):
             return redirect(bitacora.url)
     form.clave.data = unidad.clave
     form.nombre.data = unidad.nombre
+    form.es_activo.data = unidad.es_activo
     return render_template("unidades/edit.jinja2", form=form, unidad=unidad)
 
 

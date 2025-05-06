@@ -46,6 +46,7 @@ def create_app():
     app.register_blueprint(turnos_tipos)
     app.register_blueprint(usuarios)
     app.register_blueprint(usuarios_turnos_tipos)
+    app.register_blueprint(unidades)
     app.register_blueprint(unidades_ventanillas)
     app.register_blueprint(usuarios_roles)
     app.register_blueprint(ventanillas)
