@@ -6,6 +6,7 @@ from flask import Flask
 
 from config.settings import Settings
 from tauro.blueprints.api_keys.views import api_keys
+from tauro.blueprints.api_v1.resources import api_v1
 from tauro.blueprints.bitacoras.views import bitacoras
 from tauro.blueprints.entradas_salidas.views import entradas_salidas
 from tauro.blueprints.modulos.views import modulos
@@ -19,8 +20,8 @@ from tauro.blueprints.unidades.views import unidades
 from tauro.blueprints.unidades_ventanillas.views import unidades_ventanillas
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios.views import usuarios
-from tauro.blueprints.usuarios_turnos_tipos.views import usuarios_turnos_tipos
 from tauro.blueprints.usuarios_roles.views import usuarios_roles
+from tauro.blueprints.usuarios_turnos_tipos.views import usuarios_turnos_tipos
 from tauro.blueprints.ventanillas.views import ventanillas
 from tauro.extensions import csrf, database, login_manager, moment
 
@@ -50,6 +51,10 @@ def create_app():
     app.register_blueprint(unidades_ventanillas)
     app.register_blueprint(usuarios_roles)
     app.register_blueprint(ventanillas)
+
+    # Registrar blueprints de API sin csrf
+    app.register_blueprint(api_v1)
+    csrf.exempt(api_v1)
 
     # Inicializar extensiones
     extensions(app)
