@@ -112,6 +112,7 @@ class GenerarTurno(Resource):
             id=nuevo_turno.id,
             numero=nuevo_turno.numero,
             unidad_id=nuevo_turno.unidad_id,
+            turno_estado_nombre=nuevo_turno.turno_estado_nombre,
             comentarios=nuevo_turno.comentarios,
         ).model_dump()
         # Entregar JSON
