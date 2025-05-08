@@ -2,8 +2,9 @@
 Tareas en el fondo
 """
 
-from hercules.blueprints.tareas.models import Tarea
 from rq import get_current_job
+
+from tauro.blueprints.tareas.models import Tarea
 
 
 def set_task_progress(progress: int, message: str, archivo: str = "", url: str = "") -> None:

@@ -1,5 +1,5 @@
 """
-turnos, modelos
+Turnos, modelos
 """
 
 from datetime import datetime
@@ -38,6 +38,11 @@ class Turno(database.Model, UniversalMixin):
     termino: Mapped[Optional[datetime]] = mapped_column(DateTime)
     unidad_id: Mapped[Optional[int]]
     comentarios: Mapped[Optional[str]] = mapped_column(String(512))
+
+    @property
+    def turno_estado_nombre(self) -> str:
+        """Nombre del estado del turno"""
+        return self.turno_estado.nombre
 
     def __repr__(self):
         """Representación"""
