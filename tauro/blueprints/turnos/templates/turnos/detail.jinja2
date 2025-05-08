@@ -9,7 +9,7 @@
     {% call topbar.page_buttons('Turno ' + turno.numero | string) %}
         {{ topbar.button_previous('Turnos', url_for('turnos.list_active')) }}
         {% if current_user.can_edit('TURNOS') %}
-            {{ topbar.button_edit('Editar', url_for('turnos.edit', turno_id=turno.id)) }}
+            {# {{ topbar.button_edit('Editar', url_for('turnos.edit', turno_id=turno.id)) }} #}
         {% endif %}
         {% if current_user.can_admin('TURNOS') %}
             {% if turno.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('turnos.delete', turno_id=turno.id)) }}{% endif %}
@@ -24,10 +24,10 @@
         {{ detail.label_value('ID', turno.id) }}
         {{ detail.label_value('Usuario', turno.usuario.nombre, url_for("usuarios.detail", usuario_id=turno.usuario.id)) }}
         {{ detail.label_value('Ventanilla', turno.ventanilla.clave_descripcion, url_for("ventanillas.detail", ventanilla_id=turno.ventanilla.id)) }}
-        {{ detail.label_value('Tipo', turno.tipo) }}
+        {{ detail.label_value('Tipo', turno.turno_tipo.nombre) }}
         {{ detail.label_value('Inicio', moment(turno.inicio, local=False).format('DD MMM YYYY HH:mm')) }}
         {{ detail.label_value('Término', moment(turno.termino, local=False).format('DD MMM YYYY HH:mm')) }}
-        {{ detail.label_value('Estado', turno.estado) }}
+        {{ detail.label_value('Estado', turno.turno_estado.nombre) }}
         {{ detail.label_value('Comentarios', turno.comentarios) }}
     {% endcall %}
 {% endblock %}
