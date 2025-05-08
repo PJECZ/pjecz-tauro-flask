@@ -39,6 +39,11 @@ class Turno(database.Model, UniversalMixin):
     unidad_id: Mapped[Optional[int]]
     comentarios: Mapped[Optional[str]] = mapped_column(String(512))
 
+    @property
+    def turno_estado_nombre(self) -> str:
+        """Nombre del estado del turno"""
+        return self.turno_estado.nombre
+
     def __repr__(self):
         """Representación"""
         return f"<Turno {self.id}>"

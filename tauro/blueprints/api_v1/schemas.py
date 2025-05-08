@@ -19,6 +19,7 @@ class TurnoSchemaOut(BaseModel):
     id: int
     numero: int
     unidad_id: int | None
+    turno_estado_nombre: str
     comentarios: str | None
     model_config = ConfigDict(from_attributes=True)
 
