@@ -19,6 +19,9 @@ from tauro.blueprints.turnos.forms import TurnoForm
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.ventanillas.models import Ventanilla
 
+from tauro.blueprints.turnos_tipos.models import TurnoTipo
+from tauro.blueprints.turnos_estados.models import TurnoEstado
+
 MODULO = "TURNOS"
 
 turnos = Blueprint("turnos", __name__, template_folder="templates")
@@ -40,15 +43,21 @@ def datatable_json():
     consulta = Turno.query
     # Primero filtrar por columnas propias
     if "estatus" in request.form:
-        consulta = consulta.filter_by(estatus=request.form["estatus"])
+        consulta = consulta.filter(Turno.estatus == request.form["estatus"])
     else:
-        consulta = consulta.filter_by(estatus="A")
-    # if "persona_id" in request.form:
-    #     consulta = consulta.filter_by(persona_id=request.form["persona_id"])
+        consulta = consulta.filter(Turno.estatus == "A")
+    if "numero" in request.form:
+        numero = safe_string(request.form["numero"])
+        if numero.isnumeric():
+            consulta = consulta.filter(Turno.numero == numero)
+    if "turno_tipo_id" in request.form:
+        consulta = consulta.filter(Turno.turno_tipo_id == request.form["turno_tipo_id"])
+    if "turno_estado_id" in request.form:
+        consulta = consulta.filter(Turno.turno_estado_id == request.form["turno_estado_id"])
     # Luego filtrar por columnas de otras tablas
-    # if "persona_rfc" in request.form:
-    #     consulta = consulta.join(Persona)
-    #     consulta = consulta.filter(Persona.rfc.contains(safe_rfc(request.form["persona_rfc"], search_fragment=True)))
+    # if "turno_tipo_id" in request.form:
+    #     consulta = consulta.join(TurnoTipo)
+    #     consulta = consulta.filter(TurnoTipo.rfc.contains(safe_rfc(request.form["persona_rfc"], search_fragment=True)))
     # Ordenar y paginar
     registros = consulta.order_by(Turno.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
@@ -61,9 +70,10 @@ def datatable_json():
                     "numero": f"{resultado.numero}".zfill(3),
                     "url": url_for("turnos.detail", turno_id=resultado.id),
                 },
-                "tipo": resultado.tipo,
-                "estado": resultado.estado,
-                "ventanilla": resultado.ventanilla.clave,
+                "fecha_hora": resultado.creado.strftime("%Y/%m/%d - %H:%M %p"),
+                "tipo": resultado.turno_tipo.nombre,
+                "estado": resultado.turno_estado.nombre,
+                "ventanilla": resultado.ventanilla.nombre,
             }
         )
     # Entregar JSON
@@ -77,6 +87,8 @@ def list_active():
         "turnos/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Turnos",
+        turnos_tipos=TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoTipo.nombre).all(),
+        turnos_estados=TurnoEstado.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoEstado.nombre).all(),
         estatus="A",
     )
 
@@ -88,6 +100,8 @@ def list_inactive():
     return render_template(
         "turnos/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
+        turnos_tipos=TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoTipo.nombre).all(),
+        turnos_estados=TurnoEstado.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoEstado.nombre).all(),
         titulo="Turnos inactivos",
         estatus="B",
     )
