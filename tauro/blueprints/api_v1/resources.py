@@ -27,11 +27,55 @@ class HelloWorld(Resource):
         return {"hello": "world"}
 
 
-class Turnos(Resource):
-    """Obtener los turnos"""
+class ConsultarVentanilla(Resource):
+    """Consultar ventanilla del usuario"""
 
     def get(self):
-        """Obtener los turnos"""
+        """Consultar ventanilla del usuario"""
+        # Entregar
+        # - ventanilla
+        # - tipos de turnos del usuario
+        # - nombre completo del usuario
+        # - ultimo turno
+        return ResponseSchema(
+            success=True,
+            message="Se ha consultado la ventanilla",
+            data=None,
+        ).model_dump()
+
+
+class CambiarTurnoEstado(Resource):
+    """Cambiar estado del turno"""
+
+    def post(self):
+        """Cambiar estado del turno"""
+        # Recibir
+        # - id del turno
+        # - nuevo estado
+        return ResponseSchema(
+            success=True,
+            message="Se ha cambiado el estado del turno",
+            data=None,
+        ).model_dump()
+
+
+class TomarTurno(Resource):
+    """Tomar un turno"""
+
+    def get(self):
+        """Tomar un turno"""
+        return ResponseSchema(
+            success=True,
+            message="Se ha tomado el turno",
+            data=None,
+        ).model_dump()
+
+
+class ConsultarTurnos(Resource):
+    """Consultar los turnos"""
+
+    def get(self, unidad_id=None):
+        """Consultar los turnos"""
         # Consultar turnos activos
         turnos = Turno.query.order_by(Turno.id.desc()).all()
         # Serializar
@@ -39,13 +83,13 @@ class Turnos(Resource):
         # Entregar JSON
         return ResponseSchema(
             success=True,
-            message="Turnos obtenidos",
+            message="Se han consultado los turnos",
             data=turnos_serializados,
         ).model_dump()
 
 
-class GenerarTurno(Resource):
-    """Generar nuevo turno"""
+class CrearTurno(Resource):
+    """Crear un turno"""
 
     def post(self):
         """Generar nuevo turno"""
@@ -123,39 +167,23 @@ class GenerarTurno(Resource):
         ).model_dump()
 
 
-class DarBajaTurno(Resource):
-    """Dar de baja turno"""
-
-    def get(self, turno_id):
-        """Dar de baja turno"""
-        # Consultar turno
-        turno = Turno.query.get(turno_id)
-        if not turno:
-            return ResponseSchema(
-                success=False,
-                message="Turno no encontrado",
-            ).model_dump()
-        # Dar de baja
-        turno.estatus = "B"
-        turno.save()
-        # Entregar JSON
-        return ResponseSchema(
-            success=True,
-            message="Turno dado de baja",
-        ).model_dump()
+class ConsultarVentanillasActivas(Resource):
+    """Consultar ventanillas activas"""
 
 
-class TramitarTurno(Resource):
-    """Tramitar turno (Tomar turno por parte de los usuarios internos)"""
+class ConsultarTurnosTipos(Resource):
+    """Consultar tipos de turnos"""
 
 
-class TerminarTurno(Resource):
-    """Terminar turno"""
+class ActualizarUsuario(Resource):
+    """Actualizar usuario"""
 
 
 api.add_resource(HelloWorld, "/hello")
-api.add_resource(Turnos, "/turnos")
-api.add_resource(GenerarTurno, "/turnos/generar")
-api.add_resource(DarBajaTurno, "/turnos/baja")
-api.add_resource(TramitarTurno, "/turnos/tramitar")
-api.add_resource(TerminarTurno, "/turnos/terminar")
+api.add_resource(ConsultarVentanilla, "/ventanilla")
+api.add_resource(CambiarTurnoEstado, "/turnos/cambiar_estado")
+api.add_resource(TomarTurno, "/turnos/tomar")
+api.add_resource(ConsultarTurnos, "/turnos")
+api.add_resource(ConsultarVentanillasActivas, "/ventanillas/consultar_activas")
+api.add_resource(ConsultarTurnosTipos, "/turnos_tipos")
+api.add_resource(ActualizarUsuario, "/usuarios/actualizar")
