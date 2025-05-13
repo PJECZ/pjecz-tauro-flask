@@ -47,7 +47,7 @@ class VentanillaUsuarioSchemaOut(BaseModel):
 class OneVentanillaUsuarioSchemaOut(ResponseSchema):
     """Esquema para entregar una ventanilla de un usuario"""
 
-    data: VentanillaUsuarioSchemaOut
+    data: VentanillaUsuarioSchemaOut | None = None
 
 
 class TurnoSchemaIn(BaseModel):
@@ -61,7 +61,20 @@ class TurnoSchemaIn(BaseModel):
 class OneTurnoSchemaOut(ResponseSchema):
     """Esquema para entregar un turno ya creado"""
 
-    data: TurnoSchemaOut
+    data: TurnoSchemaOut | None = None
+
+
+class ListTurnoSchemaOut(ResponseSchema):
+    """Esquema para entregar un turno ya creado"""
+
+    data: list[TurnoSchemaOut] | None = None
+
+
+class TurnoEstadoIn(BaseModel):
+    """Esquema para cambiar el estado de un turno"""
+
+    turno_id: int
+    turno_estado_nombre: str
 
 
 class VentanillaActivaOut(BaseModel):

@@ -18,6 +18,8 @@ from tauro.blueprints.ventanillas.models import Ventanilla
 
 
 class CrearTurno(Resource):
+    """Crear un nuevo turno"""
+
     @token_required
     def post(self) -> OneTurnoSchemaOut:
         """Crear un turno"""
@@ -28,7 +30,7 @@ class CrearTurno(Resource):
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
-                message="Usuario no encontrado o email duplicado",
+                message="Usuario no encontrado",
             ).model_dump()
         # Recibir y validar TurnoSchemaIn
         payload = request.get_json()
@@ -39,7 +41,7 @@ class CrearTurno(Resource):
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
-                message="Tipo de turno no encontrado o nombre duplicado",
+                message="Tipo de turno no encontrado",
             ).model_dump()
         # Consultar la unidad
         try:
@@ -47,7 +49,7 @@ class CrearTurno(Resource):
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
-                message="Unidad no encontrada o clave duplicada",
+                message="Unidad no encontrada",
             ).model_dump()
         # Consultar el estado de turno "EN ESPERA"
         try:
@@ -55,7 +57,7 @@ class CrearTurno(Resource):
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
-                message="Estado de turno no encontrado o nombre duplicado",
+                message="Estado de turno no encontrado",
             ).model_dump()
         # Consultar la ventanilla NO DEFINIDO
         try:
@@ -63,7 +65,7 @@ class CrearTurno(Resource):
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
-                message="Ventanilla no encontrada o nombre duplicado",
+                message="Ventanilla no encontrada",
             ).model_dump()
         # Definir el numero de turno
         numero = Turno.query.count() + 1
