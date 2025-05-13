@@ -9,6 +9,7 @@ from tauro.blueprints.api_v1.endpoints.autenticar import Authenticate
 from tauro.blueprints.api_v1.endpoints.consultar_turnos_tipos import ConsultarTurnosTipos
 from tauro.blueprints.api_v1.endpoints.consultar_ventanilla import ConsultarVentanilla
 from tauro.blueprints.api_v1.endpoints.consultar_ventanillas_activas import ConsultarVentanillasActivas
+from tauro.blueprints.api_v1.endpoints.crear_turno import CrearTurno
 
 api_v1 = Blueprint("api_v1", __name__, url_prefix="/api/v1")
 
@@ -24,12 +25,14 @@ class HelloWorld(Resource):
 
 api.add_resource(HelloWorld, "/hello")
 api.add_resource(Authenticate, "/token")
+api.add_resource(ConsultarTurnosTipos, "/turnos_tipos")
+api.add_resource(ConsultarVentanillasActivas, "/ventanillas/consultar_activas")
 api.add_resource(ConsultarVentanilla, "/ventanilla")
+api.add_resource(CrearTurno, "/turnos/crear")
+
 # api.add_resource(CambiarTurnoEstado, "/turnos/cambiar_estado")
 # api.add_resource(TomarTurno, "/turnos/tomar")
 # api.add_resource(ConsultarTurnos, "/turnos")
-api.add_resource(ConsultarVentanillasActivas, "/ventanillas/consultar_activas")
-api.add_resource(ConsultarTurnosTipos, "/turnos_tipos")
 # api.add_resource(ActualizarUsuario, "/usuarios/actualizar")
 
 

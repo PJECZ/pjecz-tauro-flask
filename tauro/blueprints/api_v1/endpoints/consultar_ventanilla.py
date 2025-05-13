@@ -20,8 +20,8 @@ class ConsultarVentanilla(Resource):
     @token_required
     def get(self) -> OneVentanillaUsuarioSchemaOut:
         """Consultar ventanilla del usuario"""
-        username = g.current_user
         # Consultar el usuario
+        username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).one()
         except (MultipleResultsFound, NoResultFound):
