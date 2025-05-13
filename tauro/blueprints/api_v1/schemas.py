@@ -16,6 +16,17 @@ class ResponseSchema(BaseModel):
     data: dict | list | None = None
 
 
+class TokenSchema(BaseModel):
+    """Esquema para entregar el token"""
+
+    success: bool
+    message: str
+    access_token: str | None = None
+    token_type: str | None = None
+    expires_in: int | None = None
+    username: str | None = None
+
+
 class TurnoSchemaOut(BaseModel):
     """Esquema para entregar un turno"""
 
