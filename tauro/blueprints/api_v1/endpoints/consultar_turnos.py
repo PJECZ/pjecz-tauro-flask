@@ -5,7 +5,6 @@ API v1 Endpoint: Consultar Turnos
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from lib.safe_string import safe_string
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import ListTurnoSchemaOut, TurnoSchemaOut
 from tauro.blueprints.turnos.models import Turno
