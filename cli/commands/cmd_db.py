@@ -27,9 +27,6 @@ from cli.commands.respaldar_ventanillas import respaldar_ventanillas
 from tauro.app import create_app
 from tauro.extensions import database
 
-from tauro.blueprints.unidades.models import Unidad
-from tauro.blueprints.ventanillas.models import Ventanilla
-
 app = create_app()
 app.app_context().push()
 database.app = app
