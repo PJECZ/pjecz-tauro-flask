@@ -7,7 +7,18 @@ from flask_restful import Api, Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from lib.safe_string import safe_string
-from tauro.blueprints.api_v1.schemas import ResponseSchema, TurnoSchemaIn, TurnoSchemaOut
+from tauro.blueprints.api_v1.schemas import (
+    OneTurnoSchemaOut,
+    OneVentanillaUsuarioSchemaOut,
+    ResponseSchema,
+    TiposTurnosOut,
+    TipoTurnoOut,
+    TurnoSchemaIn,
+    TurnoSchemaOut,
+    VentanillaActivaOut,
+    VentanillasActivasOut,
+    VentanillaUsuarioSchemaOut,
+)
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -168,11 +179,37 @@ class CrearTurno(Resource):
 
 
 class ConsultarVentanillasActivas(Resource):
-    """Consultar ventanillas activas"""
+    """Consultar las ventanillas activas"""
+
+    def get(self) -> VentanillasActivasOut:
+        """Consultar las ventanillas activas"""
+        # Consultar
+        ventanillas = Ventanilla.query.filter_by(es_activo=True).order_by(Ventanilla.nombre).all()
+        # Serializar
+        data = [VentanillaActivaOut(id=ventanilla.id, nombre=ventanilla.nombre) for ventanilla in ventanillas]
+        # Entregar JSON
+        return VentanillasActivasOut(
+            success=True,
+            message="Se han consultado las ventanillas activas",
+            data=data,
+        ).model_dump()
 
 
 class ConsultarTurnosTipos(Resource):
     """Consultar tipos de turnos"""
+
+    def get(self) -> TiposTurnosOut:
+        """Consultar tipos de turnos"""
+        # Consultar
+        turnos_tipos = TurnoTipo.query.filter_by(es_activo=True).order_by(TurnoTipo.nombre).all()
+        # Serializar
+        data = [TipoTurnoOut(nombre=turno_tipo.nombre) for turno_tipo in turnos_tipos]
+        # Entregar JSON
+        return TiposTurnosOut(
+            success=True,
+            message="Se han consultado los tipos de turnos",
+            data=data,
+        ).model_dump()
 
 
 class ActualizarUsuario(Resource):

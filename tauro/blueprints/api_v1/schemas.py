@@ -2,7 +2,10 @@
 API v1 Schemas
 """
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
+
+# ConfigDict
+# model_config = ConfigDict(from_attributes=True)
 
 
 class ResponseSchema(BaseModel):
@@ -14,31 +17,62 @@ class ResponseSchema(BaseModel):
 
 
 class TurnoSchemaOut(BaseModel):
-    """Esquema para entregar un Turno"""
+    """Esquema para entregar un turno"""
 
     id: int
     numero: int
-    unidad_id: int | None
-    turno_estado_nombre: str
     comentarios: str | None
-    model_config = ConfigDict(from_attributes=True)
+
+
+class VentanillaUsuarioSchemaOut(BaseModel):
+    """Esquema para entregar una ventanilla de un usuario"""
+
+    nombre: str
+    turnos_tipos_nombres: list[str] | None
+    usuario_nombre_completo: str
+    ultimo_turno: TurnoSchemaOut | None
+
+
+class OneVentanillaUsuarioSchemaOut(ResponseSchema):
+    """Esquema para entregar una ventanilla de un usuario"""
+
+    data: VentanillaUsuarioSchemaOut
 
 
 class TurnoSchemaIn(BaseModel):
-    """Esquema para generar un nuevo turno"""
+    """Esquema para crear un turno"""
 
-    usuario_email: str
     turno_tipo_nombre: str
     unidad_clave: str
     comentarios: str | None
 
 
-class TomarTurnoSchemaIn(BaseModel):
-    """Esquema para tomar un turno"""
+class OneTurnoSchemaOut(ResponseSchema):
+    """Esquema para entregar un turno ya creado"""
 
-    usuario_email: str
-    turno_estado_nombre: str
-    turno_tipo_nombre: str
-    ventanilla_id: int
-    unidad_id: int | None
-    comentarios: str | None
+    data: TurnoSchemaOut
+
+
+class VentanillaActivaOut(BaseModel):
+    """Esquema para entregar una ventanilla activa"""
+
+    id: int
+    nombre: str
+
+
+class VentanillasActivasOut(ResponseSchema):
+    """Esquema para entregar una lista de ventanillas activas"""
+
+    data: list[VentanillaActivaOut]
+
+
+class TipoTurnoOut(BaseModel):
+    """Esquema para entregar un tipo de turno"""
+
+    nombre: str
+
+
+class TiposTurnosOut(ResponseSchema):
+    """Esquema para entregar una lista de tipos de turnos"""
+
+    data: list[TipoTurnoOut]
