@@ -100,3 +100,10 @@ class TiposTurnosOut(ResponseSchema):
     """Esquema para entregar una lista de tipos de turnos"""
 
     data: list[TipoTurnoOut]
+
+
+class ActualizarUsuarioSchemaIn(BaseModel):
+    """Esquema para actualizar un usuario"""
+
+    ventanilla_id: int
+    turnos_tipos_nombres: list[str]
