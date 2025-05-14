@@ -26,18 +26,18 @@ class CrearTurno(Resource):
         # Consultar el usuario
         username = g.current_user
         try:
-            usuario = Usuario.query.filter_by(email=username).one()
+            usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
-        # Recibir y validar TurnoSchemaIn
+        # Recibir y validar el payload
         payload = request.get_json()
         turno_in = TurnoSchemaIn.model_validate(payload)
         # Consultar el tipo de turno
         try:
-            turno_tipo = TurnoTipo.query.filter_by(nombre=turno_in.turno_tipo_nombre).one()
+            turno_tipo = TurnoTipo.query.filter_by(nombre=turno_in.turno_tipo_nombre).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
@@ -45,7 +45,7 @@ class CrearTurno(Resource):
             ).model_dump()
         # Consultar la unidad
         try:
-            unidad = Unidad.query.filter_by(clave=turno_in.unidad_clave).one()
+            unidad = Unidad.query.filter_by(clave=turno_in.unidad_clave).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
@@ -53,7 +53,7 @@ class CrearTurno(Resource):
             ).model_dump()
         # Consultar el estado de turno "EN ESPERA"
         try:
-            turno_estado = TurnoEstado.query.filter_by(nombre="EN ESPERA").one()
+            turno_estado = TurnoEstado.query.filter_by(nombre="EN ESPERA").filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
@@ -61,7 +61,7 @@ class CrearTurno(Resource):
             ).model_dump()
         # Consultar la ventanilla NO DEFINIDO
         try:
-            ventanilla = Ventanilla.query.filter_by(nombre="NO DEFINIDO").one()
+            ventanilla = Ventanilla.query.filter_by(nombre="NO DEFINIDO").filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,

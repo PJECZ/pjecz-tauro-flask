@@ -16,12 +16,10 @@ class ConsultarVentanillasActivas(Resource):
     def get(self) -> VentanillasActivasOut:
         """Consultar las ventanillas activas"""
         # Consultar
-        ventanillas = Ventanilla.query.filter_by(es_activo=True).order_by(Ventanilla.nombre).all()
-        # Serializar
-        data = [VentanillaActivaOut(id=ventanilla.id, nombre=ventanilla.nombre) for ventanilla in ventanillas]
+        ventanillas = Ventanilla.query.filter_by(es_activo=True).filter_by(estatus="A").order_by(Ventanilla.nombre).all()
         # Entregar JSON
         return VentanillasActivasOut(
             success=True,
             message="Se han consultado las ventanillas activas",
-            data=data,
+            data=[VentanillaActivaOut(id=ventanilla.id, nombre=ventanilla.nombre) for ventanilla in ventanillas],
         ).model_dump()
