@@ -16,12 +16,10 @@ class ConsultarTurnosTipos(Resource):
     def get(self) -> TiposTurnosOut:
         """Consultar tipos de turnos"""
         # Consultar
-        turnos_tipos = TurnoTipo.query.filter_by(es_activo=True).order_by(TurnoTipo.nombre).all()
-        # Serializar
-        data = [TipoTurnoOut(nombre=turno_tipo.nombre) for turno_tipo in turnos_tipos]
+        turnos_tipos = TurnoTipo.query.filter_by(es_activo=True).filter_by(estatus="A").order_by(TurnoTipo.nombre).all()
         # Entregar JSON
         return TiposTurnosOut(
             success=True,
             message="Se han consultado los tipos de turnos",
-            data=data,
+            data=[TipoTurnoOut(nombre=turno_tipo.nombre) for turno_tipo in turnos_tipos],
         ).model_dump()

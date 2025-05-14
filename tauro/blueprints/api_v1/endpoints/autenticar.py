@@ -1,16 +1,20 @@
 """
 API v1 Endpoint: Autenticar
 """
-
+import re
 from datetime import datetime, timedelta
 from functools import wraps
 
 import jwt
 import pytz
+from email_validator import EmailNotValidError, validate_email
 from flask import current_app, g, request
 from flask_restful import Resource
 
 from tauro.blueprints.api_v1.schemas import ResponseSchema, TokenSchema
+from tauro.blueprints.usuarios.models import Usuario
+
+CONTRASENA_REGEXP = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"  # Contraseña con al menos 8 caracteres, una letra y un número
 
 
 def token_required(f):
@@ -60,11 +64,33 @@ class Authenticate(Resource):
         """Autenticarse recibiendo el username y el password por request form, entregar el Token"""
         username = request.form.get("username")
         password = request.form.get("password")
-        # Validar
-        if username != "guillermo.valdes@pjecz.gob.mx" or password != "admin":
+        # Validar que username sea un correo electrónico
+        try:
+            validate_email(username)
+        except EmailNotValidError as error:
             return TokenSchema(
                 success=False,
-                message="Usuario o contraseña incorrectos",
+                message=f"Email no válido: {str(error)}",
+            ).model_dump()
+        # Validar que password cumpla con la expresión regular
+        if not re.match(CONTRASENA_REGEXP, password):
+            return TokenSchema(
+                success=False,
+                message="La contraseña debe tener al menos 8 caracteres, una letra y un número",
+            ).model_dump()
+        # Consultar el usuario
+        usuario = Usuario.find_by_identity(username)
+        # Si no existe el usuario
+        if not usuario:
+            return TokenSchema(
+                success=False,
+                message="Usuario no encontrado",
+            ).model_dump()
+        # Si la contraseña no es correcta
+        if not usuario.authenticated(with_password=True, password=password):
+            return TokenSchema(
+                success=False,
+                message="Contraseña incorrecta",
             ).model_dump()
         # Generar token con PyJWT
         payload = {

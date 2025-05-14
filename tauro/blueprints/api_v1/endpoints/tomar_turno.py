@@ -26,16 +26,23 @@ class TomarTurno(Resource):
         # Consultar el usuario
         username = g.current_user
         try:
-            usuario = Usuario.query.filter_by(email=username).one()
+            usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
         # Consultar los tipos de turnos del usuario
-        usuarios_turnos_tipos = UsuarioTurnoTipo.query.filter_by(usuario_id=usuario.id).filter_by(es_activo=True).all()
+        usuarios_turnos_tipos = (
+            UsuarioTurnoTipo.query.filter_by(usuario_id=usuario.id).filter_by(es_activo=True).filter_by(estatus="A").all()
+        )
+        if usuarios_turnos_tipos is None:
+            return OneTurnoSchemaOut(
+                success=False,
+                message="No ha elegido los tipos de turnos que atenderá",
+            ).model_dump()
         tipos_turnos = [utt.turno_tipo.nombre for utt in usuarios_turnos_tipos]
-        # Consultar los turnos...
+        # Tomar un turno...
         # - Filtrar el estado del turno "EN ESPERA",
         # - Filtrar los tipos de turnos que tiene el usuario, por ejemplo ["ATENCION URGENTE", "NORMAL"]
         # - Filtrar la unidad del usuario,
@@ -47,6 +54,7 @@ class TomarTurno(Resource):
             .filter(TurnoEstado.nombre == "EN ESPERA")
             .filter(TurnoTipo.nombre.in_(tipos_turnos))
             .filter(Turno.unidad_id == usuario.unidad_id)
+            .filter(Turno.estatus == "A")
             .order_by(TurnoTipo.nombre, Turno.numero)
             .first()
         )
@@ -64,12 +72,12 @@ class TomarTurno(Resource):
                 success=False,
                 message="Estado de turno no encontrado",
             ).model_dump()
-        # Cambiar el estado del turno a "ATENDIENDO"
+        # Cambiar el usuario, el estado a "ATENDIENDO" y la ventanilla, así como el tiempo de inicio
         turno.usuario_id = usuario.id
         turno.turno_estado_id = turno_estado.id
         turno.ventanilla_id = usuario.ventanilla_id
         turno.inicio = datetime.now()
-        # Guardar el turno
+        # Guardar
         turno.save()
         # Entregar JSON
         return OneTurnoSchemaOut(

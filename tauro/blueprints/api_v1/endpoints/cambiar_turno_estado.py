@@ -2,6 +2,8 @@
 API v1 Endpoint: Cambiar Turno Estado
 """
 
+from datetime import datetime
+
 from flask import g, request
 from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -22,13 +24,13 @@ class CambiarTurnoEstado(Resource):
         # Consultar el usuario
         username = g.current_user
         try:
-            usuario = Usuario.query.filter_by(email=username).one()
+            usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoSchemaOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
-        # Recibir y validar TurnoEstadoIn
+        # Recibir y validar el payload
         payload = request.get_json()
         turno_estado_in = TurnoEstadoIn.model_validate(payload)
         # Consultar el turno
@@ -54,12 +56,15 @@ class CambiarTurnoEstado(Resource):
             ).model_dump()
         # Cambiar el estado del turno
         turno.turno_estado_id = turno_estado.id
+        # Si el estado es "COMPLETADO", definir el tiempo de término
+        if turno_estado.nombre == "COMPLETADO":
+            turno.termino = datetime.now()
         # Guardar cambios
         turno.save()
         # Entregar JSON
         return OneTurnoSchemaOut(
             success=True,
-            message=f"Se ha cambiado el estado del turno a {turno_estado_in.turno_estado_nombre}",
+            message=f"{username} ha cambiado el turno {turno.numero} a {turno_estado_in.turno_estado_nombre}",
             data=TurnoSchemaOut(
                 id=turno.id,
                 numero=turno.numero,

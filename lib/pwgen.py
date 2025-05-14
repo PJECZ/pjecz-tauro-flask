@@ -26,8 +26,8 @@ def generar_contrasena(largo=16):
     minusculas = string.ascii_lowercase
     mayusculas = string.ascii_uppercase
     digitos = string.digits
-    simbolos = string.punctuation
-    todos = minusculas + mayusculas + digitos + simbolos
+    # simbolos = string.punctuation
+    todos = minusculas + mayusculas + digitos  # + simbolos
     temp = random.sample(todos, largo)
     return "".join(temp)
 
