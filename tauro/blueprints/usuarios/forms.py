@@ -3,11 +3,11 @@ Usuarios, formularios
 """
 
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, IntegerField, PasswordField, SelectField, StringField, SubmitField
+from wtforms import HiddenField, PasswordField, SelectField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, Optional, Regexp
 
 from lib.safe_string import CONTRASENA_REGEXP
-from tauro.blueprints.usuarios.models import Usuario
+from tauro.blueprints.unidades.models import Unidad
 
 CONTRASENA_MENSAJE = "De 8 a 48 caracteres con al menos una mayúscula, una minúscula y un número. No acentos, ni eñe."
 
@@ -33,4 +33,17 @@ class UsuarioForm(FlaskForm):
     nombres = StringField("Nombres", validators=[DataRequired(), Length(max=256)])
     apellido_paterno = StringField("Apellido primero", validators=[DataRequired(), Length(max=256)])
     apellido_materno = StringField("Apellido segundo", validators=[Optional(), Length(max=256)])
+    contrasena = PasswordField(
+        "Contraseña",
+        validators=[Optional(), Length(8, 48), Regexp(CONTRASENA_REGEXP, 0, CONTRASENA_MENSAJE)],
+    )
+    unidad = SelectField("Unidad", coerce=int, validators=[DataRequired()])
     guardar = SubmitField("Guardar")
+
+    def __init__(self, *args, **kwargs):
+        """Inicializar y cargar opciones en unidad"""
+        super().__init__(*args, **kwargs)
+        self.unidad.choices = [
+            (u.id, u.clave + ": " + u.nombre)
+            for u in Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(Unidad.clave).all()
+        ]

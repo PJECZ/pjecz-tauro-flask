@@ -23,6 +23,7 @@
         <div class="row">
             <div class="col-md-6">
                 {{ detail.label_value('Nombre', usuario.nombre) }}
+                {{ detail.label_value('Unidad', usuario.unidad.clave + ': ' + usuario.unidad.nombre, url_for('unidades.detail', unidad_id=usuario.unidad.id)) }}
             </div>
             <div class="col-md-3">
                 {% if current_user.can_view("BITACORAS") %}
