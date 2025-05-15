@@ -64,6 +64,7 @@ class Authenticate(Resource):
         """Autenticarse recibiendo el username y el password por request form, entregar el Token"""
         username = request.form.get("username")
         password = request.form.get("password")
+
         # Validar que username sea un correo electrónico
         try:
             validate_email(username)
@@ -72,26 +73,31 @@ class Authenticate(Resource):
                 success=False,
                 message=f"Email no válido: {str(error)}",
             ).model_dump()
+
         # Validar que password cumpla con la expresión regular
         if not re.match(CONTRASENA_REGEXP, password):
             return TokenSchema(
                 success=False,
                 message="La contraseña debe tener al menos 8 caracteres, una letra y un número",
             ).model_dump()
+
         # Consultar el usuario
         usuario = Usuario.find_by_identity(username)
+
         # Si no existe el usuario
         if not usuario:
             return TokenSchema(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
+
         # Si la contraseña no es correcta
         if not usuario.authenticated(with_password=True, password=password):
             return TokenSchema(
                 success=False,
                 message="Contraseña incorrecta",
             ).model_dump()
+
         # Generar token con PyJWT
         payload = {
             "sub": username,
@@ -99,6 +105,7 @@ class Authenticate(Resource):
             "exp": datetime.now(tz=pytz.UTC) + timedelta(minutes=30),
         }
         access_token = jwt.encode(payload, current_app.config["SECRET_KEY"], algorithm="HS256")
+
         # Entregar JSON
         return TokenSchema(
             success=True,

@@ -9,10 +9,11 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import (
-    ActualizarUsuarioSchemaIn,
-    OneVentanillaUsuarioSchemaOut,
-    TurnoSchemaOut,
-    VentanillaUsuarioSchemaOut,
+    ActualizarUsuarioIn,
+    OneVentanillaUsuarioOut,
+    TurnoOut,
+    TurnoTipoOut,
+    VentanillaUsuarioOut,
 )
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -26,34 +27,38 @@ class ActualizarUsuario(Resource):
     """Actualizar un usuario"""
 
     @token_required
-    def post(self) -> OneVentanillaUsuarioSchemaOut:
+    def post(self) -> OneVentanillaUsuarioOut:
         """Actualizar un usuario"""
+
         # Consultar el usuario
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneVentanillaUsuarioSchemaOut(
+            return OneVentanillaUsuarioOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
+
         # Recibir y validar el payload
         payload = request.get_json()
-        actualizar_usuario_in = ActualizarUsuarioSchemaIn.model_validate(payload)
+        actualizar_usuario_in = ActualizarUsuarioIn.model_validate(payload)
+
         # Actualizar TODOS los tipos de turnos que el usuario ESTA atendiendo con es_activo a falso
         for usuario_turno_tipo in UsuarioTurnoTipo.query.filter_by(usuario_id=usuario.id).all():
             if usuario_turno_tipo.es_activo:
                 usuario_turno_tipo.es_activo = False
                 usuario_turno_tipo.save()
-        # Inicializar la lista de los nombres de los turnos tipos
-        turnos_tipos_nombres = []
+
         # Consultar los tipos de turnos que el usuario QUIERE atender
         turnos_tipos = (
-            TurnoTipo.query.filter(TurnoTipo.nombre.in_(actualizar_usuario_in.turnos_tipos_nombres))
+            TurnoTipo.query.filter(TurnoTipo.id.in_(actualizar_usuario_in.turnos_tipos_ids))
             .filter(TurnoTipo.es_activo == True)
             .filter(TurnoTipo.estatus == "A")
             .all()
         )
+
+        # Agregar o actualizar en la tabla usuarios_turnos_tipos
         for turno_tipo in turnos_tipos:
             # ¿Estará en la tabla?
             usuario_turno_tipo = (
@@ -71,40 +76,43 @@ class ActualizarUsuario(Resource):
                 )
                 nuevo_utt.save()
             else:
-                # Si ya estaba y es_activo es falso, lo actualizamos con es_activo a verdadero
+                # Si ya estaba y es_activo es falso, lo actualizamos a verdadero
                 if usuario_turno_tipo.es_activo is False:
                     usuario_turno_tipo.es_activo = True
                     usuario_turno_tipo.save()
-            # Agregar el nombre del turno tipo a la lista
-            turnos_tipos_nombres.append(turno_tipo.nombre)
+
         # Consultar la ventanilla
         ventanilla = Ventanilla.query.get(actualizar_usuario_in.ventanilla_id)
         if ventanilla is None:
-            return OneVentanillaUsuarioSchemaOut(
+            return OneVentanillaUsuarioOut(
                 success=False,
                 message="Ventanilla no encontrada",
             ).model_dump()
         if ventanilla.estatus != "A":
-            return OneVentanillaUsuarioSchemaOut(
+            return OneVentanillaUsuarioOut(
                 success=False,
                 message="Ventanilla eliminada",
             ).model_dump()
         if ventanilla.es_activo is False:
-            return OneVentanillaUsuarioSchemaOut(
+            return OneVentanillaUsuarioOut(
                 success=False,
                 message="Ventanilla no activa",
             ).model_dump()
-        # Consultar los usuarios por la ventanilla, si la tiene otro usuario, se le manda un error
+
+        # Consultar los usuarios por la ventanilla, si la ventanilla la tiene otro usuario, se le manda un error
         usuarios = Usuario.query.filter_by(ventanilla_id=ventanilla.id).filter_by(estatus="A").first()
         if usuarios is not None and usuarios.id != usuario.id:
-            return OneVentanillaUsuarioSchemaOut(
+            return OneVentanillaUsuarioOut(
                 success=False,
                 message="Ventanilla ocupada por otro usuario",
             ).model_dump()
-        # Actualizar el usuario
+
+        # Actualizar la ventanilla del usuario
         usuario.ventanilla_id = ventanilla.id
-        # Guardar cambios
+
+        # Guardar
         usuario.save()
+
         # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
@@ -115,14 +123,16 @@ class ActualizarUsuario(Resource):
         )
         ultimo_turno = None
         if turnos:
-            ultimo_turno = TurnoSchemaOut(id=turnos.id, numero=turnos.numero, comentarios=turnos.comentarios)
+            ultimo_turno = TurnoOut(id=turnos.id, numero=turnos.numero, comentarios=turnos.comentarios)
+
         # Entregar JSON
-        return OneVentanillaUsuarioSchemaOut(
+        return OneVentanillaUsuarioOut(
             success=True,
             message="Usuario actualizado",
-            data=VentanillaUsuarioSchemaOut(
-                nombre=ventanilla.nombre,
-                turnos_tipos_nombres=turnos_tipos_nombres,
+            data=VentanillaUsuarioOut(
+                id=usuario.ventanilla_id,
+                ventanilla=ventanilla.nombre,
+                turnos_tipos=[TurnoTipoOut(id=tt.id, nombre=tt.nombre) for tt in turnos_tipos],
                 usuario_nombre_completo=usuario.nombre,
                 ultimo_turno=ultimo_turno,
             ),
