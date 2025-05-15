@@ -9,7 +9,7 @@ from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneTurnoSchemaOut, TurnoSchemaOut
+from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -21,27 +21,30 @@ class TomarTurno(Resource):
     """Tomar un turno"""
 
     @token_required
-    def post(self) -> OneTurnoSchemaOut:
-        """Crear un turno"""
+    def get(self) -> OneTurnoOut:
+        """Tomar un turno"""
+
         # Consultar el usuario
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneTurnoSchemaOut(
+            return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
+
         # Consultar los tipos de turnos del usuario
         usuarios_turnos_tipos = (
             UsuarioTurnoTipo.query.filter_by(usuario_id=usuario.id).filter_by(es_activo=True).filter_by(estatus="A").all()
         )
         if usuarios_turnos_tipos is None:
-            return OneTurnoSchemaOut(
+            return OneTurnoOut(
                 success=False,
                 message="No ha elegido los tipos de turnos que atenderá",
             ).model_dump()
         tipos_turnos = [utt.turno_tipo.nombre for utt in usuarios_turnos_tipos]
+
         # Tomar un turno...
         # - Filtrar el estado del turno "EN ESPERA",
         # - Filtrar los tipos de turnos que tiene el usuario, por ejemplo ["ATENCION URGENTE", "NORMAL"]
@@ -58,32 +61,37 @@ class TomarTurno(Resource):
             .order_by(TurnoTipo.nombre, Turno.numero)
             .first()
         )
+
         # Si no hay turnos en espera, retornar error
         if turno is None:
-            return OneTurnoSchemaOut(
+            return OneTurnoOut(
                 success=False,
                 message="No hay turnos en espera",
             ).model_dump()
+
         # Consultar el estado de turno "ATENDIENDO"
         try:
             turno_estado = TurnoEstado.query.filter_by(nombre="ATENDIENDO").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneTurnoSchemaOut(
+            return OneTurnoOut(
                 success=False,
                 message="Estado de turno no encontrado",
             ).model_dump()
+
         # Cambiar el usuario, el estado a "ATENDIENDO" y la ventanilla, así como el tiempo de inicio
         turno.usuario_id = usuario.id
         turno.turno_estado_id = turno_estado.id
         turno.ventanilla_id = usuario.ventanilla_id
         turno.inicio = datetime.now()
+
         # Guardar
         turno.save()
+
         # Entregar JSON
-        return OneTurnoSchemaOut(
+        return OneTurnoOut(
             success=True,
             message=f"Turno {turno.numero} tomado por {usuario.nombre}",
-            data=TurnoSchemaOut(
+            data=TurnoOut(
                 id=turno.id,
                 numero=turno.numero,
                 comentarios=turno.comentarios,

@@ -4,9 +4,6 @@ API v1 Schemas
 
 from pydantic import BaseModel
 
-# ConfigDict
-# model_config = ConfigDict(from_attributes=True)
-
 
 class ResponseSchema(BaseModel):
     """Esquema común para responder todas las peticiones"""
@@ -27,54 +24,38 @@ class TokenSchema(BaseModel):
     username: str | None = None
 
 
-class TurnoSchemaOut(BaseModel):
+class TurnoEstadoOut(BaseModel):
+    """Esquema para entregar un estado de turno"""
+
+    id: int
+    nombre: str
+
+
+class ListTurnosEstadosOut(ResponseSchema):
+    """Esquema para entregar una lista de estados de turnos"""
+
+    data: list[TurnoEstadoOut]
+
+
+class TurnoTipoOut(BaseModel):
+    """Esquema para entregar un tipo de turno"""
+
+    id: int
+    nombre: str
+
+
+class ListTurnosTiposOut(ResponseSchema):
+    """Esquema para entregar una lista de tipos de turnos"""
+
+    data: list[TurnoTipoOut]
+
+
+class TurnoOut(BaseModel):
     """Esquema para entregar un turno"""
 
     id: int
     numero: int
     comentarios: str | None
-
-
-class VentanillaUsuarioSchemaOut(BaseModel):
-    """Esquema para entregar una ventanilla de un usuario"""
-
-    nombre: str
-    turnos_tipos_nombres: list[str] | None
-    usuario_nombre_completo: str
-    ultimo_turno: TurnoSchemaOut | None
-
-
-class OneVentanillaUsuarioSchemaOut(ResponseSchema):
-    """Esquema para entregar una ventanilla de un usuario"""
-
-    data: VentanillaUsuarioSchemaOut | None = None
-
-
-class TurnoSchemaIn(BaseModel):
-    """Esquema para crear un turno"""
-
-    turno_tipo_nombre: str
-    unidad_clave: str
-    comentarios: str | None
-
-
-class OneTurnoSchemaOut(ResponseSchema):
-    """Esquema para entregar un turno ya creado"""
-
-    data: TurnoSchemaOut | None = None
-
-
-class ListTurnoSchemaOut(ResponseSchema):
-    """Esquema para entregar un turno ya creado"""
-
-    data: list[TurnoSchemaOut] | None = None
-
-
-class TurnoEstadoIn(BaseModel):
-    """Esquema para cambiar el estado de un turno"""
-
-    turno_id: int
-    turno_estado_nombre: str
 
 
 class VentanillaActivaOut(BaseModel):
@@ -84,26 +65,57 @@ class VentanillaActivaOut(BaseModel):
     nombre: str
 
 
-class VentanillasActivasOut(ResponseSchema):
+class ListVentanillasActivasOut(ResponseSchema):
     """Esquema para entregar una lista de ventanillas activas"""
 
     data: list[VentanillaActivaOut]
 
 
-class TipoTurnoOut(BaseModel):
-    """Esquema para entregar un tipo de turno"""
+class VentanillaUsuarioOut(BaseModel):
+    """Esquema para entregar una ventanilla de un usuario"""
 
-    nombre: str
-
-
-class TiposTurnosOut(ResponseSchema):
-    """Esquema para entregar una lista de tipos de turnos"""
-
-    data: list[TipoTurnoOut]
+    id: int  # Ventanilla ID
+    ventanilla: str  # Ventanilla nombre
+    turnos_tipos: list[TurnoTipoOut] | None
+    usuario_nombre_completo: str
+    ultimo_turno: TurnoOut | None
 
 
-class ActualizarUsuarioSchemaIn(BaseModel):
+class OneVentanillaUsuarioOut(ResponseSchema):
+    """Esquema para entregar una ventanilla de un usuario"""
+
+    data: VentanillaUsuarioOut | None = None
+
+
+class CrearTurnoIn(BaseModel):
+    """Esquema para crear un turno"""
+
+    turno_tipo_id: int
+    unidad_id: int
+    comentarios: str | None
+
+
+class OneTurnoOut(ResponseSchema):
+    """Esquema para entregar un turno ya creado"""
+
+    data: TurnoOut | None = None
+
+
+class ListTurnosOut(ResponseSchema):
+    """Esquema para entregar un turno ya creado"""
+
+    data: list[TurnoOut] | None = None
+
+
+class ActualizarTurnoEstadoIn(BaseModel):
+    """Esquema para cambiar el estado de un turno"""
+
+    id: int  # Turno ID
+    turno_estado_id: int  # Turno Estado ID
+
+
+class ActualizarUsuarioIn(BaseModel):
     """Esquema para actualizar un usuario"""
 
     ventanilla_id: int
-    turnos_tipos_nombres: list[str]
+    turnos_tipos_ids: list[int]

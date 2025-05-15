@@ -8,7 +8,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from lib.safe_string import safe_string
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneTurnoSchemaOut, TurnoSchemaIn, TurnoSchemaOut
+from tauro.blueprints.api_v1.schemas import CrearTurnoIn, OneTurnoOut, TurnoOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -21,54 +21,60 @@ class CrearTurno(Resource):
     """Crear un nuevo turno"""
 
     @token_required
-    def post(self) -> OneTurnoSchemaOut:
+    def post(self) -> OneTurnoOut:
         """Crear un turno"""
+
         # Consultar el usuario
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneTurnoSchemaOut(
+            return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
+
         # Recibir y validar el payload
         payload = request.get_json()
-        turno_in = TurnoSchemaIn.model_validate(payload)
+        turno_in = CrearTurnoIn.model_validate(payload)
+
         # Consultar el tipo de turno
-        try:
-            turno_tipo = TurnoTipo.query.filter_by(nombre=turno_in.turno_tipo_nombre).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
-            return OneTurnoSchemaOut(
+        turno_tipo = TurnoTipo.query.get(turno_in.turno_tipo_id)
+        if turno_tipo is None:
+            return OneTurnoOut(
                 success=False,
                 message="Tipo de turno no encontrado",
             ).model_dump()
+
         # Consultar la unidad
-        try:
-            unidad = Unidad.query.filter_by(clave=turno_in.unidad_clave).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
-            return OneTurnoSchemaOut(
+        unidad = Unidad.query.get(turno_in.unidad_id)
+        if unidad is None:
+            return OneTurnoOut(
                 success=False,
                 message="Unidad no encontrada",
             ).model_dump()
+
         # Consultar el estado de turno "EN ESPERA"
         try:
             turno_estado = TurnoEstado.query.filter_by(nombre="EN ESPERA").filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneTurnoSchemaOut(
+            return OneTurnoOut(
                 success=False,
                 message="Estado de turno no encontrado",
             ).model_dump()
+
         # Consultar la ventanilla NO DEFINIDO
         try:
             ventanilla = Ventanilla.query.filter_by(nombre="NO DEFINIDO").filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneTurnoSchemaOut(
+            return OneTurnoOut(
                 success=False,
                 message="Ventanilla no encontrada",
             ).model_dump()
+
         # Definir el numero de turno
         numero = Turno.query.count() + 1
+
         # Crear el nuevo turno
         turno = Turno(
             usuario=usuario,
@@ -80,11 +86,12 @@ class CrearTurno(Resource):
             comentarios=safe_string(turno_in.comentarios),
         )
         turno.save()
+
         # Entregar JSON
-        return OneTurnoSchemaOut(
+        return OneTurnoOut(
             success=True,
-            message=f"Se ha creado el turno {turno.numero} por el usuario {username}",
-            data=TurnoSchemaOut(
+            message=f"Se ha creado el turno {turno.numero} en {unidad.clave} por {username}",
+            data=TurnoOut(
                 id=turno.id,
                 numero=turno.numero,
                 comentarios=turno.comentarios,
