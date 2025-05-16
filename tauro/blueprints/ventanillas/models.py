@@ -22,6 +22,7 @@ class Ventanilla(database.Model, UniversalMixin):
 
     # Columnas
     nombre: Mapped[str] = mapped_column(String(256))
+    numero: Mapped[Optional[int]] = mapped_column(nullable=True, default=None)
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos

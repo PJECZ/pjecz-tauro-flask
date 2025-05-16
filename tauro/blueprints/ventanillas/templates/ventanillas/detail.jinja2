@@ -6,7 +6,7 @@
 {% block title %}Ventanilla {{ ventanilla.nombre }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons('Ventanilla ' + ventanilla.nombre) %}
+    {% call topbar.page_buttons('Ventanilla ' + ventanilla.nombre + ' ' + ventanilla.numero | string ) %}
         {{ topbar.button_previous('Ventanillas', url_for('ventanillas.list_active')) }}
         {% if current_user.can_edit('VENTANILLAS') %}
             {{ topbar.button_edit('Editar', url_for('ventanillas.edit', ventanilla_id=ventanilla.id)) }}
@@ -21,6 +21,7 @@
 {% block content %}
     {% call detail.card(estatus=ventanilla.estatus) %}
         {{ detail.label_value('Nombre', ventanilla.nombre) }}
+        {{ detail.label_value('Número', ventanilla.numero) }}
         {{ detail.label_value('Está Activa', ventanilla.es_activo) }}
     {% endcall %}
 {% endblock %}

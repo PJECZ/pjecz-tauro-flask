@@ -63,6 +63,7 @@ def datatable_json():
                     "url": url_for("ventanillas.detail", ventanilla_id=resultado.id),
                 },
                 "nombre": resultado.nombre,
+                "numero": resultado.numero,
                 "es_activo": resultado.es_activo,
             }
         )
@@ -114,6 +115,7 @@ def new():
         # Guardar
         ventanilla = Ventanilla(
             nombre=safe_string(form.nombre.data),
+            numero=form.numero.data,
             es_activo=form.es_activo.data,
         )
         ventanilla.save()
@@ -137,6 +139,7 @@ def edit(ventanilla_id):
     form = VentanillaForm()
     if form.validate_on_submit():
         ventanilla.nombre = safe_string(form.nombre.data)
+        ventanilla.numero = form.numero.data
         ventanilla.es_activo = form.es_activo.data
         ventanilla.save()
         bitacora = Bitacora(
@@ -149,6 +152,7 @@ def edit(ventanilla_id):
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
     form.nombre.data = ventanilla.nombre
+    form.numero.data = ventanilla.numero
     form.es_activo.data = ventanilla.es_activo
     return render_template("ventanillas/edit.jinja2", form=form, ventanilla=ventanilla)
 
