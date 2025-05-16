@@ -2,6 +2,7 @@
 {% import 'macros/detail.jinja2' as detail %}
 {% import 'macros/modals.jinja2' as modals %}
 {% import 'macros/topbar.jinja2' as topbar %}
+{% import 'macros/list.jinja2' as list %}
 
 {% block title %}Ventanilla {{ ventanilla.nombre }}{% endblock %}
 
@@ -22,7 +23,20 @@
     {% call detail.card(estatus=ventanilla.estatus) %}
         {{ detail.label_value('Nombre', ventanilla.nombre) }}
         {{ detail.label_value('Número', ventanilla.numero) }}
-        {{ detail.label_value('Está Activa', ventanilla.es_activo) }}
+        {{ detail.label_value_boolean('Está Activa', ventanilla.es_activo) }}
+    {% endcall %}
+    {# Card de listado de unidades-ventanillas #}
+    {% call detail.card('Unidades-Ventanillas') %}
+        <!-- DataTable unidadesVentanillas -->
+        <table id="unidades_ventanillas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Unidad</th>
+                    <th>Activo</th>
+                </tr>
+            </thead>
+        </table>
     {% endcall %}
 {% endblock %}
 
@@ -31,4 +45,41 @@
         {% if ventanilla.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar la ventanilla ' + ventanilla.nombre + '?') }}{% endif %}
         {% if ventanilla.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar la ventanilla ' + ventanilla.nombre + '?') }}{% endif %}
     {% endif %}
+    {# Carga de listados #}
+    <script src="/static/js/datatables-constructor.js"></script>
+    <script src="/static/js/datatables-filtros.js"></script>
+    {# DataTable unidadesVentanillas #}
+    <script>
+        // DataTable unidadesVentanillas
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDataTable = constructorDataTable.config();
+        configDataTable['ajax']['url'] = '/unidades_ventanillas/datatable_json';
+        configDataTable['ajax']['data'] = {'estatus': 'A', 'ventanilla_id': {{ ventanilla.id }}};
+        configDataTable['columns'] = [
+            { data: 'id' },
+            { data: 'unidad' },
+            { data: 'es_activo' }
+        ];
+        configDataTable['columnDefs'] = [
+            {
+                targets: 1, // unidad
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.nombre + '</a>';
+                }
+            },
+            {
+                targets: 2, // es_activo
+                data: null,
+                render: function(data, type, row, meta) {
+                    if (data) {
+                        return '<span class="iconify" data-icon="mdi:checkbox-marked" style="font-size: 1.4em"></span>';
+                    }
+                    return '<span class="iconify text-secondary" data-icon="mdi:checkbox-blank-outline" style="font-size: 1.4em"></span>';
+                }
+            }
+        ];
+        const filtrosUnidadesVentanillas = new FiltrosDataTable('#unidades_ventanillas_datatable', configDataTable);
+        filtrosUnidadesVentanillas.precargar();
+    </script>
 {% endblock %}

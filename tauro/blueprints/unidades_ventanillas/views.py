@@ -43,6 +43,8 @@ def datatable_json():
         consulta = consulta.filter(UnidadVentanilla.estatus == "A")
     if "unidad_id" in request.form:
         consulta = consulta.filter(UnidadVentanilla.unidad_id == request.form["unidad_id"])
+    if "ventanilla_id" in request.form:
+        consulta = consulta.filter(UnidadVentanilla.ventanilla_id == request.form["ventanilla_id"])
     # Luego filtrar por columnas de otras tablas
     if "ventanilla_nombre" in request.form:
         ventanilla_nombre = safe_string(request.form["ventanilla_nombre"])
@@ -63,7 +65,11 @@ def datatable_json():
                     "url": url_for("unidades.detail", unidad_id=resultado.unidad.id),
                 },
                 "ventanilla": {
-                    "nombre": resultado.ventanilla.nombre,
+                    "nombre": (
+                        resultado.ventanilla.nombre + " - " + str(resultado.ventanilla.numero)
+                        if resultado.ventanilla.numero
+                        else resultado.ventanilla.nombre
+                    ),
                     "url": url_for("ventanillas.detail", ventanilla_id=resultado.ventanilla.id),
                 },
                 "es_activo": resultado.es_activo,

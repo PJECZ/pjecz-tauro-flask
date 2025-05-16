@@ -23,7 +23,7 @@
     {% call detail.card(estatus=unidad.estatus) %}
         {{ detail.label_value_big('Clave', unidad.clave) }}
         {{ detail.label_value('Nombre', unidad.nombre) }}
-        {{ detail.label_value('Activo', unidad.es_activo) }}
+        {{ detail.label_value_boolean('Activo', unidad.es_activo) }}
     {% endcall %}
     {# Listado de Usuarios #}
     {% call detail.card(title='Usuarios') %}
@@ -66,6 +66,19 @@
             </thead>
         </table>
     {% endcall %}
+    {# Listado de Unidades-Ventanillas #}
+    {% call detail.card(title='Unidades-Ventanillas') %}
+        <!-- DataTable unidadesVentanillas -->
+        <table id="unidades_ventanillas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ventanilla</th>
+                    <th>Activo</th>
+                </tr>
+            </thead>
+        </table>
+    {% endcall %}
 {% endblock %}
 
 {% block custom_javascript %}
@@ -79,8 +92,8 @@
     {# Listado de Usuarios #}
     <script>
         // DataTable usuarios
-        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
-        let configDTUsuarios = constructorDataTable.config();
+        const constructorDataTableUsuarios = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDTUsuarios = constructorDataTableUsuarios.config();
         configDTUsuarios['ajax']['url'] = '/usuarios/datatable_json';
         configDTUsuarios['ajax']['data'] = { 'estatus': 'A', 'unidad_id': '{{unidad.id}}' };
         configDTUsuarios['columns'] = [
@@ -112,5 +125,39 @@
         filtrosDTUsuarios.agregarInput('filtroNombres', 'nombres');
         filtrosDTUsuarios.agregarInput('filtroApellidoPaterno', 'apellido_paterno');
         filtrosDTUsuarios.precargar();
+    </script>
+    {# DataTable unidadesVentanillas #}
+    <script>
+        // DataTable unidadesVentanillas
+        const constructorDataTableUV = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDataTableUV = constructorDataTableUV.config();
+        configDataTableUV['ajax']['url'] = '/unidades_ventanillas/datatable_json';
+        configDataTableUV['ajax']['data'] = {'estatus': 'A', 'unidad_id': {{ unidad.id }}};
+        configDataTableUV['columns'] = [
+            { data: 'id' },
+            { data: 'ventanilla' },
+            { data: 'es_activo' }
+        ];
+        configDataTableUV['columnDefs'] = [
+            {
+                targets: 1, // ventanilla
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.nombre + '</a>';
+                }
+            },
+            {
+                targets: 2, // es_activo
+                data: null,
+                render: function(data, type, row, meta) {
+                    if (data) {
+                        return '<span class="iconify" data-icon="mdi:checkbox-marked" style="font-size: 1.4em"></span>';
+                    }
+                    return '<span class="iconify text-secondary" data-icon="mdi:checkbox-blank-outline" style="font-size: 1.4em"></span>';
+                }
+            }
+        ];
+        const filtrosUnidadesVentanillas = new FiltrosDataTable('#unidades_ventanillas_datatable', configDataTableUV);
+        filtrosUnidadesVentanillas.precargar();
     </script>
 {% endblock %}
