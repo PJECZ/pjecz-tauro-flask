@@ -203,6 +203,7 @@ def new():
                 apellido_materno=safe_string(form.apellido_materno.data, save_enie=True),
                 contrasena=contrasena,
                 unidad_id=form.unidad.data,
+                es_acceso_frontend=form.es_acceso_frontend.data,
                 ventanilla=ventanilla_nd,
             )
             usuario.save()
@@ -244,6 +245,7 @@ def edit(usuario_id):
             if form.contrasena.data:
                 usuario.contrasena = pwd_context.hash(form.contrasena.data.strip())
             usuario.unidad_id = form.unidad.data
+            usuario.es_acceso_frontend = form.es_acceso_frontend.data
             usuario.save()
             bitacora = Bitacora(
                 modulo=Modulo.query.filter_by(nombre=MODULO).first(),
@@ -261,6 +263,7 @@ def edit(usuario_id):
     form.apellido_paterno.data = usuario.apellido_paterno
     form.apellido_materno.data = usuario.apellido_materno
     form.unidad.data = usuario.unidad_id
+    form.es_acceso_frontend.data = usuario.es_acceso_frontend
     return render_template("usuarios/edit.jinja2", form=form, usuario=usuario)
 
 

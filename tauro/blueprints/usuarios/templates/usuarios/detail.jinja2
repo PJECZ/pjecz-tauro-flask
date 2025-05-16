@@ -24,6 +24,16 @@
             <div class="col-md-6">
                 {{ detail.label_value('Nombre', usuario.nombre) }}
                 {{ detail.label_value('Unidad', usuario.unidad.clave + ': ' + usuario.unidad.nombre, url_for('unidades.detail', unidad_id=usuario.unidad.id)) }}
+                <div class="row">
+                    <div class="col-md-3 text-end">Acceso al Frontend</div>
+                    <div class="col-md-9">
+                        {% if usuario.es_acceso_frontend %}
+                            <span class="iconify" data-icon="mdi:check" style="font-size: 1.4em"></span> CON ACCESO
+                        {% else %}
+                            <span class="iconify text-secondary" data-icon="mdi:cancel" style="font-size: 1.4em"></span> SIN ACCESO
+                        {% endif %}
+                    </div>
+                </div>
             </div>
             <div class="col-md-3">
                 {% if current_user.can_view("BITACORAS") %}
