@@ -72,6 +72,9 @@ DB_HOST=127.0.0.1
 DB_PORT=5432
 SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://adminpjecztauro:XXXXXXXXXXXXXXXX@127.0.0.1:5432/pjecz_tauro"
 
+# Host se usa por CORS en la API
+HOST=http://127.0.0.1:5000
+
 # Salt sirve para cifrar el ID con HashID, debe ser igual en la API
 SALT=XXXXXXXXXXXXXXXX
 
