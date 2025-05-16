@@ -22,7 +22,7 @@
     {% call detail.card(estatus=turno_estado.estatus) %}
         {{ detail.label_value_big('ID', turno_estado.id) }}
         {{ detail.label_value('Nombre', turno_estado.nombre) }}
-        {{ detail.label_value('Activo', turno_estado.es_activo) }}
+        {{ detail.label_value_boolean('Activo', turno_estado.es_activo) }}
     {% endcall %}
 {% endblock %}
 

@@ -30,6 +30,9 @@ def alimentar_ventanillas():
         for row in rows:
             ventanilla_id = int(row["ventanilla_id"])
             nombre = safe_string(row["nombre"], save_enie=True)
+            numero = row["numero"]
+            if numero == "":
+                numero = None
             es_activo = row["es_activo"] == "1"
             estatus = row["estatus"]
             if ventanilla_id != contador + 1:
@@ -37,6 +40,7 @@ def alimentar_ventanillas():
                 sys.exit(1)
             Ventanilla(
                 nombre=nombre,
+                numero=numero,
                 es_activo=es_activo,
                 estatus=estatus,
             ).save()

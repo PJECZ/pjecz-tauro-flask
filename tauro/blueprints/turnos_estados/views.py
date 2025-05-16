@@ -139,7 +139,8 @@ def edit(turno_estado_id):
         )
         bitacora.save()
         flash(bitacora.descripcion, "success")
-        return redirect(bitacora.url)
+        return redirect(url_for("turnos_estados.list_active"))
+    # Cargar datos
     form.nombre.data = turno_estado.nombre
     form.es_activo.data = turno_estado.es_activo
     return render_template("turnos_estados/edit.jinja2", form=form, turno_estado=turno_estado)

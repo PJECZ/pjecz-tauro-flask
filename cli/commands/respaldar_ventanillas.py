@@ -27,6 +27,7 @@ def respaldar_ventanillas():
             [
                 "ventanilla_id",
                 "nombre",
+                "numero",
                 "es_activo",
                 "estatus",
             ]
@@ -36,6 +37,7 @@ def respaldar_ventanillas():
                 [
                     ventanilla.id,
                     ventanilla.nombre,
+                    ventanilla.numero,
                     int(ventanilla.es_activo),
                     ventanilla.estatus,
                 ]

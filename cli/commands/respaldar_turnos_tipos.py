@@ -27,6 +27,7 @@ def respaldar_turnos_tipos():
             [
                 "turno_tipo_id",
                 "nombre",
+                "nivel",
                 "es_activo",
                 "estatus",
             ]
@@ -36,6 +37,7 @@ def respaldar_turnos_tipos():
                 [
                     turno_tipo.id,
                     turno_tipo.nombre,
+                    int(turno_tipo.nivel),
                     int(turno_tipo.es_activo),
                     turno_tipo.estatus,
                 ]

@@ -41,6 +41,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Número</th>
                     <th>Está Activa</th>
                 </tr>
             </thead>
@@ -60,6 +61,7 @@
         configDataTable['columns'] = [
             { data: 'detalle' },
             { data: 'nombre' },
+            { data: 'numero' },
             { data: 'es_activo' }
         ];
         configDataTable['columnDefs'] = [
@@ -71,7 +73,7 @@
                 }
             },
             {
-                targets: 2, // es_activo
+                targets: 3, // es_activo
                 data: null,
                 render: function(data, type, row, meta) {
                     if (data) {

@@ -4,16 +4,17 @@ Usuarios, vistas
 
 import json
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from pytz import timezone
+from lib.pwgen import generar_contrasena
 
 from lib.datatables import get_datatable_parameters, output_datatable_json
-from lib.pwgen import generar_api_key, generar_contrasena
 from lib.safe_next_url import safe_next_url
-from lib.safe_string import CONTRASENA_REGEXP, EMAIL_REGEXP, TOKEN_REGEXP, safe_email, safe_message, safe_string
+from lib.safe_string import CONTRASENA_REGEXP, EMAIL_REGEXP, safe_email, safe_message, safe_string
+from tauro.extensions import pwd_context
 from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.entradas_salidas.models import EntradaSalida
 from tauro.blueprints.modulos.models import Modulo
@@ -21,6 +22,7 @@ from tauro.blueprints.permisos.models import Permiso
 from tauro.blueprints.usuarios.decorators import anonymous_required, permission_required
 from tauro.blueprints.usuarios.forms import AccesoForm, UsuarioForm
 from tauro.blueprints.usuarios.models import Usuario
+from tauro.blueprints.ventanillas.models import Ventanilla
 
 MODULO = "USUARIOS"
 
@@ -116,6 +118,8 @@ def datatable_json():
         consulta = consulta.filter(Usuario.apellido_materno.contains(safe_string(request.form["apellido_materno"])))
     if "email" in request.form:
         consulta = consulta.filter(Usuario.email.contains(safe_email(request.form["email"], search_fragment=True)))
+    if "unidad_id" in request.form:
+        consulta = consulta.filter(Usuario.unidad_id == request.form["unidad_id"])
     # Ordenar y paginar
     registros = consulta.order_by(Usuario.email).offset(start).limit(rows_per_page).all()
     total = consulta.count()
@@ -184,6 +188,12 @@ def new():
         if Usuario.query.filter_by(email=email).first():
             flash("El e-mail ya está en uso. Debe de ser único.", "warning")
             es_valido = False
+        if form.contrasena.data:
+            contrasena = pwd_context.hash(form.contrasena.data.strip())
+        else:
+            contrasena = pwd_context.hash(generar_contrasena())
+        # Determinar Ventanilla como NO DEFINIDO
+        ventanilla_nd = Ventanilla.query.filter_by(nombre="NO DEFINIDO").first()
         # Guardar
         if es_valido:
             usuario = Usuario(
@@ -191,7 +201,10 @@ def new():
                 nombres=safe_string(form.nombres.data, save_enie=True),
                 apellido_paterno=safe_string(form.apellido_paterno.data, save_enie=True),
                 apellido_materno=safe_string(form.apellido_materno.data, save_enie=True),
-                contrasena=generar_contrasena(),
+                contrasena=contrasena,
+                unidad_id=form.unidad.data,
+                es_acceso_frontend=form.es_acceso_frontend.data,
+                ventanilla=ventanilla_nd,
             )
             usuario.save()
             bitacora = Bitacora(
@@ -229,6 +242,10 @@ def edit(usuario_id):
             usuario.nombres = safe_string(form.nombres.data, save_enie=True)
             usuario.apellido_paterno = safe_string(form.apellido_paterno.data, save_enie=True)
             usuario.apellido_materno = safe_string(form.apellido_materno.data, save_enie=True)
+            if form.contrasena.data:
+                usuario.contrasena = pwd_context.hash(form.contrasena.data.strip())
+            usuario.unidad_id = form.unidad.data
+            usuario.es_acceso_frontend = form.es_acceso_frontend.data
             usuario.save()
             bitacora = Bitacora(
                 modulo=Modulo.query.filter_by(nombre=MODULO).first(),
@@ -245,6 +262,8 @@ def edit(usuario_id):
     form.nombres.data = usuario.nombres
     form.apellido_paterno.data = usuario.apellido_paterno
     form.apellido_materno.data = usuario.apellido_materno
+    form.unidad.data = usuario.unidad_id
+    form.es_acceso_frontend.data = usuario.es_acceso_frontend
     return render_template("usuarios/edit.jinja2", form=form, usuario=usuario)
 
 

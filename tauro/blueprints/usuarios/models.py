@@ -37,6 +37,7 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     apellido_paterno: Mapped[str] = mapped_column(String(256))
     apellido_materno: Mapped[str] = mapped_column(String(256))
     contrasena: Mapped[Optional[str]] = mapped_column(String(256))
+    es_acceso_frontend: Mapped[bool] = mapped_column(default=False)
 
     # Hijos
     bitacoras: Mapped[List["Bitacora"]] = relationship("Bitacora", back_populates="usuario")

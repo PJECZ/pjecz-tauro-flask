@@ -61,6 +61,7 @@ def datatable_json():
                     "nombre": resultado.nombre,
                     "url": url_for("turnos_tipos.detail", turno_tipo_id=resultado.id),
                 },
+                "nivel": resultado.nivel,
                 "es_activo": resultado.es_activo,
             }
         )
@@ -104,17 +105,34 @@ def new():
     """Nuevo Turno Tipo"""
     form = TurnoTipoForm()
     if form.validate_on_submit():
-        turno_tipo = TurnoTipo(nombre=safe_string(form.nombre.data))
-        turno_tipo.save()
-        bitacora = Bitacora(
-            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
-            usuario=current_user,
-            descripcion=safe_message(f"Nuevo Turno Tipo {turno_tipo.nombre}"),
-            url=url_for("turnos_tipos.detail", turno_tipo_id=turno_tipo.id),
-        )
-        bitacora.save()
-        flash(bitacora.descripcion, "success")
-        return redirect(bitacora.url)
+        es_valido = True
+        # Validar que el nombre sea único
+        nombre = safe_string(form.nombre.data)
+        if TurnoTipo.query.filter_by(nombre=nombre).first():
+            flash(f"El nombre {nombre} ya existe, debe ser único", "warning")
+            es_valido = False
+        # Validar si el nivel es único
+        nivel = form.nivel.data
+        if TurnoTipo.query.filter_by(nivel=nivel).first():
+            flash(f"El nivel {nivel} ya existe, debe ser único", "warning")
+            es_valido = False
+        # Guardar
+        if es_valido:
+            turno_tipo = TurnoTipo(
+                nombre=nombre,
+                nivel=nivel,
+                es_activo=form.es_activo.data,
+            )
+            turno_tipo.save()
+            bitacora = Bitacora(
+                modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+                usuario=current_user,
+                descripcion=safe_message(f"Nuevo Turno Tipo {turno_tipo.nombre}"),
+                url=url_for("turnos_tipos.detail", turno_tipo_id=turno_tipo.id),
+            )
+            bitacora.save()
+            flash(bitacora.descripcion, "success")
+            return redirect(bitacora.url)
     return render_template("turnos_tipos/new.jinja2", form=form)
 
 
@@ -125,19 +143,36 @@ def edit(turno_tipo_id):
     turno_tipo = TurnoTipo.query.get_or_404(turno_tipo_id)
     form = TurnoTipoForm()
     if form.validate_on_submit():
-        turno_tipo.nombre = safe_string(form.nombre.data)
-        turno_tipo.es_activo = form.es_activo.data
-        turno_tipo.save()
-        bitacora = Bitacora(
-            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
-            usuario=current_user,
-            descripcion=safe_message(f"Editado Turno Tipo {turno_tipo.nombre}"),
-            url=url_for("turnos_tipos.detail", turno_tipo_id=turno_tipo.id),
-        )
-        bitacora.save()
-        flash(bitacora.descripcion, "success")
-        return redirect(bitacora.url)
+        es_valido = True
+        # Validar que el nombre sea único
+        nombre = safe_string(form.nombre.data)
+        if nombre != turno_tipo.nombre:
+            if TurnoTipo.query.filter_by(nombre=nombre).first():
+                flash(f"El nombre {nombre} ya existe, debe ser único", "warning")
+                es_valido = False
+        # Validar si el nivel es único
+        nivel = form.nivel.data
+        if nivel != turno_tipo.nivel:
+            if TurnoTipo.query.filter_by(nivel=nivel).first():
+                flash(f"El nivel {nivel} ya existe, debe ser único", "warning")
+                es_valido = False
+        # Guardar cambios
+        if es_valido:
+            turno_tipo.nombre = nombre
+            turno_tipo.nivel = nivel
+            turno_tipo.es_activo = form.es_activo.data
+            turno_tipo.save()
+            bitacora = Bitacora(
+                modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+                usuario=current_user,
+                descripcion=safe_message(f"Editado Turno Tipo {turno_tipo.nombre}"),
+                url=url_for("turnos_tipos.detail", turno_tipo_id=turno_tipo.id),
+            )
+            bitacora.save()
+            flash(bitacora.descripcion, "success")
+            return redirect(url_for("turnos_tipos.list_active"))
     form.nombre.data = turno_tipo.nombre
+    form.nivel.data = turno_tipo.nivel
     form.es_activo.data = turno_tipo.es_activo
     return render_template("turnos_tipos/edit.jinja2", form=form, turno_tipo=turno_tipo)
 
