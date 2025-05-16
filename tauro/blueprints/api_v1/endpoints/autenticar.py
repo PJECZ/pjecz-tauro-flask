@@ -65,6 +65,19 @@ class Authenticate(Resource):
         username = request.form.get("username")
         password = request.form.get("password")
 
+        # Si username es None y password es None, entonces recibir por JSON
+        if username is None and password is None:
+            data = request.get_json()
+            username = data.get("username")
+            password = data.get("password")
+
+        # Si aun asi username es None y password es None, entonces error
+        if username is None or password is None:
+            return TokenSchema(
+                success=False,
+                message="Username y password son requeridos",
+            ).model_dump()
+
         # Validar que username sea un correo electrónico
         try:
             validate_email(username)
