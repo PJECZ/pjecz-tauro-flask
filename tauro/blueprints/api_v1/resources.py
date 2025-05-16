@@ -19,15 +19,20 @@ from tauro.blueprints.api_v1.endpoints.consultar_ventanillas_activas import Cons
 from tauro.blueprints.api_v1.endpoints.crear_turno import CrearTurno
 from tauro.blueprints.api_v1.endpoints.tomar_turno import TomarTurno
 
-settings = get_settings()
-
 api_v1 = Blueprint("api_v1", __name__, url_prefix="/api/v1")
 
+# Crear la API
 api = Api(api_v1)
+
+# CORS
 CORS(api_v1)
-CORS(api_v1, origins=[settings.HOST])
+origins = ["http://localhost:5000", "http://127.0.0.1:5000"]
+settings = get_settings()
+if settings.HOST:
+    origins.append(settings.HOST)
+CORS(api_v1, origins=origins)
 
-
+# Agregar los recursos a la API
 api.add_resource(Authenticate, "/token")
 api.add_resource(ActualizarTurnoEstado, "/actualizar_turno_estado")
 api.add_resource(ActualizarUsuario, "/actualizar_usuario")
