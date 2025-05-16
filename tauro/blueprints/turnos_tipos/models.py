@@ -22,6 +22,7 @@ class TurnoTipo(database.Model, UniversalMixin):
 
     # Columnas
     nombre: Mapped[str] = mapped_column(String(256), unique=True)
+    nivel: Mapped[int] = mapped_column(Integer, unique=True)
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos

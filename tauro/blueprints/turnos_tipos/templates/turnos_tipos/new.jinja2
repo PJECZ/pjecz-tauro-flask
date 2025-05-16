@@ -12,6 +12,7 @@
     {% call f.card() %}
         {% call f.form_tag('turnos_tipos.new', fid='turno_tipo_form') %}
             {% call f.form_group(form.nombre) %}{% endcall %}
+            {% call f.form_group(form.nivel) %}{% endcall %}
             {% call f.form_group(form.es_activo) %}{% endcall %}
             {% call f.form_group(form.guardar) %}{% endcall %}
         {% endcall %}

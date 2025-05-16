@@ -22,6 +22,7 @@
     {% call detail.card(estatus=turno_tipo.estatus) %}
         {{ detail.label_value_big('Id', turno_tipo.id) }}
         {{ detail.label_value('Nombre', turno_tipo.nombre) }}
+        {{ detail.label_value('Nivel', turno_tipo.nivel) }}
         {{ detail.label_value('Activo', turno_tipo.es_activo) }}
     {% endcall %}
 {% endblock %}
