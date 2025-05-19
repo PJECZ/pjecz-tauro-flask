@@ -1,6 +1,7 @@
 """
 API v1 Endpoint: Autenticar
 """
+
 import re
 from datetime import datetime, timedelta
 from functools import wraps
@@ -11,8 +12,11 @@ from email_validator import EmailNotValidError, validate_email
 from flask import current_app, g, request
 from flask_restful import Resource
 
-from tauro.blueprints.api_v1.schemas import ResponseSchema, TokenSchema
+from tauro.blueprints.api_v1.schemas import ResponseSchema, TokenSchema, RolSchemaOut, UnidadOut
 from tauro.blueprints.usuarios.models import Usuario
+from tauro.blueprints.roles.models import Rol
+from tauro.blueprints.usuarios_roles.models import UsuarioRol
+
 
 CONTRASENA_REGEXP = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"  # Contraseña con al menos 8 caracteres, una letra y un número
 
@@ -111,6 +115,22 @@ class Authenticate(Resource):
                 message="Contraseña incorrecta",
             ).model_dump()
 
+        # Verificar si el usuario tiene acceso al front-end
+        if not usuario.es_acceso_frontend:
+            return TokenSchema(
+                success=False,
+                message="El usuario no tiene acceso al front-end",
+            ).model_dump()
+
+        # Extraer un único rol
+        usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
+        if usuarios_roles is None:
+            return TokenSchema(
+                success=False,
+                message="El usuario no tiene un rol asignado",
+            ).model_dump
+        rol = usuarios_roles.rol
+
         # Generar token con PyJWT
         payload = {
             "sub": username,
@@ -127,4 +147,13 @@ class Authenticate(Resource):
             token_type="Bearer",
             expires_in=30 * 60,  # 30 minutos
             username=username,
+            rol=RolSchemaOut(
+                id=rol.id,
+                nombre=rol.nombre,
+            ),
+            unidad=UnidadOut(
+                id=usuario.unidad_id,
+                nombre=usuario.unidad.nombre,
+                clave=usuario.unidad.clave,
+            ),
         ).model_dump()

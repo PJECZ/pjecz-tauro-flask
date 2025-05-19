@@ -16,6 +16,7 @@ from tauro.blueprints.api_v1.schemas import (
     VentanillaUsuarioOut,
     VentanillaActivaOut,
     UnidadOut,
+    RolSchemaOut,
 )
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -24,6 +25,7 @@ from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.blueprints.ventanillas.models import Ventanilla
 from tauro.blueprints.unidades.models import Unidad
+from tauro.blueprints.usuarios_roles.models import UsuarioRol
 
 
 class ActualizarUsuario(Resource):
@@ -141,8 +143,14 @@ class ActualizarUsuario(Resource):
                 ventanilla_nombre=ventanilla_sql.nombre,
                 ventanilla_numero=ventanilla_sql.numero,
             )
-        # Consultar los roles del usuario
-        roles = usuario.get_roles()
+        # # Extraer un único rol
+        usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
+        if usuarios_roles is None:
+            return OneVentanillaUsuarioOut(
+                success=False,
+                message="El usuario no tiene un rol asignado",
+            ).model_dump
+        rol = usuarios_roles.rol
         # Consultar la unidad
         unidad_sql = Unidad.query.get(usuario.unidad_id)
         if unidad_sql:
@@ -159,7 +167,10 @@ class ActualizarUsuario(Resource):
             data=VentanillaUsuarioOut(
                 ventanilla=ventanilla,
                 unidad=unidad,
-                roles=roles,
+                rol=RolSchemaOut(
+                    id=rol.id,
+                    nombre=rol.nombre,
+                ),
                 turnos_tipos=[TurnoTipoOut(id=tt.id, nombre=tt.nombre, nivel=tt.nivel) for tt in turnos_tipos],
                 usuario_nombre_completo=usuario.nombre,
                 ultimo_turno=ultimo_turno,

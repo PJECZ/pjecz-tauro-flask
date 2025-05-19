@@ -13,6 +13,21 @@ class ResponseSchema(BaseModel):
     data: dict | list | None = None
 
 
+class RolSchemaOut(BaseModel):
+    """Esquema para entregar un rol"""
+
+    id: int
+    nombre: str
+
+
+class UnidadOut(BaseModel):
+    """Esquema para entregar una Unidad"""
+
+    id: int
+    clave: str
+    nombre: str
+
+
 class TokenSchema(BaseModel):
     """Esquema para entregar el token"""
 
@@ -22,6 +37,8 @@ class TokenSchema(BaseModel):
     token_type: str | None = None
     expires_in: int | None = None
     username: str | None = None
+    rol: RolSchemaOut | None = None
+    unidad: UnidadOut | None = None
 
 
 class TurnoEstadoOut(BaseModel):
@@ -66,15 +83,8 @@ class UnidadTurnosOut(BaseModel):
     unidad_id: int
     unidad_clave: str
     unidad_nombre: str
+    ultimo_turno: TurnoOut | None
     turnos: list[TurnoOut] | None
-
-
-class UnidadOut(BaseModel):
-    """Esquema para entregar una Unidad"""
-
-    id: int
-    clave: str
-    nombre: str
 
 
 class TurnoUnidadOut(BaseModel):
@@ -112,7 +122,7 @@ class VentanillaUsuarioOut(BaseModel):
 
     ventanilla: VentanillaActivaOut | None
     unidad: UnidadOut | None
-    roles: list[str] | None
+    rol: RolSchemaOut | None = None
     turnos_tipos: list[TurnoTipoOut] | None
     usuario_nombre_completo: str
     ultimo_turno: TurnoOut | None
@@ -138,10 +148,17 @@ class OneTurnoOut(ResponseSchema):
     data: TurnoOut | None = None
 
 
-class ListTurnosOut(ResponseSchema):
-    """Esquema para entregar un turno ya creado"""
+class ListTurnosOut(BaseModel):
+    """Esquema para entregar un listado de todos los turnos"""
 
-    data: list[TurnoUnidadOut] | None = None
+    ultimo_turno: TurnoUnidadOut | None = None
+    turnos: list[TurnoUnidadOut] | None = None
+
+
+class OneListTurnosOut(ResponseSchema):
+    """Esquema para entregar un listado de Turnos"""
+
+    data: ListTurnosOut | None = None
 
 
 class ActualizarTurnoEstadoIn(BaseModel):

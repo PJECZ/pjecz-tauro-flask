@@ -6,7 +6,7 @@ from flask_restful import Resource
 from sqlalchemy import or_
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import ListTurnosOut, TurnoUnidadOut, UnidadOut
+from tauro.blueprints.api_v1.schemas import OneListTurnosOut, ListTurnosOut, TurnoUnidadOut, UnidadOut, TurnoOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -17,7 +17,7 @@ class ConsultarTurnos(Resource):
     """Consultar los turnos EN ESPERA y ATENDIENDO"""
 
     @token_required
-    def get(self) -> ListTurnosOut:
+    def get(self) -> OneListTurnosOut:
         """Consultar los turnos EN ESPERA y ATENDIENDO"""
 
         # Consultar los turnos...
@@ -29,13 +29,13 @@ class ConsultarTurnos(Resource):
             .join(TurnoTipo)
             .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "ATENDIENDO"))
             .filter(Turno.estatus == "A")
-            .order_by(TurnoTipo.nombre, Turno.numero)
+            .order_by(TurnoTipo.nivel, Turno.numero)
             .all()
         )
 
         # Si no se encuentran turnos, entregar success en verdadero
         if not turnos:
-            return ListTurnosOut(
+            return OneListTurnosOut(
                 success=True,
                 message="No hay turnos en espera",
             ).model_dump()
@@ -44,22 +44,45 @@ class ConsultarTurnos(Resource):
         unidades_sql = Unidad.query.all()
         unidades = {unidad.id: unidad for unidad in unidades_sql}
 
+        # Consultar Último turno en estado 'ATENDIENDO'
+        ultimo_turno_atendiendo = (
+            Turno.query.join(TurnoEstado)
+            .join(TurnoTipo)
+            .filter(TurnoEstado.nombre == "ATENDIENDO")
+            .filter(Turno.estatus == "A")
+            .order_by(TurnoTipo.nivel, Turno.numero)
+            .first()
+        )
+
         # Entregar JSON
-        return ListTurnosOut(
+        return OneListTurnosOut(
             success=True,
             message="Se han consultado todos los turnos",
-            data=[
-                TurnoUnidadOut(
-                    turno_id=turno.id,
-                    turno_numero=turno.numero,
-                    turno_estado=turno.turno_estado.nombre,
-                    turno_comentarios=turno.comentarios,
+            data=ListTurnosOut(
+                ultimo_turno=TurnoUnidadOut(
+                    turno_id=ultimo_turno_atendiendo.id,
+                    turno_numero=ultimo_turno_atendiendo.numero,
+                    turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
+                    turno_comentarios=ultimo_turno_atendiendo.comentarios,
                     unidad=UnidadOut(
-                        id=unidades[turno.unidad_id].id,
-                        nombre=unidades[turno.unidad_id].nombre,
-                        clave=unidades[turno.unidad_id].clave,
+                        id=unidades[ultimo_turno_atendiendo.unidad_id].id,
+                        nombre=unidades[ultimo_turno_atendiendo.unidad_id].nombre,
+                        clave=unidades[ultimo_turno_atendiendo.unidad_id].clave,
                     ),
-                )
-                for turno in turnos
-            ],
+                ),
+                turnos=[
+                    TurnoUnidadOut(
+                        turno_id=turno.id,
+                        turno_numero=turno.numero,
+                        turno_estado=turno.turno_estado.nombre,
+                        turno_comentarios=turno.comentarios,
+                        unidad=UnidadOut(
+                            id=unidades[turno.unidad_id].id,
+                            nombre=unidades[turno.unidad_id].nombre,
+                            clave=unidades[turno.unidad_id].clave,
+                        ),
+                    )
+                    for turno in turnos
+                ],
+            ),
         ).model_dump()
