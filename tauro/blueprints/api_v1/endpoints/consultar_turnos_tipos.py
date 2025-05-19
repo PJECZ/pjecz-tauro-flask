@@ -23,5 +23,7 @@ class ConsultarTurnosTipos(Resource):
         return ListTurnosTiposOut(
             success=True,
             message="Se han consultado los tipos de turnos",
-            data=[TurnoTipoOut(id=turno_tipo.id, nombre=turno_tipo.nombre) for turno_tipo in turnos_tipos],
+            data=[
+                TurnoTipoOut(id=turno_tipo.id, nombre=turno_tipo.nombre, nivel=turno_tipo.nivel) for turno_tipo in turnos_tipos
+            ],
         ).model_dump()

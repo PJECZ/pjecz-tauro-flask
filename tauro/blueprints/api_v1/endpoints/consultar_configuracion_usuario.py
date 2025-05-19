@@ -1,5 +1,5 @@
 """
-API v1 Endpoint: Consultar Ventanilla
+API v1 Endpoint: Consultar Configuracion Usuario
 """
 
 from flask import g
@@ -8,19 +8,28 @@ from sqlalchemy import or_
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneVentanillaUsuarioOut, TurnoOut, TurnoTipoOut, VentanillaUsuarioOut
+from tauro.blueprints.api_v1.schemas import (
+    OneVentanillaUsuarioOut,
+    TurnoOut,
+    TurnoTipoOut,
+    VentanillaUsuarioOut,
+    VentanillaActivaOut,
+    UnidadOut,
+)
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
+from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.unidades.models import Unidad
 
 
-class ConsultarVentanilla(Resource):
-    """Consultar ventanilla del usuario"""
+class ConsultarConfiguracionUsuario(Resource):
+    """Consultar configuración del usuario"""
 
     @token_required
     def get(self) -> OneVentanillaUsuarioOut:
-        """Consultar ventanilla del usuario"""
+        """Consultar configuración del usuario"""
 
         # Consultar el usuario
         username = g.current_user
@@ -38,7 +47,10 @@ class ConsultarVentanilla(Resource):
         )
         turnos_tipos = None
         if usuarios_turnos_tipos:
-            turnos_tipos = [TurnoTipoOut(id=utt.turno_tipo.id, nombre=utt.turno_tipo.nombre) for utt in usuarios_turnos_tipos]
+            turnos_tipos = [
+                TurnoTipoOut(id=utt.turno_tipo.id, nombre=utt.turno_tipo.nombre, nivel=utt.turno_tipo.nivel)
+                for utt in usuarios_turnos_tipos
+            ]
 
         # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
         turnos = (
@@ -51,17 +63,38 @@ class ConsultarVentanilla(Resource):
         )
         ultimo_turno = None
         if turnos:
-            ultimo_turno = TurnoOut(id=turnos.id, numero=turnos.numero, comentarios=turnos.comentarios)
+            ultimo_turno = TurnoOut(
+                turno_id=turnos.id,
+                turno_numero=turnos.numero,
+                turno_estado=turnos.turno_estado.nombre,
+                turno_comentarios=turnos.comentarios,
+            )
+        # Consultar la ventanilla del usuario
+        ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
+        ventanilla = VentanillaActivaOut(
+            ventanilla_id=ventanilla_sql.id, ventanilla_nombre=ventanilla_sql.nombre, ventanilla_numero=ventanilla_sql.numero
+        )
+        # Consultar los roles del usuario
+        roles = usuario.get_roles()
+        # Consultar la unidad
+        unidad_sql = Unidad.query.get(usuario.unidad_id)
+        if unidad_sql:
+            unidad = UnidadOut(
+                id=unidad_sql.id,
+                clave=unidad_sql.clave,
+                nombre=unidad_sql.nombre,
+            )
 
         # Entregar JSON
         return OneVentanillaUsuarioOut(
             success=True,
             message=f"Se ha consultado la ventanilla de {username}",
             data=VentanillaUsuarioOut(
-                id=usuario.ventanilla.id,
-                ventanilla=usuario.ventanilla.nombre,
+                ventanilla=ventanilla,
+                unidad=unidad,
                 turnos_tipos=turnos_tipos,
                 usuario_nombre_completo=usuario.nombre,
+                roles=roles,
                 ultimo_turno=ultimo_turno,
             ),
         ).model_dump()

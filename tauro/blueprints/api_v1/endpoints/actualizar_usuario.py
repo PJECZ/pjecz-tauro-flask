@@ -14,6 +14,8 @@ from tauro.blueprints.api_v1.schemas import (
     TurnoOut,
     TurnoTipoOut,
     VentanillaUsuarioOut,
+    VentanillaActivaOut,
+    UnidadOut,
 )
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -21,6 +23,7 @@ from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.unidades.models import Unidad
 
 
 class ActualizarUsuario(Resource):
@@ -123,16 +126,41 @@ class ActualizarUsuario(Resource):
         )
         ultimo_turno = None
         if turnos:
-            ultimo_turno = TurnoOut(id=turnos.id, numero=turnos.numero, comentarios=turnos.comentarios)
+            ultimo_turno = TurnoOut(
+                turno_id=turnos.id,
+                turno_numero=turnos.numero,
+                turno_estado=turnos.turno_estado.nombre,
+                turno_comentarios=turnos.comentarios,
+            )
+        # Consultar Ventanilla
+        ventanilla = None
+        ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
+        if ventanilla_sql:
+            ventanilla = VentanillaActivaOut(
+                ventanilla_id=ventanilla_sql.id,
+                ventanilla_nombre=ventanilla_sql.nombre,
+                ventanilla_numero=ventanilla_sql.numero,
+            )
+        # Consultar los roles del usuario
+        roles = usuario.get_roles()
+        # Consultar la unidad
+        unidad_sql = Unidad.query.get(usuario.unidad_id)
+        if unidad_sql:
+            unidad = UnidadOut(
+                id=unidad_sql.id,
+                clave=unidad_sql.clave,
+                nombre=unidad_sql.nombre,
+            )
 
         # Entregar JSON
         return OneVentanillaUsuarioOut(
             success=True,
             message="Usuario actualizado",
             data=VentanillaUsuarioOut(
-                id=usuario.ventanilla_id,
-                ventanilla=ventanilla.nombre,
-                turnos_tipos=[TurnoTipoOut(id=tt.id, nombre=tt.nombre) for tt in turnos_tipos],
+                ventanilla=ventanilla,
+                unidad=unidad,
+                roles=roles,
+                turnos_tipos=[TurnoTipoOut(id=tt.id, nombre=tt.nombre, nivel=tt.nivel) for tt in turnos_tipos],
                 usuario_nombre_completo=usuario.nombre,
                 ultimo_turno=ultimo_turno,
             ),
