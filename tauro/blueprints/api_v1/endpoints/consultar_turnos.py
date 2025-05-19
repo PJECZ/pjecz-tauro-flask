@@ -6,10 +6,11 @@ from flask_restful import Resource
 from sqlalchemy import or_
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import ListTurnosOut, TurnoOut
+from tauro.blueprints.api_v1.schemas import ListTurnosOut, TurnoUnidadOut, UnidadOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
+from tauro.blueprints.unidades.models import Unidad
 
 
 class ConsultarTurnos(Resource):
@@ -39,9 +40,26 @@ class ConsultarTurnos(Resource):
                 message="No hay turnos en espera",
             ).model_dump()
 
+        # Consultar Unidades
+        unidades_sql = Unidad.query.all()
+        unidades = {unidad.id: unidad for unidad in unidades_sql}
+
         # Entregar JSON
         return ListTurnosOut(
             success=True,
             message="Se han consultado todos los turnos",
-            data=[TurnoOut(id=turno.id, numero=turno.numero, comentarios=turno.comentarios) for turno in turnos],
+            data=[
+                TurnoUnidadOut(
+                    turno_id=turno.id,
+                    turno_numero=turno.numero,
+                    turno_estado=turno.turno_estado.nombre,
+                    turno_comentarios=turno.comentarios,
+                    unidad=UnidadOut(
+                        id=unidades[turno.unidad_id].id,
+                        nombre=unidades[turno.unidad_id].nombre,
+                        clave=unidades[turno.unidad_id].clave,
+                    ),
+                )
+                for turno in turnos
+            ],
         ).model_dump()

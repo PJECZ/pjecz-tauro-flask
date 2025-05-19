@@ -37,7 +37,7 @@ class ActualizarTurnoEstado(Resource):
         turno_estado_in = ActualizarTurnoEstadoIn.model_validate(payload)
 
         # Consultar el turno
-        turno = Turno.query.get(turno_estado_in.id)
+        turno = Turno.query.get(turno_estado_in.turno_id)
         if turno is None:
             return OneTurnoOut(
                 success=False,
@@ -74,8 +74,9 @@ class ActualizarTurnoEstado(Resource):
             success=True,
             message=f"Se ha cambiado el turno {turno.numero} a {turno_estado.nombre} por {username}",
             data=TurnoOut(
-                id=turno.id,
-                numero=turno.numero,
-                comentarios=turno.comentarios,
+                turno_id=turno.id,
+                turno_numero=turno.numero,
+                turno_estado=turno.turno_estado.nombre,
+                turno_comentarios=turno.comentarios,
             ),
         ).model_dump()

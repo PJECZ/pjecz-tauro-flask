@@ -23,5 +23,10 @@ class ConsultarVentanillasActivas(Resource):
         return ListVentanillasActivasOut(
             success=True,
             message="Se han consultado las ventanillas activas",
-            data=[VentanillaActivaOut(id=ventanilla.id, nombre=ventanilla.nombre) for ventanilla in ventanillas],
+            data=[
+                VentanillaActivaOut(
+                    ventanilla_id=ventanilla.id, ventanilla_nombre=ventanilla.nombre, ventanilla_numero=ventanilla.numero
+                )
+                for ventanilla in ventanillas
+            ],
         ).model_dump()

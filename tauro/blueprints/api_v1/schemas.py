@@ -42,6 +42,7 @@ class TurnoTipoOut(BaseModel):
 
     id: int
     nombre: str
+    nivel: int
 
 
 class ListTurnosTiposOut(ResponseSchema):
@@ -53,16 +54,51 @@ class ListTurnosTiposOut(ResponseSchema):
 class TurnoOut(BaseModel):
     """Esquema para entregar un turno"""
 
+    turno_id: int
+    turno_numero: int
+    turno_estado: str
+    turno_comentarios: str | None
+
+
+class UnidadTurnosOut(BaseModel):
+    """Esquema para entregar una unidad con sus turnos"""
+
+    unidad_id: int
+    unidad_clave: str
+    unidad_nombre: str
+    turnos: list[TurnoOut] | None
+
+
+class UnidadOut(BaseModel):
+    """Esquema para entregar una Unidad"""
+
     id: int
-    numero: int
-    comentarios: str | None
+    clave: str
+    nombre: str
+
+
+class TurnoUnidadOut(BaseModel):
+    """Esquema para entregar un turno"""
+
+    turno_id: int
+    turno_numero: int
+    turno_estado: str
+    turno_comentarios: str | None
+    unidad: UnidadOut
+
+
+class OneUnidadTurnosOut(ResponseSchema):
+    """Esquema para entregar una unidad con sus turnos"""
+
+    data: UnidadTurnosOut | None = None
 
 
 class VentanillaActivaOut(BaseModel):
     """Esquema para entregar una ventanilla activa"""
 
-    id: int
-    nombre: str
+    ventanilla_id: int
+    ventanilla_nombre: str
+    ventanilla_numero: int | None
 
 
 class ListVentanillasActivasOut(ResponseSchema):
@@ -74,8 +110,9 @@ class ListVentanillasActivasOut(ResponseSchema):
 class VentanillaUsuarioOut(BaseModel):
     """Esquema para entregar una ventanilla de un usuario"""
 
-    id: int  # Ventanilla ID
-    ventanilla: str  # Ventanilla nombre
+    ventanilla: VentanillaActivaOut | None
+    unidad: UnidadOut | None
+    roles: list[str] | None
     turnos_tipos: list[TurnoTipoOut] | None
     usuario_nombre_completo: str
     ultimo_turno: TurnoOut | None
@@ -104,13 +141,13 @@ class OneTurnoOut(ResponseSchema):
 class ListTurnosOut(ResponseSchema):
     """Esquema para entregar un turno ya creado"""
 
-    data: list[TurnoOut] | None = None
+    data: list[TurnoUnidadOut] | None = None
 
 
 class ActualizarTurnoEstadoIn(BaseModel):
     """Esquema para cambiar el estado de un turno"""
 
-    id: int  # Turno ID
+    turno_id: int  # Turno ID
     turno_estado_id: int  # Turno Estado ID
 
 
