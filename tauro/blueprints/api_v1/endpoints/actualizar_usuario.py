@@ -16,7 +16,7 @@ from tauro.blueprints.api_v1.schemas import (
     VentanillaUsuarioOut,
     VentanillaActivaOut,
     UnidadOut,
-    RolSchemaOut,
+    RolOut,
 )
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -167,7 +167,7 @@ class ActualizarUsuario(Resource):
             data=VentanillaUsuarioOut(
                 ventanilla=ventanilla,
                 unidad=unidad,
-                rol=RolSchemaOut(
+                rol=RolOut(
                     id=rol.id,
                     nombre=rol.nombre,
                 ),

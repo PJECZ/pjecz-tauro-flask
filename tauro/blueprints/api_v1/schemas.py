@@ -13,7 +13,7 @@ class ResponseSchema(BaseModel):
     data: dict | list | None = None
 
 
-class RolSchemaOut(BaseModel):
+class RolOut(BaseModel):
     """Esquema para entregar un rol"""
 
     id: int
@@ -38,7 +38,7 @@ class TokenSchema(BaseModel):
     expires_in: int | None = None
     username: str | None = None
     usuario_nombre_completo: str | None = None
-    rol: RolSchemaOut | None = None
+    rol: RolOut | None = None
     unidad: UnidadOut | None = None
 
 
@@ -123,7 +123,7 @@ class VentanillaUsuarioOut(BaseModel):
 
     ventanilla: VentanillaActivaOut | None
     unidad: UnidadOut | None
-    rol: RolSchemaOut | None = None
+    rol: RolOut | None = None
     turnos_tipos: list[TurnoTipoOut] | None
     usuario_nombre_completo: str
     ultimo_turno: TurnoOut | None
