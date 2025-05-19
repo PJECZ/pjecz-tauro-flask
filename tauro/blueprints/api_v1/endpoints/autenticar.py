@@ -147,6 +147,7 @@ class Authenticate(Resource):
             token_type="Bearer",
             expires_in=30 * 60,  # 30 minutos
             username=username,
+            usuario_nombre_completo=usuario.nombre,
             rol=RolSchemaOut(
                 id=rol.id,
                 nombre=rol.nombre,

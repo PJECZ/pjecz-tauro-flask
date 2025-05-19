@@ -37,6 +37,7 @@ class TokenSchema(BaseModel):
     token_type: str | None = None
     expires_in: int | None = None
     username: str | None = None
+    usuario_nombre_completo: str | None = None
     rol: RolSchemaOut | None = None
     unidad: UnidadOut | None = None
 

@@ -58,6 +58,15 @@ class ConsultarTurnosUnidad(Resource):
             .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
         )
+        if ultimo_turno_atendiendo:
+            ultimo_turno = TurnoOut(
+                turno_id=ultimo_turno_atendiendo.id,
+                turno_numero=ultimo_turno_atendiendo.numero,
+                turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
+                turno_comentarios=ultimo_turno_atendiendo.comentarios,
+            )
+        else:
+            ultimo_turno = None
 
         # Entregar JSON
         return OneUnidadTurnosOut(
@@ -67,12 +76,7 @@ class ConsultarTurnosUnidad(Resource):
                 unidad_id=unidad.id,
                 unidad_clave=unidad.clave,
                 unidad_nombre=unidad.nombre,
-                ultimo_turno=TurnoOut(
-                    turno_id=ultimo_turno_atendiendo.id,
-                    turno_numero=ultimo_turno_atendiendo.numero,
-                    turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
-                    turno_comentarios=ultimo_turno_atendiendo.comentarios,
-                ),
+                ultimo_turno=ultimo_turno,
                 turnos=[
                     TurnoOut(
                         turno_id=turno.id,
