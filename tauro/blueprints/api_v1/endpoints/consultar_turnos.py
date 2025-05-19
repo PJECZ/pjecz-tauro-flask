@@ -53,23 +53,27 @@ class ConsultarTurnos(Resource):
             .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
         )
+        if ultimo_turno_atendiendo:
+            ultimo_turno = TurnoUnidadOut(
+                turno_id=ultimo_turno_atendiendo.id,
+                turno_numero=ultimo_turno_atendiendo.numero,
+                turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
+                turno_comentarios=ultimo_turno_atendiendo.comentarios,
+                unidad=UnidadOut(
+                    id=unidades[ultimo_turno_atendiendo.unidad_id].id,
+                    nombre=unidades[ultimo_turno_atendiendo.unidad_id].nombre,
+                    clave=unidades[ultimo_turno_atendiendo.unidad_id].clave,
+                ),
+            )
+        else:
+            ultimo_turno = None
 
         # Entregar JSON
         return OneListTurnosOut(
             success=True,
             message="Se han consultado todos los turnos",
             data=ListTurnosOut(
-                ultimo_turno=TurnoUnidadOut(
-                    turno_id=ultimo_turno_atendiendo.id,
-                    turno_numero=ultimo_turno_atendiendo.numero,
-                    turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
-                    turno_comentarios=ultimo_turno_atendiendo.comentarios,
-                    unidad=UnidadOut(
-                        id=unidades[ultimo_turno_atendiendo.unidad_id].id,
-                        nombre=unidades[ultimo_turno_atendiendo.unidad_id].nombre,
-                        clave=unidades[ultimo_turno_atendiendo.unidad_id].clave,
-                    ),
-                ),
+                ultimo_turno=ultimo_turno,
                 turnos=[
                     TurnoUnidadOut(
                         turno_id=turno.id,
