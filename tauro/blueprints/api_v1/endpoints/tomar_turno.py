@@ -92,8 +92,9 @@ class TomarTurno(Resource):
             success=True,
             message=f"Turno {turno.numero} tomado por {usuario.nombre}",
             data=TurnoOut(
-                id=turno.id,
-                numero=turno.numero,
-                comentarios=turno.comentarios,
+                turno_id=turno.id,
+                turno_numero=turno.numero,
+                turno_estado=turno.turno_estado.nombre,
+                turno_comentarios=turno.comentarios,
             ),
         ).model_dump()
