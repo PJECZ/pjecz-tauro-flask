@@ -48,6 +48,17 @@ class ConsultarTurnosUnidad(Resource):
                 message="No hay turnos en espera",
             ).model_dump()
 
+        # Consultar Último turno en estado 'ATENDIENDO'
+        ultimo_turno_atendiendo = (
+            Turno.query.join(TurnoEstado)
+            .join(TurnoTipo)
+            .filter(Turno.unidad_id == unidad.id)
+            .filter(TurnoEstado.nombre == "ATENDIENDO")
+            .filter(Turno.estatus == "A")
+            .order_by(TurnoTipo.nivel, Turno.numero)
+            .first()
+        )
+
         # Entregar JSON
         return OneUnidadTurnosOut(
             success=True,
@@ -56,6 +67,12 @@ class ConsultarTurnosUnidad(Resource):
                 unidad_id=unidad.id,
                 unidad_clave=unidad.clave,
                 unidad_nombre=unidad.nombre,
+                ultimo_turno=TurnoOut(
+                    turno_id=ultimo_turno_atendiendo.id,
+                    turno_numero=ultimo_turno_atendiendo.numero,
+                    turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
+                    turno_comentarios=ultimo_turno_atendiendo.comentarios,
+                ),
                 turnos=[
                     TurnoOut(
                         turno_id=turno.id,
