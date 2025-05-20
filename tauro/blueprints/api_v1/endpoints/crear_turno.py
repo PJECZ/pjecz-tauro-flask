@@ -2,9 +2,11 @@
 API v1 Endpoint: Crear Turno
 """
 
-from datetime import datetime, date, time
-from flask import g, request
+from datetime import datetime
+
+from flask import current_app, g, request
 from flask_restful import Resource
+from pytz import timezone
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from lib.safe_string import safe_string
@@ -74,8 +76,9 @@ class CrearTurno(Resource):
             ).model_dump()
 
         # Definir el numero de turno
-        fecha_hoy = datetime.combine(date.today(), time(0, 0, 0))
-        numero = Turno.query.filter(Turno.creado >= fecha_hoy).count() + 1
+        fecha_hoy = datetime.now(tz=timezone(current_app.config["TZ"])).date()
+        timestamp_hoy = datetime(year=fecha_hoy.year, month=fecha_hoy.month, day=fecha_hoy.day, hour=0, minute=0, second=0)
+        numero = Turno.query.filter(Turno.creado >= timestamp_hoy).count() + 1
 
         # Crear el nuevo turno
         turno = Turno(
