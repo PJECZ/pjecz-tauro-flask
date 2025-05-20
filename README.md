@@ -78,6 +78,9 @@ HOST=http://127.0.0.1:5000
 # Salt sirve para cifrar el ID con HashID, debe ser igual en la API
 SALT=XXXXXXXXXXXXXXXX
 
+# Huso horario
+TZ=America/Mexico_City
+
 # Si esta en PRODUCTION se evita reiniciar la base de datos
 DEPLOYMENT_ENVIRONMENT=develop
 ```

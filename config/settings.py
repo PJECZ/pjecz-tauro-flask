@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     SALT: str = ""
     SECRET_KEY: str = ""
     SQLALCHEMY_DATABASE_URI: str = ""
+    TZ: str = "America/Mexico_City"
 
     class Config:
         """Load configuration"""
