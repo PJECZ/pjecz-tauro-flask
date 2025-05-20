@@ -5,7 +5,7 @@ API v1 Endpoint: Consultar Turnos Unidad
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from tauro.blueprints.api_v1.schemas import OneUnidadTurnosOut, TurnoOut, UnidadTurnosOut
+from tauro.blueprints.api_v1.schemas import OneUnidadTurnosOut, TurnoOut, UnidadTurnosOut, UnidadOut, VentanillaOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -64,6 +64,11 @@ class ConsultarTurnosUnidad(Resource):
                 turno_numero=ultimo_turno_atendiendo.numero,
                 turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
                 turno_comentarios=ultimo_turno_atendiendo.comentarios,
+                ventanilla=VentanillaOut(
+                    id=ultimo_turno_atendiendo.ventanilla.id,
+                    nombre=ultimo_turno_atendiendo.ventanilla.nombre,
+                    numero=ultimo_turno_atendiendo.ventanilla.numero,
+                ),
             )
         else:
             ultimo_turno = None
@@ -73,9 +78,7 @@ class ConsultarTurnosUnidad(Resource):
             success=True,
             message=f"Se han consultado los turnos de {unidad.clave}",
             data=UnidadTurnosOut(
-                unidad_id=unidad.id,
-                unidad_clave=unidad.clave,
-                unidad_nombre=unidad.nombre,
+                unidad=UnidadOut(id=unidad.id, clave=unidad.clave, nombre=unidad.nombre),
                 ultimo_turno=ultimo_turno,
                 turnos=[
                     TurnoOut(
@@ -83,6 +86,11 @@ class ConsultarTurnosUnidad(Resource):
                         turno_numero=turno.numero,
                         turno_estado=turno.turno_estado.nombre,
                         turno_comentarios=turno.comentarios,
+                        ventanilla=VentanillaOut(
+                            id=turno.ventanilla.id,
+                            nombre=turno.ventanilla.nombre,
+                            numero=turno.ventanilla.numero,
+                        ),
                     )
                     for turno in turnos
                 ],

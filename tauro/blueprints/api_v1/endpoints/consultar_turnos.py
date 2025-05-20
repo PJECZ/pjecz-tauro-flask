@@ -6,7 +6,7 @@ from flask_restful import Resource
 from sqlalchemy import or_
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneListTurnosOut, ListTurnosOut, TurnoUnidadOut, UnidadOut, TurnoOut
+from tauro.blueprints.api_v1.schemas import OneListTurnosOut, ListTurnosOut, TurnoUnidadOut, UnidadOut, VentanillaOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -64,6 +64,11 @@ class ConsultarTurnos(Resource):
                     nombre=unidades[ultimo_turno_atendiendo.unidad_id].nombre,
                     clave=unidades[ultimo_turno_atendiendo.unidad_id].clave,
                 ),
+                ventanilla=VentanillaOut(
+                    id=ultimo_turno_atendiendo.ventanilla_id,
+                    nombre=ultimo_turno_atendiendo.ventanilla.nombre,
+                    numero=ultimo_turno_atendiendo.ventanilla.numero,
+                ),
             )
         else:
             ultimo_turno = None
@@ -84,6 +89,11 @@ class ConsultarTurnos(Resource):
                             id=unidades[turno.unidad_id].id,
                             nombre=unidades[turno.unidad_id].nombre,
                             clave=unidades[turno.unidad_id].clave,
+                        ),
+                        ventanilla=VentanillaOut(
+                            id=turno.ventanilla_id,
+                            nombre=turno.ventanilla.nombre,
+                            numero=turno.ventanilla.numero,
                         ),
                     )
                     for turno in turnos
