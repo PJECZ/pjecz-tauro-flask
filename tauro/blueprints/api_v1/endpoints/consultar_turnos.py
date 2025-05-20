@@ -16,7 +16,6 @@ from tauro.blueprints.unidades.models import Unidad
 class ConsultarTurnos(Resource):
     """Consultar los turnos EN ESPERA y ATENDIENDO"""
 
-    @token_required
     def get(self) -> OneListTurnosOut:
         """Consultar los turnos EN ESPERA y ATENDIENDO"""
 

@@ -59,6 +59,7 @@
                 <tr>
                     <th>Correo electrónico</th>
                     <th>Nombre completo</th>
+                    <th>Acceso al Frontend</th>
                 </tr>
             </thead>
         </table>
@@ -76,7 +77,8 @@
         configDTUsuarios['ajax']['data'] = {{ filtros }};
         configDTUsuarios['columns'] = [
             { data: "detalle" },
-            { data: "nombre" }
+            { data: "nombre" },
+            { data: "acceso_frontend" }
         ];
         configDTUsuarios['columnDefs'] = [
             {
@@ -94,6 +96,16 @@
                         return '<span title="' + data + '">' + data.substring(0, 24) + '…</span>';
                     }
                     return data;
+                }
+            },
+            {
+                targets: 2, // acceso_frontend
+                data: null,
+                render: function(data, type, row, meta) {
+                    if (data) {
+                        return '<span class="iconify" data-icon="mdi:checkbox-marked" style="font-size: 1.4em"></span>';
+                    }
+                    return '<span class="iconify text-secondary" data-icon="mdi:checkbox-blank-outline" style="font-size: 1.4em"></span>';
                 }
             }
         ];

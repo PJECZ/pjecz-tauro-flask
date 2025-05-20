@@ -104,8 +104,31 @@
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.numero + '</a>';
                 }
+            },
+            {
+                targets: 4, // estado
+                data: null,
+                render: function(data, type, row, meta) {
+                    let bgcolor = "bg-dark";
+                    switch (data)    {
+                        case "EN ESPERA":     bgcolor = 'bg-warning text-dark';   break;
+                        case "ATENDIENDO":    bgcolor = 'bg-primary';             break;
+                        case "COMPLETADO":    bgcolor = 'bg-success';             break;
+                        case "CANCELADO":     bgcolor = 'bg-danger';              break;
+                    }
+                    return '<span class="badge rounded-pill ' + bgcolor + '">' + data + '</span>';
+                }
             }
         ];
+        // Colores filas
+        configDataTable['rowCallback'] = function(row, data) {
+            switch (data.estado)    {
+                case "EN ESPERA":                                               break;
+                case "ATENDIENDO":  $(row).css("background-color", "#ebf5fb");  break;
+                case "COMPLETADO":  $(row).css("background-color", "#eafaf1");  break;
+                case "CANCELADO":   $(row).css("background-color", "#fdedec");  break;
+            }
+        };
         // Filtros turnos
         const filtrosTurnos = new FiltrosDataTable('#turnos_datatable', configDataTable);
         filtrosTurnos.agregarInput('filtroNumero', 'numero');

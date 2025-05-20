@@ -9,7 +9,7 @@ from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import ActualizarTurnoEstadoIn, OneTurnoOut, TurnoOut
+from tauro.blueprints.api_v1.schemas import ActualizarTurnoEstadoIn, OneTurnoOut, TurnoOut, VentanillaOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
@@ -65,6 +65,9 @@ class ActualizarTurnoEstado(Resource):
         # Si el estado es "COMPLETADO", definir el tiempo de término
         if turno_estado.nombre == "COMPLETADO":
             turno.termino = datetime.now()
+        # Si el estado es "ATENDIENDO", definir el tiempo de inicio
+        if turno_estado.nombre == "ATENDIENDO":
+            turno.inicio = datetime.now()
 
         # Guardar cambios
         turno.save()
@@ -78,5 +81,10 @@ class ActualizarTurnoEstado(Resource):
                 turno_numero=turno.numero,
                 turno_estado=turno.turno_estado.nombre,
                 turno_comentarios=turno.comentarios,
+                ventanilla=VentanillaOut(
+                    id=turno.ventanilla.id,
+                    nombre=turno.ventanilla.nombre,
+                    numero=turno.ventanilla.numero,
+                ),
             ),
         ).model_dump()
