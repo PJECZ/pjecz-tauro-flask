@@ -14,6 +14,7 @@ from tauro.blueprints.api_v1.schemas import (
     TurnoTipoOut,
     VentanillaUsuarioOut,
     VentanillaActivaOut,
+    VentanillaOut,
     UnidadOut,
     RolOut,
 )
@@ -70,12 +71,15 @@ class ConsultarConfiguracionUsuario(Resource):
                 turno_numero=turnos.numero,
                 turno_estado=turnos.turno_estado.nombre,
                 turno_comentarios=turnos.comentarios,
+                ventanilla=VentanillaOut(
+                    id=turnos.ventanilla.id,
+                    nombre=turnos.ventanilla.nombre,
+                    numero=turnos.ventanilla.numero,
+                ),
             )
         # Consultar la ventanilla del usuario
         ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
-        ventanilla = VentanillaActivaOut(
-            ventanilla_id=ventanilla_sql.id, ventanilla_nombre=ventanilla_sql.nombre, ventanilla_numero=ventanilla_sql.numero
-        )
+        ventanilla = VentanillaOut(id=ventanilla_sql.id, nombre=ventanilla_sql.nombre, numero=ventanilla_sql.numero)
         # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
