@@ -70,10 +70,14 @@ def datatable_json():
                     "numero": f"{resultado.numero}".zfill(3),
                     "url": url_for("turnos.detail", turno_id=resultado.id),
                 },
-                "fecha_hora": resultado.creado.strftime("%Y/%m/%d - %H:%M %p"),
+                "fecha_hora": resultado.creado.strftime("%Y-%m-%d %H:%M"),
                 "tipo": resultado.turno_tipo.nombre,
                 "estado": resultado.turno_estado.nombre,
-                "ventanilla": resultado.ventanilla.nombre,
+                "ventanilla": (
+                    resultado.ventanilla.nombre + f"{ - resultado.ventanilla.numero}"
+                    if resultado.ventanilla.numero is not None
+                    else ""
+                ),
             }
         )
     # Entregar JSON
