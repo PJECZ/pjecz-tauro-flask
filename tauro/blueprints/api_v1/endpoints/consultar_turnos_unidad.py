@@ -5,7 +5,7 @@ API v1 Endpoint: Consultar Turnos Unidad
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from tauro.blueprints.api_v1.schemas import OneUnidadTurnosOut, TurnoOut, UnidadTurnosOut, UnidadOut, VentanillaOut
+from tauro.blueprints.api_v1.schemas import OneUnidadTurnosOut, TurnoOut, UnidadOut, UnidadTurnosOut, VentanillaOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -16,7 +16,7 @@ class ConsultarTurnosUnidad(Resource):
     """Consultar los turnos EN ESPERA y ATENDIENDO de una unidad"""
 
     def get(self, unidad_id: int) -> OneUnidadTurnosOut:
-        """Consultar los turnos EN ESPERA y ATENDIENDO de una unidad"""
+        """Consultar los turnos EN ESPERA y ATENDIENDO de una unidad, aquí NO SE USA el decorador porque es para pantallas"""
 
         # Validar el ID de la unidad
         unidad = Unidad.query.get(unidad_id)

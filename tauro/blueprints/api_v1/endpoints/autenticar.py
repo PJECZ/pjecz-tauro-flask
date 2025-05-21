@@ -12,11 +12,10 @@ from email_validator import EmailNotValidError, validate_email
 from flask import current_app, g, request
 from flask_restful import Resource
 
-from tauro.blueprints.api_v1.schemas import ResponseSchema, TokenSchema, RolOut, UnidadOut
-from tauro.blueprints.usuarios.models import Usuario
+from tauro.blueprints.api_v1.schemas import ResponseSchema, RolOut, TokenSchema, UnidadOut
 from tauro.blueprints.roles.models import Rol
+from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_roles.models import UsuarioRol
-
 
 CONTRASENA_REGEXP = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"  # Contraseña con al menos 8 caracteres, una letra y un número
 
@@ -33,7 +32,7 @@ def token_required(f):
             return (
                 ResponseSchema(
                     success=False,
-                    message="Token is missing!",
+                    message="No hay token en esta solicitud",
                 ).model_dump(),
                 401,
             )
@@ -44,15 +43,15 @@ def token_required(f):
             return (
                 ResponseSchema(
                     success=False,
-                    message="Token has expired!",
+                    message="El token ha expirado!",
                 ).model_dump(),
-                401,
+                200,
             )
         except jwt.InvalidTokenError:
             return (
                 ResponseSchema(
                     success=False,
-                    message="Invalid token!",
+                    message="No es válido el token!",
                 ).model_dump(),
                 401,
             )
@@ -134,8 +133,8 @@ class Authenticate(Resource):
         # Generar token con PyJWT
         payload = {
             "sub": username,
-            "iat": datetime.now(tz=pytz.UTC),
-            "exp": datetime.now(tz=pytz.UTC) + timedelta(minutes=30),
+            "iat": datetime.now(),
+            "exp": datetime.now() + timedelta(hours=1),
         }
         access_token = jwt.encode(payload, current_app.config["SECRET_KEY"], algorithm="HS256")
 
