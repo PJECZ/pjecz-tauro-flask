@@ -5,8 +5,7 @@ API v1 Endpoint: Consultar Turnos
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneListTurnosOut, ListTurnosOut, TurnoUnidadOut, UnidadOut, VentanillaOut
+from tauro.blueprints.api_v1.schemas import ListTurnosOut, OneListTurnosOut, TurnoUnidadOut, UnidadOut, VentanillaOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -17,7 +16,7 @@ class ConsultarTurnos(Resource):
     """Consultar los turnos EN ESPERA y ATENDIENDO"""
 
     def get(self) -> OneListTurnosOut:
-        """Consultar los turnos EN ESPERA y ATENDIENDO"""
+        """Consultar los turnos EN ESPERA y ATENDIENDO, aquí NO SE USA el decorador porque es para pantallas"""
 
         # Consultar los turnos...
         # - Filtrar por los estados EN ESPERA y ATENDIENDO,
