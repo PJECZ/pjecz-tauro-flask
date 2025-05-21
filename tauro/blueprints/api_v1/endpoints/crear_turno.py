@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from lib.safe_string import safe_string
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import CrearTurnoIn, OneTurnoOut, TurnoOut
+from tauro.blueprints.api_v1.schemas import CrearTurnoIn, OneTurnoOut, TurnoOut, VentanillaOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -101,5 +101,10 @@ class CrearTurno(Resource):
                 turno_numero=turno.numero,
                 turno_estado=turno.turno_estado.nombre,
                 turno_comentarios=turno.comentarios,
+                ventanilla=VentanillaOut(
+                    id=turno.ventanilla.id,
+                    nombre=turno.ventanilla.nombre,
+                    numero=turno.ventanilla.numero,
+                ),
             ),
         ).model_dump()
