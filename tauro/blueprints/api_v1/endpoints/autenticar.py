@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 
 import jwt
-import pytz
+from pytz import timezone
 from email_validator import EmailNotValidError, validate_email
 from flask import current_app, g, request
 from flask_restful import Resource
@@ -133,8 +133,8 @@ class Authenticate(Resource):
         # Generar token con PyJWT
         payload = {
             "sub": username,
-            "iat": datetime.now(),
-            "exp": datetime.now() + timedelta(hours=1),
+            "iat": datetime.now(tz=timezone(current_app.config["TZ"])),
+            "exp": datetime.now(tz=timezone(current_app.config["TZ"])) + timedelta(hours=1),
         }
         access_token = jwt.encode(payload, current_app.config["SECRET_KEY"], algorithm="HS256")
 
