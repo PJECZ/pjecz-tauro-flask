@@ -28,6 +28,12 @@ class UnidadOut(BaseModel):
     nombre: str
 
 
+class ListUnidadesOut(ResponseSchema):
+    """Esquema para entregar una lista de Unidades"""
+
+    data: list[UnidadOut]
+
+
 class TokenSchema(BaseModel):
     """Esquema para entregar el token"""
 
@@ -115,9 +121,9 @@ class OneUnidadTurnosOut(ResponseSchema):
 class VentanillaActivaOut(BaseModel):
     """Esquema para entregar una ventanilla activa"""
 
-    ventanilla_id: int
-    ventanilla_nombre: str
-    ventanilla_numero: int | None
+    id: int
+    nombre: str
+    numero: int | None
 
 
 class ListVentanillasActivasOut(ResponseSchema):
