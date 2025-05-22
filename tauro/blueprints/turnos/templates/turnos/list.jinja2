@@ -73,6 +73,7 @@
                     <th>Número</th>
                     <th>Fecha y Hora</th>
                     <th>Tipo</th>
+                    <th>Unidad</th>
                     <th>Ventanilla</th>
                     <th>Estado</th>
                 </tr>
@@ -94,6 +95,7 @@
             { data: 'detalle' },
             { data: 'fecha_hora' },
             { data: 'tipo' },
+            { data: 'unidad' },
             { data: 'ventanilla' },
             { data: 'estado' }
         ];
@@ -106,7 +108,14 @@
                 }
             },
             {
-                targets: 4, // estado
+                targets: [3,4], // unidad, ventanilla
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.nombre + '</a>';
+                }
+            },
+            {
+                targets: 5, // estado
                 data: null,
                 render: function(data, type, row, meta) {
                     let bgcolor = "bg-dark";
