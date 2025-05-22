@@ -139,9 +139,9 @@ class ActualizarUsuario(Resource):
         ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
         if ventanilla_sql:
             ventanilla = VentanillaActivaOut(
-                ventanilla_id=ventanilla_sql.id,
-                ventanilla_nombre=ventanilla_sql.nombre,
-                ventanilla_numero=ventanilla_sql.numero,
+                id=ventanilla_sql.id,
+                nombre=ventanilla_sql.nombre,
+                numero=ventanilla_sql.numero,
             )
         # # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()

@@ -24,9 +24,7 @@ class ConsultarVentanillasActivas(Resource):
             success=True,
             message="Se han consultado las ventanillas activas",
             data=[
-                VentanillaActivaOut(
-                    ventanilla_id=ventanilla.id, ventanilla_nombre=ventanilla.nombre, ventanilla_numero=ventanilla.numero
-                )
+                VentanillaActivaOut(id=ventanilla.id, nombre=ventanilla.nombre, numero=ventanilla.numero)
                 for ventanilla in ventanillas
             ],
         ).model_dump()

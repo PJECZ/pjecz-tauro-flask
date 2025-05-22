@@ -115,9 +115,9 @@ class OneUnidadTurnosOut(ResponseSchema):
 class VentanillaActivaOut(BaseModel):
     """Esquema para entregar una ventanilla activa"""
 
-    ventanilla_id: int
-    ventanilla_nombre: str
-    ventanilla_numero: int | None
+    id: int
+    nombre: str
+    numero: int | None
 
 
 class ListVentanillasActivasOut(ResponseSchema):
