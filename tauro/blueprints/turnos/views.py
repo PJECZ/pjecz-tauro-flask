@@ -18,6 +18,7 @@ from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos.forms import TurnoForm
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.unidades.models import Unidad
 
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -61,6 +62,10 @@ def datatable_json():
     # Ordenar y paginar
     registros = consulta.order_by(Turno.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
+    # Consultar Unidades
+    unidades_sql = Unidad.query.all()
+    unidades = {unidad.id: unidad for unidad in unidades_sql}
+
     # Elaborar datos para DataTable
     data = []
     for resultado in registros:
@@ -73,11 +78,18 @@ def datatable_json():
                 "fecha_hora": resultado.creado.strftime("%Y-%m-%d %H:%M"),
                 "tipo": resultado.turno_tipo.nombre,
                 "estado": resultado.turno_estado.nombre,
-                "ventanilla": (
-                    resultado.ventanilla.nombre + f"{ - resultado.ventanilla.numero}"
-                    if resultado.ventanilla.numero is not None
-                    else ""
-                ),
+                "unidad": {
+                    "nombre": unidades[resultado.unidad_id].clave,
+                    "url": url_for("unidades.detail", unidad_id=resultado.unidad_id),
+                },
+                "ventanilla": {
+                    "nombre": (
+                        resultado.ventanilla.nombre + f"{ - resultado.ventanilla.numero}"
+                        if resultado.ventanilla.numero is not None
+                        else ""
+                    ),
+                    "url": url_for("ventanillas.detail", ventanilla_id=resultado.ventanilla_id),
+                },
             }
         )
     # Entregar JSON
@@ -115,7 +127,11 @@ def list_inactive():
 def detail(turno_id):
     """Detalle de un Turno"""
     turno = Turno.query.get_or_404(turno_id)
-    return render_template("turnos/detail.jinja2", turno=turno)
+    # Consultar Unidades
+    unidades_sql = Unidad.query.all()
+    unidades = {unidad.id: unidad for unidad in unidades_sql}
+    # Entregar resultado
+    return render_template("turnos/detail.jinja2", turno=turno, unidades=unidades)
 
 
 @turnos.route("/turnos/nuevo", methods=["GET", "POST"])

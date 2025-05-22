@@ -30,6 +30,11 @@ class Ventanilla(database.Model, UniversalMixin):
     unidades_ventanillas: Mapped[List["UnidadVentanilla"]] = relationship(back_populates="ventanilla")
     usuarios: Mapped[List["Usuario"]] = relationship(back_populates="ventanilla")
 
+    @property
+    def nombre_numero(self):
+        """Junta clave y nombre de la ventanilla"""
+        return f"{self.nombre} - {self.numero}"
+
     def __repr__(self):
         """Representación"""
         return f"<Ventanilla {self.id}>"
