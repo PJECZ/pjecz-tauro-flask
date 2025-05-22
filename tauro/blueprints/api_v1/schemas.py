@@ -182,3 +182,9 @@ class ActualizarUsuarioIn(BaseModel):
 
     ventanilla_id: int
     turnos_tipos_ids: list[int]
+
+
+class ListUnidadesOut(ResponseSchema):
+    """Esquema para entregar una lista de Unidades"""
+
+    data: list[UnidadOut]
