@@ -28,6 +28,12 @@ class UnidadOut(BaseModel):
     nombre: str
 
 
+class ListUnidadesOut(ResponseSchema):
+    """Esquema para entregar una lista de Unidades"""
+
+    data: list[UnidadOut]
+
+
 class TokenSchema(BaseModel):
     """Esquema para entregar el token"""
 
@@ -182,9 +188,3 @@ class ActualizarUsuarioIn(BaseModel):
 
     ventanilla_id: int
     turnos_tipos_ids: list[int]
-
-
-class ListUnidadesOut(ResponseSchema):
-    """Esquema para entregar una lista de Unidades"""
-
-    data: list[UnidadOut]
