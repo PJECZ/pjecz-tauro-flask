@@ -23,7 +23,7 @@ from tauro.blueprints.usuarios.views import usuarios
 from tauro.blueprints.usuarios_roles.views import usuarios_roles
 from tauro.blueprints.usuarios_turnos_tipos.views import usuarios_turnos_tipos
 from tauro.blueprints.ventanillas.views import ventanillas
-from tauro.extensions import csrf, database, login_manager, moment
+from tauro.extensions import csrf, database, login_manager, moment, socketio
 
 
 def create_app():
@@ -72,7 +72,7 @@ def extensions(app):
     database.init_app(app)
     login_manager.init_app(app)
     moment.init_app(app)
-    # socketio.init_app(app)
+    socketio.init_app(app)
 
 
 def authentication(user_model):

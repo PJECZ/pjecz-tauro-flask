@@ -15,6 +15,7 @@ from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
+from tauro.extensions import socketio
 
 
 class TomarTurno(Resource):
@@ -87,8 +88,8 @@ class TomarTurno(Resource):
         # Guardar
         turno.save()
 
-        # Entregar JSON
-        return OneTurnoOut(
+        # Crear objeto OneTurnoOut
+        one_turno_out = OneTurnoOut(
             success=True,
             message=f"Turno {turno.numero} tomado por {usuario.nombre}",
             data=TurnoOut(
@@ -103,3 +104,9 @@ class TomarTurno(Resource):
                 ),
             ),
         ).model_dump()
+
+        # Enviar mensaje socketio
+        socketio.send(one_turno_out)
+
+        # Entregar JSON
+        return one_turno_out

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receptor Socket.IO</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        #datosRecibidos {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        h1 {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Datos Recibidos del Servidor:</h1>
+    <div id="datosRecibidos">
+        Esperando datos...
+    </div>
+
+    <!-- Incluye la librería cliente de Socket.IO -->
+    <!-- Asegúrate de que la versión sea compatible con tu servidor Socket.IO -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+    <script>
+        // Conéctate al servidor de Socket.IO
+        // Cambia 'http://localhost:3000' por la URL de tu servidor Socket.IO si es diferente
+        const socket = io('http://localhost:5000');
+
+        // Elemento donde mostraremos los datos recibidos
+        const datosDiv = document.getElementById('datosRecibidos');
+
+        // Escucha un evento específico del servidor (por ejemplo, 'nuevoDato')
+        // El nombre del evento 'nuevoDato' debe coincidir con el que el servidor emite.
+        socket.on('message', (data) => {
+            console.log('Dato recibido del servidor:', data);
+
+            // Muestra el dato en la página
+            // Puedes formatear 'data' como necesites.
+            // Si 'data' es un objeto, podrías querer mostrar una propiedad específica
+            // o convertirlo a una cadena JSON.
+            if (typeof data === 'object') {
+                datosDiv.textContent = JSON.stringify(data, null, 2); // Muestra el JSON formateado
+            } else {
+                datosDiv.textContent = data;
+            }
+        });
+
+        // Opcional: Manejar eventos de conexión y desconexión
+        socket.on('connect', () => {
+            console.log('Conectado al servidor Socket.IO con ID:', socket.id);
+            datosDiv.innerHTML = 'Conectado al servidor. Esperando datos...';
+        });
+
+        socket.on('disconnect', (reason) => {
+            console.log('Desconectado del servidor Socket.IO:', reason);
+            datosDiv.textContent = 'Desconectado del servidor. Intenta recargar la página.';
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('Error de conexión con Socket.IO:', error);
+            datosDiv.textContent = 'Error al conectar con el servidor Socket.IO. Verifica la consola.';
+        });
+    </script>
+</body>
+</html>

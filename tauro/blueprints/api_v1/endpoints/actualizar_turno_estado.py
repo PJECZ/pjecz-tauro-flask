@@ -13,6 +13,7 @@ from tauro.blueprints.api_v1.schemas import ActualizarTurnoEstadoIn, OneTurnoOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
+from tauro.extensions import socketio
 
 
 class ActualizarTurnoEstado(Resource):
@@ -72,8 +73,8 @@ class ActualizarTurnoEstado(Resource):
         # Guardar cambios
         turno.save()
 
-        # Entregar JSON
-        return OneTurnoOut(
+        # Crear objeto OneTurnoOut
+        one_turno_out = OneTurnoOut(
             success=True,
             message=f"Se ha cambiado el turno {turno.numero} a {turno_estado.nombre} por {username}",
             data=TurnoOut(
@@ -88,3 +89,9 @@ class ActualizarTurnoEstado(Resource):
                 ),
             ),
         ).model_dump()
+
+        # Enviar mensaje vía socketio
+        socketio.send(one_turno_out)
+
+        # Entregar JSON
+        return one_turno_out
