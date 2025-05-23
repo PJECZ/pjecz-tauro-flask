@@ -18,6 +18,7 @@ from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.extensions import socketio
 
 
 class CrearTurno(Resource):
@@ -92,8 +93,8 @@ class CrearTurno(Resource):
         )
         turno.save()
 
-        # Entregar JSON
-        return OneTurnoOut(
+        # Crear nuevo objeto OneTurnoOut
+        turno_out = OneTurnoOut(
             success=True,
             message=f"Se ha creado el turno {turno.numero} en {unidad.clave} por {username}",
             data=TurnoOut(
@@ -108,3 +109,9 @@ class CrearTurno(Resource):
                 ),
             ),
         ).model_dump()
+
+        # Ejecutar send socket-io. Envía una variable "message" con la estructura json
+        socketio.send(turno_out)
+
+        # Entregar JSON
+        return turno_out
