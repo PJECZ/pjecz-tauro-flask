@@ -2,6 +2,7 @@
 API v1 Endpoint: Consultar Turnos
 """
 
+from flask import current_app
 from flask_restful import Resource
 from sqlalchemy import or_
 
@@ -28,6 +29,7 @@ class ConsultarTurnos(Resource):
             .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "ATENDIENDO"))
             .filter(Turno.estatus == "A")
             .order_by(TurnoTipo.nivel, Turno.numero)
+            .limit(current_app.config["LIMITE_DE_TURNOS_LISTADOS"])
             .all()
         )
 

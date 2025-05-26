@@ -12,7 +12,7 @@ from email_validator import EmailNotValidError, validate_email
 from flask import current_app, g, request
 from flask_restful import Resource
 
-from tauro.blueprints.api_v1.schemas import ResponseSchema, RolOut, TokenSchema, UnidadOut
+from tauro.blueprints.api_v1.schemas import ResponseSchema, RolOut, TokenSchema, UnidadOut, VentanillaOut
 from tauro.blueprints.roles.models import Rol
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_roles.models import UsuarioRol
@@ -155,5 +155,10 @@ class Authenticate(Resource):
                 id=usuario.unidad_id,
                 nombre=usuario.unidad.nombre,
                 clave=usuario.unidad.clave,
+            ),
+            ventanilla=VentanillaOut(
+                id=usuario.ventanilla_id,
+                nombre=usuario.ventanilla.nombre,
+                numero=usuario.ventanilla.numero,
             ),
         ).model_dump()

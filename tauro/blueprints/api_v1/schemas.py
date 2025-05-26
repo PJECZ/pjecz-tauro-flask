@@ -34,6 +34,14 @@ class ListUnidadesOut(ResponseSchema):
     data: list[UnidadOut]
 
 
+class VentanillaOut(BaseModel):
+    """Esquema para entregar una ventanilla"""
+
+    id: int
+    nombre: str
+    numero: int | None
+
+
 class TokenSchema(BaseModel):
     """Esquema para entregar el token"""
 
@@ -46,6 +54,7 @@ class TokenSchema(BaseModel):
     usuario_nombre_completo: str | None = None
     rol: RolOut | None = None
     unidad: UnidadOut | None = None
+    ventanilla: VentanillaOut | None = None
 
 
 class TurnoEstadoOut(BaseModel):
@@ -73,14 +82,6 @@ class ListTurnosTiposOut(ResponseSchema):
     """Esquema para entregar una lista de tipos de turnos"""
 
     data: list[TurnoTipoOut]
-
-
-class VentanillaOut(BaseModel):
-    """Esquema para entregar una ventanilla"""
-
-    id: int
-    nombre: str
-    numero: int | None
 
 
 class TurnoOut(BaseModel):

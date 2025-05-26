@@ -110,7 +110,7 @@ class ActualizarUsuario(Resource):
         if usuarios is not None and usuarios.id != usuario.id:
             return OneVentanillaUsuarioOut(
                 success=False,
-                message="Ventanilla ocupada por otro usuario",
+                message=f"Ventanilla ocupada por otro usuario {usuarios.nombre}",
             ).model_dump()
 
         # Actualizar la ventanilla del usuario

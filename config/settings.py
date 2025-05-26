@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = ""
     SQLALCHEMY_DATABASE_URI: str = ""
     TZ: str = "America/Mexico_City"
+    LIMITE_DE_TURNOS_LISTADOS: int = 20
 
     class Config:
         """Load configuration"""
