@@ -237,6 +237,19 @@ def edit(usuario_id):
             if usuario_existente and usuario_existente.id != usuario.id:
                 es_valido = False
                 flash("La e-mail ya está en uso. Debe de ser único.", "warning")
+        # Verificar que la ventanilla seleccionada no este siendo utilizada por alguien más.
+        ventanilla_seleccionada_id = form.ventanilla.data
+        usuario_ocupando_ventanilla = Usuario.query.filter_by(ventanilla_id=ventanilla_seleccionada_id).first()
+        if (
+            usuario_ocupando_ventanilla
+            and usuario_ocupando_ventanilla.ventanilla.nombre != "NO DEFINIDO"
+            and usuario_ocupando_ventanilla.id != usuario.id
+        ):
+            es_valido = False
+            flash(
+                f"La ventanilla '{usuario_ocupando_ventanilla.ventanilla.nombre} - {usuario_ocupando_ventanilla.ventanilla.numero}' está siendo utilizada por el usuario {usuario_ocupando_ventanilla.nombre}.",
+                "warning",
+            )
         # Si es valido actualizar
         if es_valido:
             usuario.email = email
@@ -246,6 +259,7 @@ def edit(usuario_id):
             if form.contrasena.data:
                 usuario.contrasena = pwd_context.hash(form.contrasena.data.strip())
             usuario.unidad_id = form.unidad.data
+            usuario.ventanilla_id = ventanilla_seleccionada_id
             usuario.es_acceso_frontend = form.es_acceso_frontend.data
             usuario.save()
             bitacora = Bitacora(
@@ -264,6 +278,7 @@ def edit(usuario_id):
     form.apellido_paterno.data = usuario.apellido_paterno
     form.apellido_materno.data = usuario.apellido_materno
     form.unidad.data = usuario.unidad_id
+    form.ventanilla.data = usuario.ventanilla_id
     form.es_acceso_frontend.data = usuario.es_acceso_frontend
     return render_template("usuarios/edit.jinja2", form=form, usuario=usuario)
 
