@@ -59,7 +59,25 @@
                 </thead>
             </table>
             {% if current_user.can_insert('USUARIOS ROLES') %}
-            <a href="{{ url_for('usuarios_roles.new_with_usuario', usuario_id=usuario.id) }}" class="btn btn-primary">Agregar rol</a>
+            <a href="{{ url_for('usuarios_roles.new_with_usuario', usuario_id=usuario.id) }}" class="btn btn-primary">Agregar Rol</a>
+            {% endif %}
+        {% endcall %}
+    {% endif %}
+    {# Card para listado de Tipos de Turnos #}
+    {% if current_user.can_view('USUARIOS TURNOS TIPOS') and usuario.estatus == 'A' %}
+        {% call detail.card('Turnos Tipos') %}
+            <!-- DataTable UsuariosTurnosTipos -->
+            <table id="usuarios_turnos_tipos_datatable" class="table display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Turno-Tipo</th>
+                        <th>Activo</th>
+                    </tr>
+                </thead>
+            </table>
+            {% if current_user.can_insert('USUARIOS TURNOS TIPOS') %}
+            <a href="{{ url_for('usuarios_turnos_tipos.new_with_usuario', usuario_id=usuario.id) }}" class="btn btn-primary">Agregar Tipo</a>
             {% endif %}
         {% endcall %}
     {% endif %}
@@ -153,6 +171,96 @@
                     .then(data => {
                         if (data.success) {
                             if (data.estatus === 'A') {
+                                $(id).removeClass('btn-light');
+                                $(id).addClass('btn-outline-primary'); // Color azul
+                                $(id).html('<span class="iconify" data-icon="mdi:toggle-switch"></span>'); // Icono toggle-switch
+                                $(row).removeClass('table-secondary');
+                            } else {
+                                $(id).removeClass('btn-outline-primary');
+                                $(id).addClass('btn-light'); // Color gris
+                                $(id).html('<span class="iconify" data-icon="mdi:toggle-switch-off"></span>'); // Icono toggle-switch-off
+                                $(row).addClass('table-secondary');
+                            }
+                            // console.log(data.message);
+                            console.log(row);
+                        } else {
+                            console.log(data.message);
+                        }
+                        $(id).prop("disabled", false); // Habilitar boton
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+        </script>
+    {% endif %}
+    {# DataTable Usuarios-TurnosTipos #}
+    {% if current_user.can_view('USUARIOS TURNOS TIPOS') and usuario.estatus == 'A' %}
+        <script>
+            // DataTable Usuarios-TurnosTipos
+            let configDTUsuariosTurnosTipos = constructorDataTable.config();
+            configDTUsuariosTurnosTipos['ajax']['url'] = '/usuarios_turnos_tipos/datatable_json';
+            configDTUsuariosTurnosTipos['ajax']['data'] = { 'estatus': "A", 'usuario_id': {{ usuario.id}} };
+            configDTUsuariosTurnosTipos['columns'] = [
+                { data: "detalle" },
+                { data: "turno_tipo" },
+                { data: "toggle_estatus" }
+            ];
+            configDTUsuariosTurnosTipos['columnDefs'] = [
+                {
+                    targets: 0, // detalle
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.id + '</a>';
+                    }
+                },
+                {
+                    targets: 2, // toggle_estatus
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        if (data.url === '') return data.estatus;
+                        let myId = 'usuario_turno_tipo_estatus_' + data.id;
+                        let myRow = 'usuario_turno_tipo_row_' + data.id;
+                        let myOnClick = "toggleEstatus_turnosTipos('#" + myId + "', '" + data.url + "', '#" + myRow + "')";
+                        if (data.es_activo === true) {
+                            return '<button id="' + myId + '" type="button" class="btn btn-sm btn-outline-primary" onclick="' + myOnClick + '"><span class="iconify" data-icon="mdi:toggle-switch"></span></button>';
+                        } else {
+                            return '<button id="' + myId + '" type="button" class="btn btn-sm btn-light" onclick="' + myOnClick + '"><span class="iconify" data-icon="mdi:toggle-switch-off"></span></button>';
+                        }
+                    }
+                }
+            ];
+            // DataTable UsuariosTurnosTipos filas
+            configDTUsuariosTurnosTipos['createdRow'] = function(row, data, dataIndex) {
+                // Cambiar estilo en las fila según es_activo
+                switch (data.es_activo) {
+                    case "B": $(row).addClass('table-secondary'); break;
+                }
+                // Definir un ID único para cada fila
+                if (data.hasOwnProperty('toggle_estatus')) {
+                    $(row).attr('id', 'usuario_turno_tipo_row_' + data.toggle_estatus.id);
+                }
+            };
+            // Filtros UsuariosTurnosTipos
+            const filtrosDTUsuariosTurnosTipos = new FiltrosDataTable('#usuarios_turnos_tipos_datatable', configDTUsuariosTurnosTipos);
+            filtrosDTUsuariosTurnosTipos.precargar();
+            // Preparar headers para POST
+            const myHeaders_utt = new Headers();
+            myHeaders_utt.append("X-CSRF-TOKEN", "{{ csrf_token() }}");
+            const myInit_utt = {
+                method: 'POST',
+                headers: myHeaders_utt,
+                mode: 'cors',
+                cache: 'default'
+            };
+            // Boton toggle_estatus
+            function toggleEstatus_turnosTipos(id, url, row) {
+                $(id).prop("disabled", true); // Deshabilitar boton para evitar multiples clicks
+                fetch(url, myInit_utt)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (data.es_activo === true) {
                                 $(id).removeClass('btn-light');
                                 $(id).addClass('btn-outline-primary'); // Color azul
                                 $(id).html('<span class="iconify" data-icon="mdi:toggle-switch"></span>'); // Icono toggle-switch

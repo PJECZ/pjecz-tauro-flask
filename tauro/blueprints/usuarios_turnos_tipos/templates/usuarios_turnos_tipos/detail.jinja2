@@ -1,0 +1,35 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Usuario-TurnoTipo {{ usuario_turno_tipo.id | string }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Usuario-TurnoTipo ' + usuario_turno_tipo.id | string) %}
+        {{ topbar.button_previous('Usuario', url_for('usuarios.detail', usuario_id=usuario_turno_tipo.usuario.id)) }}
+        {# {{ topbar.button_previous('Titulos_Plural', url_for('usuarios_turnos_tipos.list_active')) }} #}
+        {% if current_user.can_edit('USUARIOS TURNOS TIPOS') %}
+            {# {{ topbar.button_edit('Editar', url_for('usuarios_turnos_tipos.edit', usuario_turno_tipo_id=usuario_turno_tipo.id)) }} #}
+        {% endif %}
+        {% if current_user.can_admin('USUARIOS TURNOS TIPOS') %}
+            {# {% if usuario_turno_tipo.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('usuarios_turnos_tipos.delete', usuario_turno_tipo_id=usuario_turno_tipo.id)) }}{% endif %}
+            {% if usuario_turno_tipo.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('usuarios_turnos_tipos.recover', usuario_turno_tipo_id=usuario_turno_tipo.id)) }}{% endif %} #}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=usuario_turno_tipo.estatus) %}
+        {{ detail.label_value('Usuario', usuario_turno_tipo.usuario.nombre, url_for('usuarios.detail', usuario_id=usuario_turno_tipo.usuario.id)) }}
+        {{ detail.label_value('Turno Tipo', usuario_turno_tipo.turno_tipo.nombre, url_for('turnos_tipos.detail', turno_tipo_id=usuario_turno_tipo.turno_tipo.id)) }}
+        {{ detail.label_value_boolean('Activo', usuario_turno_tipo.es_activo) }}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('USUARIOS TURNOS TIPOS') %}
+        {% if usuario_turno_tipo.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar relación de usuario-turno tipo?') }}{% endif %}
+        {% if usuario_turno_tipo.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar relación de usuario-turno tipo?') }}{% endif %}
+    {% endif %}
+{% endblock %}
