@@ -81,6 +81,9 @@ SALT=XXXXXXXXXXXXXXXX
 # Huso horario
 TZ=America/Mexico_City
 
+# Límite de registros mostrados en el listado de turno
+LIMITE_DE_TURNOS_LISTADOS=20
+
 # Si esta en PRODUCTION se evita reiniciar la base de datos
 DEPLOYMENT_ENVIRONMENT=develop
 ```
