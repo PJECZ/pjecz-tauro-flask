@@ -69,6 +69,7 @@ class ConsultarTurnosUnidad(Resource):
                     nombre=ultimo_turno_atendiendo.ventanilla.nombre,
                     numero=ultimo_turno_atendiendo.ventanilla.numero,
                 ),
+                unidad=UnidadOut(id=unidad.id, clave=unidad.clave, nombre=unidad.nombre),
             )
         else:
             ultimo_turno = None
@@ -91,6 +92,7 @@ class ConsultarTurnosUnidad(Resource):
                             nombre=turno.ventanilla.nombre,
                             numero=turno.ventanilla.numero,
                         ),
+                        unidad=UnidadOut(id=unidad.id, clave=unidad.clave, nombre=unidad.nombre),
                     )
                     for turno in turnos
                 ],

@@ -9,10 +9,11 @@ from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import ActualizarTurnoEstadoIn, OneTurnoOut, TurnoOut, VentanillaOut
+from tauro.blueprints.api_v1.schemas import ActualizarTurnoEstadoIn, OneTurnoOut, UnidadOut, TurnoOut, VentanillaOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
+from tauro.blueprints.unidades.models import Unidad
 from tauro.extensions import socketio
 
 
@@ -73,6 +74,17 @@ class ActualizarTurnoEstado(Resource):
         # Guardar cambios
         turno.save()
 
+        # Consultar la unidad
+        unidad = Unidad.query.get(turno.unidad_id)
+        # Extraer la unidad
+        unidad_out = None
+        if unidad is not None:
+            unidad_out = UnidadOut(
+                id=unidad.id,
+                clave=unidad.clave,
+                nombre=unidad.nombre,
+            )
+
         # Crear objeto OneTurnoOut
         one_turno_out = OneTurnoOut(
             success=True,
@@ -87,6 +99,7 @@ class ActualizarTurnoEstado(Resource):
                     nombre=turno.ventanilla.nombre,
                     numero=turno.ventanilla.numero,
                 ),
+                unidad=unidad_out,
             ),
         ).model_dump()
 

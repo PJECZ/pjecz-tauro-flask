@@ -66,6 +66,17 @@ class ConsultarConfiguracionUsuario(Resource):
         )
         ultimo_turno = None
         if turnos:
+            # Consultar la unidad
+            unidad = Unidad.query.get(turnos.unidad_id)
+            # Extraer la unidad
+            unidad_out = None
+            if unidad is not None:
+                unidad_out = UnidadOut(
+                    id=unidad.id,
+                    clave=unidad.clave,
+                    nombre=unidad.nombre,
+                )
+
             ultimo_turno = TurnoOut(
                 turno_id=turnos.id,
                 turno_numero=turnos.numero,
@@ -76,6 +87,7 @@ class ConsultarConfiguracionUsuario(Resource):
                     nombre=turnos.ventanilla.nombre,
                     numero=turnos.ventanilla.numero,
                 ),
+                unidad=unidad_out,
             )
         # Consultar la ventanilla del usuario
         ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)

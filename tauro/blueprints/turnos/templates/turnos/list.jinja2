@@ -27,8 +27,8 @@
                 <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosTurnos.buscar(); return false;">
                     <div class="col-1">
                         <div class="form-floating">
-                            <input id="filtroNumero" type="text" class="form-control" aria-label="Numero" style="text-transform: uppercase;">
-                            <label for="filtroNumero">Número</label>
+                            <input id="filtroId" type="text" class="form-control" aria-label="Id" style="text-transform: uppercase;">
+                            <label for="filtroId">ID</label>
                         </div>
                     </div>
                     <div class="col-3">
@@ -70,6 +70,7 @@
         <table id="turnos_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Número</th>
                     <th>Fecha y Hora</th>
                     <th>Tipo</th>
@@ -93,6 +94,7 @@
         configDataTable['ajax']['data'] = {{ filtros }};
         configDataTable['columns'] = [
             { data: 'detalle' },
+            { data: 'numero' },
             { data: 'fecha_hora' },
             { data: 'tipo' },
             { data: 'unidad' },
@@ -108,14 +110,14 @@
                 }
             },
             {
-                targets: [3,4], // unidad, ventanilla
+                targets: [4, 5], // unidad, ventanilla
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.nombre + '</a>';
                 }
             },
             {
-                targets: 5, // estado
+                targets: 6, // estado
                 data: null,
                 render: function(data, type, row, meta) {
                     let bgcolor = "bg-dark";
@@ -140,7 +142,7 @@
         };
         // Filtros turnos
         const filtrosTurnos = new FiltrosDataTable('#turnos_datatable', configDataTable);
-        filtrosTurnos.agregarInput('filtroNumero', 'numero');
+        filtrosTurnos.agregarInput('filtroId', 'turno_id');
         filtrosTurnos.agregarInput('turnoTipoSelect', 'turno_tipo_id');
         filtrosTurnos.agregarInput('turnoEstadoSelect', 'turno_estado_id');
         filtrosTurnos.precargar();
