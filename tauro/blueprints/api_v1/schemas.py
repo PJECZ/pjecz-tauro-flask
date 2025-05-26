@@ -91,6 +91,7 @@ class TurnoOut(BaseModel):
     turno_estado: str
     turno_comentarios: str | None
     ventanilla: VentanillaOut | None
+    unidad: UnidadOut | None
 
 
 class UnidadTurnosOut(BaseModel):
