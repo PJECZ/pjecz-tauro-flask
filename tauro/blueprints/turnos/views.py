@@ -47,10 +47,10 @@ def datatable_json():
         consulta = consulta.filter(Turno.estatus == request.form["estatus"])
     else:
         consulta = consulta.filter(Turno.estatus == "A")
-    if "numero" in request.form:
-        numero = safe_string(request.form["numero"])
-        if numero.isnumeric():
-            consulta = consulta.filter(Turno.numero == numero)
+    if "turno_id" in request.form:
+        turno_id = safe_string(request.form["turno_id"])
+        if turno_id.isnumeric():
+            consulta = consulta.filter(Turno.id == turno_id)
     if "turno_tipo_id" in request.form:
         consulta = consulta.filter(Turno.turno_tipo_id == request.form["turno_tipo_id"])
     if "turno_estado_id" in request.form:
@@ -72,9 +72,10 @@ def datatable_json():
         data.append(
             {
                 "detalle": {
-                    "numero": f"{resultado.numero}".zfill(3),
+                    "numero": resultado.id,
                     "url": url_for("turnos.detail", turno_id=resultado.id),
                 },
+                "numero": f"{resultado.numero}".zfill(3),
                 "fecha_hora": resultado.creado.strftime("%Y-%m-%d %H:%M"),
                 "tipo": resultado.turno_tipo.nombre,
                 "estado": resultado.turno_estado.nombre,
