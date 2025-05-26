@@ -15,6 +15,7 @@ from tauro.blueprints.api_v1.schemas import (
     TurnoTipoOut,
     VentanillaUsuarioOut,
     VentanillaActivaOut,
+    VentanillaOut,
     UnidadOut,
     RolOut,
 )
@@ -118,6 +119,16 @@ class ActualizarUsuario(Resource):
         # Guardar
         usuario.save()
 
+        # Consultar Ventanilla
+        ventanilla = None
+        ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
+        if ventanilla_sql:
+            ventanilla = VentanillaOut(
+                id=ventanilla_sql.id,
+                nombre=ventanilla_sql.nombre,
+                numero=ventanilla_sql.numero,
+            )
+
         # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
@@ -128,21 +139,29 @@ class ActualizarUsuario(Resource):
         )
         ultimo_turno = None
         if turnos:
+            # Consultar la unidad
+            unidad = Unidad.query.get(turnos.unidad_id)
+            # Extraer la unidad
+            unidad_out = None
+            if unidad:
+                unidad_out = UnidadOut(
+                    id=unidad.id,
+                    clave=unidad.clave,
+                    nombre=unidad.nombre,
+                )
             ultimo_turno = TurnoOut(
                 turno_id=turnos.id,
                 turno_numero=turnos.numero,
                 turno_estado=turnos.turno_estado.nombre,
                 turno_comentarios=turnos.comentarios,
+                ventanilla=VentanillaOut(
+                    id=turnos.ventanilla.id,
+                    nombre=turnos.ventanilla.nombre,
+                    numero=turnos.ventanilla.numero,
+                ),
+                unidad=unidad_out,
             )
-        # Consultar Ventanilla
-        ventanilla = None
-        ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
-        if ventanilla_sql:
-            ventanilla = VentanillaActivaOut(
-                id=ventanilla_sql.id,
-                nombre=ventanilla_sql.nombre,
-                numero=ventanilla_sql.numero,
-            )
+
         # # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
