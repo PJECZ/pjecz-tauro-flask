@@ -162,3 +162,51 @@ class Authenticate(Resource):
                 numero=usuario.ventanilla.numero,
             ),
         ).model_dump()
+
+
+class ValidarToken(Resource):
+    """Validar token"""
+
+    def get(self):
+        """Validar token"""
+
+        token = None
+        if "Authorization" in request.headers:
+            auth_header = request.headers["Authorization"]
+            if auth_header.startswith("Bearer "):
+                token = auth_header.split(" ")[1]
+        if not token:
+            return (
+                ResponseSchema(
+                    success=False,
+                    message="No hay token en esta solicitud",
+                ).model_dump(),
+                200,
+            )
+        try:
+            data = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
+            g.current_user = data["sub"]
+        except jwt.ExpiredSignatureError:
+            return (
+                ResponseSchema(
+                    success=False,
+                    message="El token ha expirado!",
+                ).model_dump(),
+                200,
+            )
+        except jwt.InvalidTokenError:
+            return (
+                ResponseSchema(
+                    success=False,
+                    message="No es válido el token!",
+                ).model_dump(),
+                200,
+            )
+        # Entrega de resultado Favorable
+        return (
+            ResponseSchema(
+                success=True,
+                message="Token válido!",
+            ).model_dump(),
+            200,
+        )
