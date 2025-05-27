@@ -15,6 +15,7 @@ from lib.pwgen import generar_api_key
 from tauro.app import create_app
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.extensions import database, pwd_context
 
 app = create_app()
@@ -80,7 +81,7 @@ def nueva_contrasena(email):
 
 @click.command()
 def restablecer_ventanilla():
-    """Se restablecen todos los usuarios a Ventanilla NO DEFINIDO"""
+    """Asignar la Ventanilla NO DEFINIDO a todos los usuarios"""
 
     # Consultar cual es la ventanilla NO DEFINIDO
     ventanilla_nd = Ventanilla.query.filter_by(nombre="NO DEFINIDO").first()
@@ -103,7 +104,26 @@ def restablecer_ventanilla():
     click.echo(f"Se han restablecido las ventanillas de {contador} usuarios")
 
 
+@click.command()
+def restablecer_turnos_tipos():
+    """Se desactivan todos los turnos_tipos que tengan los usuarios"""
+
+    # Contador
+    contador = 0
+
+    # Consultar todos los usuarios-turnos_tipos
+    usuarios_turnos_tipos = UsuarioTurnoTipo.query.filter_by(es_activo=True).all()
+    for usuario_turnos_tipos in usuarios_turnos_tipos:
+        usuario_turnos_tipos.es_activo = False
+        usuario_turnos_tipos.save()
+        contador += 1
+
+    # Mensaje de resultado
+    click.echo(f"Se han desactivado los tipos de turnos que atienden {contador} usuarios")
+
+
 cli.add_command(mostrar_api_key)
 cli.add_command(nueva_api_key)
 cli.add_command(nueva_contrasena)
 cli.add_command(restablecer_ventanilla)
+cli.add_command(restablecer_turnos_tipos)
