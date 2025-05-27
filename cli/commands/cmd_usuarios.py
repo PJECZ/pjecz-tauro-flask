@@ -14,6 +14,7 @@ import click
 from lib.pwgen import generar_api_key
 from tauro.app import create_app
 from tauro.blueprints.usuarios.models import Usuario
+from tauro.blueprints.ventanillas.models import Ventanilla
 from tauro.extensions import database, pwd_context
 
 app = create_app()
@@ -77,6 +78,32 @@ def nueva_contrasena(email):
     click.echo(f"Se ha cambiado la contraseña de {email} en usuarios")
 
 
+@click.command()
+def restablecer_ventanilla():
+    """Se restablecen todos los usuarios a Ventanilla NO DEFINIDO"""
+
+    # Consultar cual es la ventanilla NO DEFINIDO
+    ventanilla_nd = Ventanilla.query.filter_by(nombre="NO DEFINIDO").first()
+    if ventanilla_nd is None:
+        click.echo("ERROR: No existe la ventanilla NO DEFINIDO")
+        sys.exit(1)
+
+    # Contador
+    contador = 0
+
+    # Consultar todos los usuarios
+    usuarios = Usuario.query.all()
+    for usuario in usuarios:
+        if usuario.ventanilla_id != ventanilla_nd.id:
+            usuario.ventanilla_id = ventanilla_nd.id
+            usuario.save()
+            contador += 1
+
+    # Mensaje de resultado
+    click.echo(f"Se han restablecido las ventanillas de {contador} usuarios")
+
+
 cli.add_command(mostrar_api_key)
 cli.add_command(nueva_api_key)
 cli.add_command(nueva_contrasena)
+cli.add_command(restablecer_ventanilla)
