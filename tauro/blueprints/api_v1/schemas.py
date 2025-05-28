@@ -39,3 +39,16 @@ class ListVentanillasOut(ResponseSchema):
     """Esquema para entregar una lista de ventanillas activas"""
 
     data: list[VentanillaOut]
+
+
+class TurnoEstadoOut(BaseModel):
+    """Esquema para entregar un estado de turno"""
+
+    id: int
+    nombre: str
+
+
+class ListTurnosEstadosOut(ResponseSchema):
+    """Esquema para entregar una lista de estados de turnos"""
+
+    data: list[TurnoEstadoOut]

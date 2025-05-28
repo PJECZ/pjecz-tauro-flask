@@ -33,19 +33,6 @@ class TokenSchema(BaseModel):
     ventanilla: VentanillaOut | None = None
 
 
-class TurnoEstadoOut(BaseModel):
-    """Esquema para entregar un estado de turno"""
-
-    id: int
-    nombre: str
-
-
-class ListTurnosEstadosOut(ResponseSchema):
-    """Esquema para entregar una lista de estados de turnos"""
-
-    data: list[TurnoEstadoOut]
-
-
 class TurnoTipoOut(BaseModel):
     """Esquema para entregar un tipo de turno"""
 
