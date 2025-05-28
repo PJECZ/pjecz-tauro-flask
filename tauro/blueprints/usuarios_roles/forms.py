@@ -29,7 +29,6 @@ class UsuarioRolNewWithUsuarioForm(FlaskForm):
     rol = SelectField("Rol", coerce=int, validators=[DataRequired()])
     usuario_email = StringField("Usuario e-mail")  # Solo lectura
     usuario_nombre = StringField("Usuario nombre")  # Solo lectura
-    usuario_puesto = StringField("Usuario puesto")  # Solo lectura
     guardar = SubmitField("Guardar")
 
     def __init__(self, *args, **kwargs):

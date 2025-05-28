@@ -1,22 +1,21 @@
 """
-API v1 Endpoint: Consultar Configuracion Usuario
+API-OAuth2 v1 Endpoint: Consultar Configuracion Usuario
 """
 
 from flask import g
 from flask_restful import Resource
 from sqlalchemy import or_
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import (
-    OneVentanillaUsuarioOut,
-    TurnoOut,
-    TurnoTipoOut,
-    VentanillaUsuarioOut,
-    VentanillaActivaOut,
-    VentanillaOut,
-    UnidadOut,
     RolOut,
+    UnidadOut,
+    TurnoTipoOut,
+    TurnoOut,
+    VentanillaOut,
+    OneConfiguracionUsuarioOut,
+    ConfiguracionUsuarioOut,
 )
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -31,7 +30,7 @@ class ConsultarConfiguracionUsuario(Resource):
     """Consultar configuración del usuario"""
 
     @token_required
-    def get(self) -> OneVentanillaUsuarioOut:
+    def get(self) -> OneConfiguracionUsuarioOut:
         """Consultar configuración del usuario"""
 
         # Consultar el usuario
@@ -39,7 +38,7 @@ class ConsultarConfiguracionUsuario(Resource):
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Usuario no encontrado o email duplicado",
             ).model_dump()
@@ -95,7 +94,7 @@ class ConsultarConfiguracionUsuario(Resource):
         # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
                 message="El usuario no tiene un rol asignado",
             ).model_dump
@@ -110,10 +109,10 @@ class ConsultarConfiguracionUsuario(Resource):
             )
 
         # Entregar JSON
-        return OneVentanillaUsuarioOut(
+        return OneConfiguracionUsuarioOut(
             success=True,
-            message=f"Se ha consultado la ventanilla de {username}",
-            data=VentanillaUsuarioOut(
+            message=f"Se ha consultado la configuración del usuario de {username}",
+            data=ConfiguracionUsuarioOut(
                 ventanilla=ventanilla,
                 unidad=unidad,
                 turnos_tipos=turnos_tipos,

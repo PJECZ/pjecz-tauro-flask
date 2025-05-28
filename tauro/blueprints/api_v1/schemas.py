@@ -13,13 +13,6 @@ class ResponseSchema(BaseModel):
     data: dict | list | None = None
 
 
-class RolOut(BaseModel):
-    """Esquema para entregar un rol"""
-
-    id: int
-    nombre: str
-
-
 class UnidadOut(BaseModel):
     """Esquema para entregar una Unidad"""
 
@@ -42,19 +35,10 @@ class VentanillaOut(BaseModel):
     numero: int | None
 
 
-class TokenSchema(BaseModel):
-    """Esquema para entregar el token"""
+class ListVentanillasOut(ResponseSchema):
+    """Esquema para entregar una lista de ventanillas activas"""
 
-    success: bool
-    message: str
-    access_token: str | None = None
-    token_type: str | None = None
-    expires_in: int | None = None
-    username: str | None = None
-    usuario_nombre_completo: str | None = None
-    rol: RolOut | None = None
-    unidad: UnidadOut | None = None
-    ventanilla: VentanillaOut | None = None
+    data: list[VentanillaOut]
 
 
 class TurnoEstadoOut(BaseModel):
@@ -84,6 +68,13 @@ class ListTurnosTiposOut(ResponseSchema):
     data: list[TurnoTipoOut]
 
 
+class RolOut(BaseModel):
+    """Esquema para entregar un rol"""
+
+    id: int
+    nombre: str
+
+
 class TurnoOut(BaseModel):
     """Esquema para entregar un turno"""
 
@@ -95,46 +86,7 @@ class TurnoOut(BaseModel):
     unidad: UnidadOut | None
 
 
-class UnidadTurnosOut(BaseModel):
-    """Esquema para entregar una unidad con sus turnos"""
-
-    unidad: UnidadOut
-    ultimo_turno: TurnoOut | None
-    turnos: list[TurnoOut] | None
-
-
-class TurnoUnidadOut(BaseModel):
-    """Esquema para entregar un turno"""
-
-    turno_id: int
-    turno_numero: int
-    turno_estado: str
-    turno_comentarios: str | None
-    unidad: UnidadOut
-    ventanilla: VentanillaOut | None
-
-
-class OneUnidadTurnosOut(ResponseSchema):
-    """Esquema para entregar una unidad con sus turnos"""
-
-    data: UnidadTurnosOut | None = None
-
-
-class VentanillaActivaOut(BaseModel):
-    """Esquema para entregar una ventanilla activa"""
-
-    id: int
-    nombre: str
-    numero: int | None
-
-
-class ListVentanillasActivasOut(ResponseSchema):
-    """Esquema para entregar una lista de ventanillas activas"""
-
-    data: list[VentanillaActivaOut]
-
-
-class VentanillaUsuarioOut(BaseModel):
+class ConfiguracionUsuarioOut(BaseModel):
     """Esquema para entregar una ventanilla de un usuario"""
 
     ventanilla: VentanillaOut | None
@@ -145,48 +97,13 @@ class VentanillaUsuarioOut(BaseModel):
     ultimo_turno: TurnoOut | None
 
 
-class OneVentanillaUsuarioOut(ResponseSchema):
+class OneConfiguracionUsuarioOut(ResponseSchema):
     """Esquema para entregar una ventanilla de un usuario"""
 
-    data: VentanillaUsuarioOut | None = None
-
-
-class CrearTurnoIn(BaseModel):
-    """Esquema para crear un turno"""
-
-    turno_tipo_id: int
-    unidad_id: int
-    comentarios: str | None
+    data: ConfiguracionUsuarioOut | None = None
 
 
 class OneTurnoOut(ResponseSchema):
     """Esquema para entregar un turno ya creado"""
 
     data: TurnoOut | None = None
-
-
-class ListTurnosOut(BaseModel):
-    """Esquema para entregar un listado de todos los turnos"""
-
-    ultimo_turno: TurnoUnidadOut | None = None
-    turnos: list[TurnoUnidadOut] | None = None
-
-
-class OneListTurnosOut(ResponseSchema):
-    """Esquema para entregar un listado de Turnos"""
-
-    data: ListTurnosOut | None = None
-
-
-class ActualizarTurnoEstadoIn(BaseModel):
-    """Esquema para cambiar el estado de un turno"""
-
-    turno_id: int  # Turno ID
-    turno_estado_id: int  # Turno Estado ID
-
-
-class ActualizarUsuarioIn(BaseModel):
-    """Esquema para actualizar un usuario"""
-
-    ventanilla_id: int
-    turnos_tipos_ids: list[int]

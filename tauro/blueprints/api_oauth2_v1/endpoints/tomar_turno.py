@@ -1,14 +1,14 @@
 """
-API v1 Endpoint: Tomar Turno
+API-OAuth2 v1 Endpoint: Tomar Turno
 """
 
 from datetime import datetime
 
 from flask import g
 from flask_restful import Resource
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, VentanillaOut, UnidadOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado

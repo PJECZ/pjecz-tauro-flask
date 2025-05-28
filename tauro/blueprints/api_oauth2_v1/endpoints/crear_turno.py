@@ -1,5 +1,5 @@
 """
-API v1 Endpoint: Crear Turno
+API-OAuth2 v1 Endpoint: Crear Turno
 """
 
 from datetime import datetime
@@ -10,8 +10,9 @@ from pytz import timezone
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from lib.safe_string import safe_string
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import CrearTurnoIn, OneTurnoOut, UnidadOut, TurnoOut, VentanillaOut
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, VentanillaOut
+from tauro.blueprints.api_oauth2_v1.schemas import CrearTurnoIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo

@@ -1,24 +1,23 @@
 """
-API v1 Endpoint: Actualizar Usuario
+API-OAuth2 v1 Endpoint: Actualizar Usuario
 """
 
 from flask import g, request
 from flask_restful import Resource
 from sqlalchemy import or_
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import (
-    ActualizarUsuarioIn,
-    OneVentanillaUsuarioOut,
-    TurnoOut,
     TurnoTipoOut,
-    VentanillaUsuarioOut,
-    VentanillaActivaOut,
+    TurnoOut,
     VentanillaOut,
     UnidadOut,
     RolOut,
+    ConfiguracionUsuarioOut,
+    OneConfiguracionUsuarioOut,
 )
+from tauro.blueprints.api_oauth2_v1.schemas import ActualizarUsuarioIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -33,7 +32,7 @@ class ActualizarUsuario(Resource):
     """Actualizar un usuario"""
 
     @token_required
-    def post(self) -> OneVentanillaUsuarioOut:
+    def post(self) -> OneConfiguracionUsuarioOut:
         """Actualizar un usuario"""
 
         # Consultar el usuario
@@ -41,7 +40,7 @@ class ActualizarUsuario(Resource):
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
@@ -90,17 +89,17 @@ class ActualizarUsuario(Resource):
         # Consultar la ventanilla
         ventanilla = Ventanilla.query.get(actualizar_usuario_in.ventanilla_id)
         if ventanilla is None:
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Ventanilla no encontrada",
             ).model_dump()
         if ventanilla.estatus != "A":
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Ventanilla eliminada",
             ).model_dump()
         if ventanilla.es_activo is False:
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Ventanilla no activa",
             ).model_dump()
@@ -108,9 +107,9 @@ class ActualizarUsuario(Resource):
         # Consultar los usuarios por la ventanilla, si la ventanilla la tiene otro usuario, se le manda un error
         usuarios = Usuario.query.filter_by(ventanilla_id=ventanilla.id).filter_by(estatus="A").first()
         if usuarios is not None and usuarios.id != usuario.id:
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
-                message=f"Ventanilla ocupada por otro usuario {usuarios.nombre}",
+                message=f"Ventanilla ocupada por {usuarios.nombre}",
             ).model_dump()
 
         # Actualizar la ventanilla del usuario
@@ -165,7 +164,7 @@ class ActualizarUsuario(Resource):
         # # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
-            return OneVentanillaUsuarioOut(
+            return OneConfiguracionUsuarioOut(
                 success=False,
                 message="El usuario no tiene un rol asignado",
             ).model_dump
@@ -180,10 +179,10 @@ class ActualizarUsuario(Resource):
             )
 
         # Entregar JSON
-        return OneVentanillaUsuarioOut(
+        return OneConfiguracionUsuarioOut(
             success=True,
             message="Usuario actualizado",
-            data=VentanillaUsuarioOut(
+            data=ConfiguracionUsuarioOut(
                 ventanilla=ventanilla,
                 unidad=unidad,
                 rol=RolOut(

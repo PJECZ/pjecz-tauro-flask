@@ -12,7 +12,7 @@ from functools import wraps
 
 from flask import g, request
 
-from tauro.blueprints.api_key_v1.schemas import ResponseSchema
+from tauro.blueprints.api_v1.schemas import ResponseSchema
 from tauro.blueprints.api_keys.models import APIKey
 
 

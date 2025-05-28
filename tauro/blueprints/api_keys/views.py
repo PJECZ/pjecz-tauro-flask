@@ -3,6 +3,9 @@ API-Keys, vistas
 """
 
 import json
+import uuid
+from datetime import datetime, timedelta
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
@@ -61,7 +64,7 @@ def datatable_json():
                     "api_key": resultado.api_key,
                     "url": url_for("api_keys.detail", api_key_id=resultado.id),
                 },
-                "api_key_expiracion": resultado.api_key_expiracion,
+                "api_key_expiracion": resultado.api_key_expiracion.strftime("%Y-%m-%d %H:%M:%S"),
                 "es_activo": resultado.es_activo,
             }
         )
@@ -120,6 +123,10 @@ def new():
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
+    # Carga de datos por defecto
+    form.api_key.data = uuid.uuid4().hex
+    form.api_key_expiracion.data = datetime.now() + timedelta(days=365 * 5)
+    form.es_activo.data = True
     return render_template("api_keys/new.jinja2", form=form)
 
 

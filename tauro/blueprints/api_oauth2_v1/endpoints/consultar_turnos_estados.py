@@ -1,10 +1,10 @@
 """
-API v1 Endpoint: Consultar Turnos Estados
+API-OAuth2 v1 Endpoint: Consultar Turnos Estados
 """
 
 from flask_restful import Resource
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import ListTurnosEstadosOut, TurnoEstadoOut
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 

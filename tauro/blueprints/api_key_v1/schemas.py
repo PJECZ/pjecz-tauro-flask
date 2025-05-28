@@ -1,27 +1,36 @@
 """
-API v1 Schemas
+API-Key v1 Schemas
 """
 
 from pydantic import BaseModel
 
 
-class ResponseSchema(BaseModel):
-    """Esquema común para responder todas las peticiones"""
+class ConsultarUsuarioIn(BaseModel):
+    """Esquema para consultar un usuario"""
 
-    success: bool
-    message: str
-    data: dict | list | None = None
+    usuario_id: int
 
 
-class UnidadOut(BaseModel):
-    """Esquema para entregar una Unidad"""
+class ActualizarUsuarioIn(BaseModel):
+    """Esquema para actualizar un usuario"""
 
-    id: int
-    clave: str
-    nombre: str
+    usuario_id: int
+    ventanilla_id: int
+    turnos_tipos_ids: list[int]
 
 
-class ListUnidadesOut(ResponseSchema):
-    """Esquema para entregar una lista de Unidades"""
+class ActualizarTurnoEstadoIn(BaseModel):
+    """Esquema para cambiar el estado de un turno"""
 
-    data: list[UnidadOut]
+    usuario_id: int
+    turno_id: int
+    turno_estado_id: int
+
+
+class CrearTurnoIn(BaseModel):
+    """Esquema para crear un turno"""
+
+    usuario_id: int
+    turno_tipo_id: int
+    unidad_id: int
+    comentarios: str | None
