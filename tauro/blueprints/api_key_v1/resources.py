@@ -9,7 +9,8 @@ from flask_restful import Api
 from config.settings import get_settings
 
 # from tauro.blueprints.api_key_v1.endpoints.actualizar_turno_estado import ActualizarTurnoEstado
-# from tauro.blueprints.api_key_v1.endpoints.actualizar_usuario import ActualizarUsuario
+from tauro.blueprints.api_key_v1.endpoints.actualizar_usuario import ActualizarUsuario
+
 # from tauro.blueprints.api_key_v1.endpoints.autenticar import Authenticate, ValidarToken
 from tauro.blueprints.api_key_v1.endpoints.consultar_configuracion_usuario import ConsultarConfiguracionUsuario
 
@@ -40,7 +41,7 @@ CORS(api_key_v1, origins=origins)
 # Agregar los recursos a la API
 # api.add_resource(Authenticate, "/token")
 # api.add_resource(ActualizarTurnoEstado, "/actualizar_turno_estado")
-# api.add_resource(ActualizarUsuario, "/actualizar_usuario")
+api.add_resource(ActualizarUsuario, "/actualizar_usuario")
 # api.add_resource(ConsultarTurnos, "/consultar_turnos")
 api.add_resource(ConsultarTurnosEstados, "/consultar_turnos_estados")
 api.add_resource(ConsultarTurnosTipos, "/consultar_turnos_tipos")

@@ -1,5 +1,5 @@
 """
-API-OAuth2 v1 Endpoint: Actualizar Usuario
+API-Key v1 Endpoint: Actualizar Usuario
 """
 
 from flask import g, request
@@ -7,7 +7,7 @@ from flask_restful import Resource
 from sqlalchemy import or_
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import (
     TurnoTipoOut,
     TurnoOut,
@@ -17,7 +17,7 @@ from tauro.blueprints.api_v1.schemas import (
     ConfiguracionUsuarioOut,
     OneConfiguracionUsuarioOut,
 )
-from tauro.blueprints.api_oauth2_v1.schemas import ActualizarUsuarioIn
+from tauro.blueprints.api_key_v1.schemas import ActualizarUsuarioIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -31,23 +31,22 @@ from tauro.blueprints.usuarios_roles.models import UsuarioRol
 class ActualizarUsuario(Resource):
     """Actualizar un usuario"""
 
-    @token_required
+    @api_key_required
     def post(self) -> OneConfiguracionUsuarioOut:
         """Actualizar un usuario"""
 
+        # Recibir y validar el payload
+        payload = request.get_json()
+        actualizar_usuario_in = ActualizarUsuarioIn.model_validate(payload)
+
         # Consultar el usuario
-        username = g.current_user
         try:
-            usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
+            usuario = Usuario.query.filter_by(id=actualizar_usuario_in.usuario_id).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
-
-        # Recibir y validar el payload
-        payload = request.get_json()
-        actualizar_usuario_in = ActualizarUsuarioIn.model_validate(payload)
 
         # Actualizar TODOS los tipos de turnos que el usuario ESTA atendiendo con es_activo a falso
         for usuario_turno_tipo in UsuarioTurnoTipo.query.filter_by(usuario_id=usuario.id).all():
