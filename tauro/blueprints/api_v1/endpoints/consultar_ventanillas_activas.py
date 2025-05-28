@@ -16,8 +16,14 @@ class ConsultarVentanillasActivas(Resource):
     def get(self) -> ListVentanillasActivasOut:
         """Consultar las ventanillas activas"""
 
-        # Consultar
-        ventanillas = Ventanilla.query.filter_by(es_activo=True).filter_by(estatus="A").order_by(Ventanilla.nombre).all()
+        # Consultar las ventanillas activas omitiendo la NO DEFINIDO
+        ventanillas = (
+            Ventanilla.query.filter_by(es_activo=True)
+            .filter_by(estatus="A")
+            .filter(Ventanilla.nombre != "NO DEFINIDO")
+            .order_by(Ventanilla.nombre)
+            .all()
+        )
 
         # Entregar JSON
         return ListVentanillasActivasOut(
