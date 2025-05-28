@@ -4,8 +4,8 @@ API v1 Endpoint: Consultar Ventanillas Activas
 
 from flask_restful import Resource
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import ListVentanillasActivasOut, VentanillaActivaOut
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_oauth2_v1.schemas import ListVentanillasActivasOut, VentanillaActivaOut
 from tauro.blueprints.ventanillas.models import Ventanilla
 
 

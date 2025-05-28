@@ -4,8 +4,8 @@ API v1 Endpoint: Consultar Turnos Tipos
 
 from flask_restful import Resource
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import ListTurnosTiposOut, TurnoTipoOut
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_oauth2_v1.schemas import ListTurnosTiposOut, TurnoTipoOut
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 
 

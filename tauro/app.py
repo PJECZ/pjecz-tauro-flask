@@ -7,7 +7,7 @@ from flask import Flask
 from config.settings import Settings
 from tauro.blueprints.api_key_v1.resources import api_key_v1
 from tauro.blueprints.api_keys.views import api_keys
-from tauro.blueprints.api_v1.resources import api_v1
+from tauro.blueprints.api_oauth2_v1.resources import api_oauth2_v1
 from tauro.blueprints.bitacoras.views import bitacoras
 from tauro.blueprints.entradas_salidas.views import entradas_salidas
 from tauro.blueprints.modulos.views import modulos
@@ -54,8 +54,8 @@ def create_app():
     app.register_blueprint(ventanillas)
 
     # Registrar blueprints de API OAuth2 sin csrf
-    app.register_blueprint(api_v1)
-    csrf.exempt(api_v1)
+    app.register_blueprint(api_oauth2_v1)
+    csrf.exempt(api_oauth2_v1)
 
     # Registrar blueprints de API Key sin csrf
     app.register_blueprint(api_key_v1)

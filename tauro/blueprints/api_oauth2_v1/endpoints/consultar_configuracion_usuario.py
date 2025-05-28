@@ -7,8 +7,8 @@ from flask_restful import Resource
 from sqlalchemy import or_
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import (
+from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_oauth2_v1.schemas import (
     OneVentanillaUsuarioOut,
     TurnoOut,
     TurnoTipoOut,
