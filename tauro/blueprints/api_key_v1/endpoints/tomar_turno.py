@@ -1,15 +1,15 @@
 """
-API-OAuth2 v1 Endpoint: Tomar Turno
+API-Key v1 Endpoint: Tomar Turno
 """
 
 from datetime import datetime
-
-from flask import g
+from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, VentanillaOut, UnidadOut
+from tauro.blueprints.api_key_v1.schemas import ConsultarUsuarioIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -22,14 +22,17 @@ from tauro.extensions import socketio
 class TomarTurno(Resource):
     """Tomar un turno"""
 
-    @token_required
-    def get(self) -> OneTurnoOut:
+    @api_key_required
+    def post(self) -> OneTurnoOut:
         """Tomar un turno"""
 
+        # Recibir y validar el payload
+        payload = request.get_json()
+        usuario_in = ConsultarUsuarioIn.model_validate(payload)
+
         # Consultar el usuario
-        username = g.current_user
         try:
-            usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
+            usuario = Usuario.query.filter_by(id=usuario_in.usuario_id).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoOut(
                 success=False,
