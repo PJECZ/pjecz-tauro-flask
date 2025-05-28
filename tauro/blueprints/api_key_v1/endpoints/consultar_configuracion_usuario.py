@@ -1,13 +1,13 @@
 """
-API-OAuth2 v1 Endpoint: Consultar Configuracion Usuario
+API-Key v1 Endpoint: Consultar Configuración Usuario
 """
 
-from flask import g
+from flask import request
 from flask_restful import Resource
 from sqlalchemy import or_
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import (
     RolOut,
     UnidadOut,
@@ -17,6 +17,7 @@ from tauro.blueprints.api_v1.schemas import (
     OneConfiguracionUsuarioOut,
     ConfiguracionUsuarioOut,
 )
+from tauro.blueprints.api_key_v1.schemas import ConsultarUsuarioIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
@@ -29,18 +30,21 @@ from tauro.blueprints.usuarios_roles.models import UsuarioRol
 class ConsultarConfiguracionUsuario(Resource):
     """Consultar configuración del usuario"""
 
-    @token_required
-    def get(self) -> OneConfiguracionUsuarioOut:
+    @api_key_required
+    def post(self) -> OneConfiguracionUsuarioOut:
         """Consultar configuración del usuario"""
 
+        # Recibir y validar el payload
+        payload = request.get_json()
+        usuario_in = ConsultarUsuarioIn.model_validate(payload)
+
         # Consultar el usuario
-        username = g.current_user
         try:
-            usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
+            usuario = Usuario.query.filter_by(id=usuario_in.usuario_id).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneConfiguracionUsuarioOut(
                 success=False,
-                message="Usuario no encontrado o email duplicado",
+                message="Usuario no encontrado",
             ).model_dump()
 
         # Consultar los tipos de turnos del usuario
@@ -111,7 +115,7 @@ class ConsultarConfiguracionUsuario(Resource):
         # Entregar JSON
         return OneConfiguracionUsuarioOut(
             success=True,
-            message=f"Se ha consultado la configuración del usuario de {username}",
+            message=f"Se ha consultado la configuración del usuario {usuario.nombre}",
             data=ConfiguracionUsuarioOut(
                 ventanilla=ventanilla,
                 unidad=unidad,

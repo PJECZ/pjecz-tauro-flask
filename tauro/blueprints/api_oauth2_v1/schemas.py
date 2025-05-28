@@ -1,22 +1,16 @@
 """
-API-Oauth2 v1 Schemas
+API-OAuth2 v1 Schemas
 """
 
 from pydantic import BaseModel
 
 from tauro.blueprints.api_v1.schemas import (
     ResponseSchema,
-    TurnoTipoOut,
+    RolOut,
+    TurnoOut,
     UnidadOut,
     VentanillaOut,
 )
-
-
-class RolOut(BaseModel):
-    """Esquema para entregar un rol"""
-
-    id: int
-    nombre: str
 
 
 class TokenSchema(BaseModel):
@@ -32,17 +26,6 @@ class TokenSchema(BaseModel):
     rol: RolOut | None = None
     unidad: UnidadOut | None = None
     ventanilla: VentanillaOut | None = None
-
-
-class TurnoOut(BaseModel):
-    """Esquema para entregar un turno"""
-
-    turno_id: int
-    turno_numero: int
-    turno_estado: str
-    turno_comentarios: str | None
-    ventanilla: VentanillaOut | None
-    unidad: UnidadOut | None
 
 
 class UnidadTurnosOut(BaseModel):
@@ -68,23 +51,6 @@ class OneUnidadTurnosOut(ResponseSchema):
     """Esquema para entregar una unidad con sus turnos"""
 
     data: UnidadTurnosOut | None = None
-
-
-class VentanillaUsuarioOut(BaseModel):
-    """Esquema para entregar una ventanilla de un usuario"""
-
-    ventanilla: VentanillaOut | None
-    unidad: UnidadOut | None
-    rol: RolOut | None = None
-    turnos_tipos: list[TurnoTipoOut] | None
-    usuario_nombre_completo: str
-    ultimo_turno: TurnoOut | None
-
-
-class OneVentanillaUsuarioOut(ResponseSchema):
-    """Esquema para entregar una ventanilla de un usuario"""
-
-    data: VentanillaUsuarioOut | None = None
 
 
 class CrearTurnoIn(BaseModel):

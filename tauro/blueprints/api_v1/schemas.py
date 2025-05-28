@@ -66,3 +66,38 @@ class ListTurnosTiposOut(ResponseSchema):
     """Esquema para entregar una lista de tipos de turnos"""
 
     data: list[TurnoTipoOut]
+
+
+class RolOut(BaseModel):
+    """Esquema para entregar un rol"""
+
+    id: int
+    nombre: str
+
+
+class TurnoOut(BaseModel):
+    """Esquema para entregar un turno"""
+
+    turno_id: int
+    turno_numero: int
+    turno_estado: str
+    turno_comentarios: str | None
+    ventanilla: VentanillaOut | None
+    unidad: UnidadOut | None
+
+
+class ConfiguracionUsuarioOut(BaseModel):
+    """Esquema para entregar una ventanilla de un usuario"""
+
+    ventanilla: VentanillaOut | None
+    unidad: UnidadOut | None
+    rol: RolOut | None = None
+    turnos_tipos: list[TurnoTipoOut] | None
+    usuario_nombre_completo: str
+    ultimo_turno: TurnoOut | None
+
+
+class OneConfiguracionUsuarioOut(ResponseSchema):
+    """Esquema para entregar una ventanilla de un usuario"""
+
+    data: ConfiguracionUsuarioOut | None = None
