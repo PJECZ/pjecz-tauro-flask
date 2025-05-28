@@ -16,6 +16,8 @@ from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.unidades.models import Unidad
 
+from tauro.extensions import socketio
+
 
 class ActualizarTurnoEstado(Resource):
     """Actualizar el estado de un turno"""
@@ -84,8 +86,8 @@ class ActualizarTurnoEstado(Resource):
                 nombre=unidad.nombre,
             )
 
-        # Entregar JSON
-        return OneTurnoOut(
+        # Crear objeto OneTurnoOut
+        one_turno_out = OneTurnoOut(
             success=True,
             message=f"Se ha cambiado el turno {turno.numero} a {turno_estado.nombre} por {usuario.nombre}",
             data=TurnoOut(
@@ -101,3 +103,9 @@ class ActualizarTurnoEstado(Resource):
                 unidad=unidad_out,
             ),
         ).model_dump()
+
+        # Enviar mensaje vía socketio
+        socketio.send(one_turno_out)
+
+        # Entregar JSON
+        return one_turno_out

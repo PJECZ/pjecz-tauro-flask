@@ -25,3 +25,12 @@ class ActualizarTurnoEstadoIn(BaseModel):
     usuario_id: int
     turno_id: int
     turno_estado_id: int
+
+
+class CrearTurnoIn(BaseModel):
+    """Esquema para crear un turno"""
+
+    usuario_id: int
+    turno_tipo_id: int
+    unidad_id: int
+    comentarios: str | None
