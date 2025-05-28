@@ -52,3 +52,17 @@ class ListTurnosEstadosOut(ResponseSchema):
     """Esquema para entregar una lista de estados de turnos"""
 
     data: list[TurnoEstadoOut]
+
+
+class TurnoTipoOut(BaseModel):
+    """Esquema para entregar un tipo de turno"""
+
+    id: int
+    nombre: str
+    nivel: int
+
+
+class ListTurnosTiposOut(ResponseSchema):
+    """Esquema para entregar una lista de tipos de turnos"""
+
+    data: list[TurnoTipoOut]

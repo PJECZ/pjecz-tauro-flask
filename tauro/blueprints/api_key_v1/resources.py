@@ -14,8 +14,8 @@ from config.settings import get_settings
 # from tauro.blueprints.api_key_v1.endpoints.consultar_configuracion_usuario import ConsultarConfiguracionUsuario
 # from tauro.blueprints.api_key_v1.endpoints.consultar_turnos import ConsultarTurnos
 from tauro.blueprints.api_key_v1.endpoints.consultar_turnos_estados import ConsultarTurnosEstados
+from tauro.blueprints.api_key_v1.endpoints.consultar_turnos_tipos import ConsultarTurnosTipos
 
-# from tauro.blueprints.api_key_v1.endpoints.consultar_turnos_tipos import ConsultarTurnosTipos
 # from tauro.blueprints.api_key_v1.endpoints.consultar_turnos_unidad import ConsultarTurnosUnidad
 from tauro.blueprints.api_key_v1.endpoints.consultar_unidades import ConsultarUnidades
 from tauro.blueprints.api_key_v1.endpoints.consultar_ventanillas import ConsultarVentanillas
@@ -42,7 +42,7 @@ CORS(api_key_v1, origins=origins)
 # api.add_resource(ActualizarUsuario, "/actualizar_usuario")
 # api.add_resource(ConsultarTurnos, "/consultar_turnos")
 api.add_resource(ConsultarTurnosEstados, "/consultar_turnos_estados")
-# api.add_resource(ConsultarTurnosTipos, "/consultar_turnos_tipos")
+api.add_resource(ConsultarTurnosTipos, "/consultar_turnos_tipos")
 # api.add_resource(ConsultarTurnosUnidad, "/consultar_turnos/<int:unidad_id>")
 # api.add_resource(ConsultarConfiguracionUsuario, "/consultar_configuracion_usuario")
 api.add_resource(ConsultarUnidades, "/consultar_unidades")

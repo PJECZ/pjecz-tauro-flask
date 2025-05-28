@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from tauro.blueprints.api_v1.schemas import (
     ResponseSchema,
+    TurnoTipoOut,
     UnidadOut,
     VentanillaOut,
 )
@@ -31,20 +32,6 @@ class TokenSchema(BaseModel):
     rol: RolOut | None = None
     unidad: UnidadOut | None = None
     ventanilla: VentanillaOut | None = None
-
-
-class TurnoTipoOut(BaseModel):
-    """Esquema para entregar un tipo de turno"""
-
-    id: int
-    nombre: str
-    nivel: int
-
-
-class ListTurnosTiposOut(ResponseSchema):
-    """Esquema para entregar una lista de tipos de turnos"""
-
-    data: list[TurnoTipoOut]
 
 
 class TurnoOut(BaseModel):
