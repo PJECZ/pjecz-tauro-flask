@@ -12,8 +12,8 @@ from email_validator import EmailNotValidError, validate_email
 from flask import current_app, g, request
 from flask_restful import Resource
 
-from tauro.blueprints.api_oauth2_v1.schemas import ResponseSchema, RolOut, TokenSchema, UnidadOut, VentanillaOut
-from tauro.blueprints.roles.models import Rol
+from tauro.blueprints.api_v1.schemas import ResponseSchema
+from tauro.blueprints.api_oauth2_v1.schemas import RolOut, TokenSchema, UnidadOut, VentanillaOut
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_roles.models import UsuarioRol
 

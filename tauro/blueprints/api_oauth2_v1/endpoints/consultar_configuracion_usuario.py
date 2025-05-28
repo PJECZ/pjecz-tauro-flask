@@ -13,7 +13,6 @@ from tauro.blueprints.api_oauth2_v1.schemas import (
     TurnoOut,
     TurnoTipoOut,
     VentanillaUsuarioOut,
-    VentanillaActivaOut,
     VentanillaOut,
     UnidadOut,
     RolOut,

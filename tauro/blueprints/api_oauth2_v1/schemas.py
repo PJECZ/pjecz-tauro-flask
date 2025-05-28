@@ -1,16 +1,14 @@
 """
-API v1 Schemas
+API-Oauth2 v1 Schemas
 """
 
 from pydantic import BaseModel
 
-
-class ResponseSchema(BaseModel):
-    """Esquema común para responder todas las peticiones"""
-
-    success: bool
-    message: str
-    data: dict | list | None = None
+from tauro.blueprints.api_v1.schemas import (
+    ResponseSchema,
+    UnidadOut,
+    VentanillaOut,
+)
 
 
 class RolOut(BaseModel):
@@ -18,28 +16,6 @@ class RolOut(BaseModel):
 
     id: int
     nombre: str
-
-
-class UnidadOut(BaseModel):
-    """Esquema para entregar una Unidad"""
-
-    id: int
-    clave: str
-    nombre: str
-
-
-class ListUnidadesOut(ResponseSchema):
-    """Esquema para entregar una lista de Unidades"""
-
-    data: list[UnidadOut]
-
-
-class VentanillaOut(BaseModel):
-    """Esquema para entregar una ventanilla"""
-
-    id: int
-    nombre: str
-    numero: int | None
 
 
 class TokenSchema(BaseModel):
@@ -118,20 +94,6 @@ class OneUnidadTurnosOut(ResponseSchema):
     """Esquema para entregar una unidad con sus turnos"""
 
     data: UnidadTurnosOut | None = None
-
-
-class VentanillaActivaOut(BaseModel):
-    """Esquema para entregar una ventanilla activa"""
-
-    id: int
-    nombre: str
-    numero: int | None
-
-
-class ListVentanillasActivasOut(ResponseSchema):
-    """Esquema para entregar una lista de ventanillas activas"""
-
-    data: list[VentanillaActivaOut]
 
 
 class VentanillaUsuarioOut(BaseModel):
