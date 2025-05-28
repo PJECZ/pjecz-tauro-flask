@@ -61,12 +61,6 @@ class CrearTurnoIn(BaseModel):
     comentarios: str | None
 
 
-class OneTurnoOut(ResponseSchema):
-    """Esquema para entregar un turno ya creado"""
-
-    data: TurnoOut | None = None
-
-
 class ListTurnosOut(BaseModel):
     """Esquema para entregar un listado de todos los turnos"""
 

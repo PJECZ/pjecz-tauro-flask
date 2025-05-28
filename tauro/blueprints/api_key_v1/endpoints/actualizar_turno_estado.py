@@ -1,46 +1,44 @@
 """
-API-OAuth2 v1 Endpoint: Actualizar Turno Estado
+API-Key v1 Endpoint: Actualizar Turno Estado
 """
 
 from datetime import datetime
 
-from flask import g, request
+from flask import request
 from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
+from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import UnidadOut, TurnoOut, VentanillaOut, OneTurnoOut
-from tauro.blueprints.api_oauth2_v1.schemas import ActualizarTurnoEstadoIn
+from tauro.blueprints.api_key_v1.schemas import ActualizarTurnoEstadoIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.unidades.models import Unidad
-from tauro.extensions import socketio
 
 
 class ActualizarTurnoEstado(Resource):
     """Actualizar el estado de un turno"""
 
-    @token_required
+    @api_key_required
     def post(self) -> OneTurnoOut:
         """Actualizar el estado de un turno"""
 
+        # Recibir y validar el payload
+        payload = request.get_json()
+        actualizar_turno_estado_in = ActualizarTurnoEstadoIn.model_validate(payload)
+
         # Consultar el usuario
-        username = g.current_user
         try:
-            usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
+            usuario = Usuario.query.filter_by(id=actualizar_turno_estado_in.usuario_id).filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
             ).model_dump()
 
-        # Recibir y validar el payload
-        payload = request.get_json()
-        turno_estado_in = ActualizarTurnoEstadoIn.model_validate(payload)
-
         # Consultar el turno
-        turno = Turno.query.get(turno_estado_in.turno_id)
+        turno = Turno.query.get(actualizar_turno_estado_in.turno_id)
         if turno is None:
             return OneTurnoOut(
                 success=False,
@@ -48,14 +46,14 @@ class ActualizarTurnoEstado(Resource):
             ).model_dump()
 
         # Si el estado que tiene el turno es el mismo que se quiere asignar, no hacer nada
-        if turno.turno_estado_id == turno_estado_in.turno_estado_id:
+        if turno.turno_estado_id == actualizar_turno_estado_in.turno_estado_id:
             return OneTurnoOut(
                 success=False,
                 message="El estado del turno ya ha sido cambiado como se desea",
             ).model_dump()
 
         # Consultar el NUEVO estado de turno
-        turno_estado = TurnoEstado.query.get(turno_estado_in.turno_estado_id)
+        turno_estado = TurnoEstado.query.get(actualizar_turno_estado_in.turno_estado_id)
         if turno_estado is None:
             return OneTurnoOut(
                 success=False,
@@ -86,10 +84,10 @@ class ActualizarTurnoEstado(Resource):
                 nombre=unidad.nombre,
             )
 
-        # Crear objeto OneTurnoOut
-        one_turno_out = OneTurnoOut(
+        # Entregar JSON
+        return OneTurnoOut(
             success=True,
-            message=f"Se ha cambiado el turno {turno.numero} a {turno_estado.nombre} por {username}",
+            message=f"Se ha cambiado el turno {turno.numero} a {turno_estado.nombre} por {usuario.nombre}",
             data=TurnoOut(
                 turno_id=turno.id,
                 turno_numero=turno.numero,
@@ -103,9 +101,3 @@ class ActualizarTurnoEstado(Resource):
                 unidad=unidad_out,
             ),
         ).model_dump()
-
-        # Enviar mensaje vía socketio
-        socketio.send(one_turno_out)
-
-        # Entregar JSON
-        return one_turno_out

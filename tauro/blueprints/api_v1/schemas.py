@@ -101,3 +101,9 @@ class OneConfiguracionUsuarioOut(ResponseSchema):
     """Esquema para entregar una ventanilla de un usuario"""
 
     data: ConfiguracionUsuarioOut | None = None
+
+
+class OneTurnoOut(ResponseSchema):
+    """Esquema para entregar un turno ya creado"""
+
+    data: TurnoOut | None = None
