@@ -201,7 +201,6 @@ def new_with_usuario(usuario_id):
         return redirect(bitacora.url)
     form.usuario_email.data = usuario.email  # Solo lectura
     form.usuario_nombre.data = usuario.nombre  # Solo lectura
-    form.usuario_puesto.data = usuario.puesto  # Solo lectura
     return render_template(
         "usuarios_roles/new_with_usuario.jinja2",
         form=form,
