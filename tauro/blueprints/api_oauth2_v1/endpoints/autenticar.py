@@ -127,7 +127,7 @@ class Authenticate(Resource):
             return TokenSchema(
                 success=False,
                 message="El usuario no tiene un rol asignado",
-            ).model_dump
+            ).model_dump()
         rol = usuarios_roles.rol
 
         # Generar token con PyJWT
