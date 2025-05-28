@@ -2,7 +2,7 @@
 API-Key v1 Endpoint: Actualizar Usuario
 """
 
-from flask import g, request
+from flask import request
 from flask_restful import Resource
 from sqlalchemy import or_
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
@@ -103,9 +103,17 @@ class ActualizarUsuario(Resource):
                 message="Ventanilla no activa",
             ).model_dump()
 
+        # Consultar la ventanilla NO DEFINIDA
+        ventanilla_nd = Ventanilla.query.filter_by(nombre="NO DEFINIDO").first()
+        if ventanilla_nd is None:
+            return OneConfiguracionUsuarioOut(
+                success=False,
+                message="Ventanilla NO DEFINIDA no encontrada",
+            ).model_dump()
+
         # Consultar los usuarios por la ventanilla, si la ventanilla la tiene otro usuario, se le manda un error
         usuarios = Usuario.query.filter_by(ventanilla_id=ventanilla.id).filter_by(estatus="A").first()
-        if usuarios is not None and usuarios.id != usuario.id:
+        if usuarios is not None and usuarios.id != usuario.id and ventanilla.id != ventanilla_nd.id:
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message=f"Ventanilla ocupada por {usuarios.nombre}",
@@ -160,13 +168,13 @@ class ActualizarUsuario(Resource):
                 unidad=unidad_out,
             )
 
-        # # Extraer un único rol
+        # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="El usuario no tiene un rol asignado",
-            ).model_dump
+            ).model_dump()
         rol = usuarios_roles.rol
         # Consultar la unidad
         unidad_sql = Unidad.query.get(usuario.unidad_id)

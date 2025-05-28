@@ -167,7 +167,7 @@ class ActualizarUsuario(Resource):
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="El usuario no tiene un rol asignado",
-            ).model_dump
+            ).model_dump()
         rol = usuarios_roles.rol
         # Consultar la unidad
         unidad_sql = Unidad.query.get(usuario.unidad_id)
