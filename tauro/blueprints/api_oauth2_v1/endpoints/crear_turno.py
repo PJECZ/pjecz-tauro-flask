@@ -4,12 +4,12 @@ API-OAuth2 v1 Endpoint: Crear Turno
 
 from datetime import datetime
 
-from flask import current_app, g, request
+from flask import current_app, g, request, url_for
 from flask_restful import Resource
 from pytz import timezone
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from lib.safe_string import safe_string
+from lib.safe_string import safe_string, safe_message
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, VentanillaOut
 from tauro.blueprints.api_oauth2_v1.schemas import CrearTurnoIn
@@ -19,6 +19,9 @@ from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.bitacoras.models import Bitacora
+from tauro.blueprints.modulos.models import Modulo
+
 from tauro.extensions import socketio
 
 
@@ -93,6 +96,14 @@ class CrearTurno(Resource):
             comentarios=safe_string(turno_in.comentarios),
         )
         turno.save()
+
+        # Crear registro en bitácora
+        Bitacora(
+            modulo=Modulo.query.filter_by(nombre="TURNOS").first(),
+            usuario=usuario,
+            descripcion=safe_message(f"El turno {turno.id} ha sido creado por Api-OAuth2"),
+            url=url_for("turnos.detail", turno_id=turno.id),
+        ).save()
 
         # Extraer la unidad
         unidad_out = None

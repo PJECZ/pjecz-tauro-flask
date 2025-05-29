@@ -4,9 +4,10 @@ API-OAuth2 v1 Endpoint: Actualizar Turno Estado
 
 from datetime import datetime
 
-from flask import g, request
+from flask import g, request, url_for
 from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from lib.safe_string import safe_message
 
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import UnidadOut, TurnoOut, VentanillaOut, OneTurnoOut
@@ -15,6 +16,9 @@ from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.unidades.models import Unidad
+from tauro.blueprints.modulos.models import Modulo
+from tauro.blueprints.bitacoras.models import Bitacora
+
 from tauro.extensions import socketio
 
 
@@ -74,6 +78,14 @@ class ActualizarTurnoEstado(Resource):
 
         # Guardar cambios
         turno.save()
+
+        # Crear registro en bitácora
+        Bitacora(
+            modulo=Modulo.query.filter_by(nombre="TURNOS").first(),
+            usuario=usuario,
+            descripcion=safe_message(f"El turno {turno.id} ha sido cambiado a {turno_estado.nombre} por Api-OAuth2"),
+            url=url_for("turnos.detail", turno_id=turno.id),
+        ).save()
 
         # Consultar la unidad
         unidad = Unidad.query.get(turno.unidad_id)
