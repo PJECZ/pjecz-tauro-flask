@@ -4,9 +4,10 @@ API-OAuth2 v1 Endpoint: Tomar Turno
 
 from datetime import datetime
 
-from flask import g
+from flask import g, url_for
 from flask_restful import Resource
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
+from lib.safe_string import safe_message
 
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, VentanillaOut, UnidadOut
@@ -16,6 +17,9 @@ from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.blueprints.unidades.models import Unidad
+from tauro.blueprints.bitacoras.models import Bitacora
+from tauro.blueprints.modulos.models import Modulo
+
 from tauro.extensions import socketio
 
 
@@ -89,6 +93,14 @@ class TomarTurno(Resource):
         # Guardar
         turno.save()
 
+        # Crear registro en bitácora
+        Bitacora(
+            modulo=Modulo.query.filter_by(nombre="TURNOS").first(),
+            usuario=usuario,
+            descripcion=safe_message(f"El turno {turno.id} ha sido tomado utilizando Api-OAuth2"),
+            url=url_for("turnos.detail", turno_id=turno.id),
+        ).save()
+
         # Consultar la unidad
         unidad = Unidad.query.get(turno.unidad_id)
         # Extraer la unidad
@@ -108,6 +120,7 @@ class TomarTurno(Resource):
                 turno_id=turno.id,
                 turno_numero=turno.numero,
                 turno_estado=turno.turno_estado.nombre,
+                turno_tipo_id=turno.turno_tipo_id,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,
