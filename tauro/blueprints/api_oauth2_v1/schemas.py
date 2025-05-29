@@ -42,6 +42,7 @@ class TurnoUnidadOut(BaseModel):
     turno_id: int
     turno_numero: int
     turno_estado: str
+    turno_tipo_id: int
     turno_comentarios: str | None
     unidad: UnidadOut
     ventanilla: VentanillaOut | None

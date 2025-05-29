@@ -122,6 +122,7 @@ class CrearTurno(Resource):
                 turno_id=turno.id,
                 turno_numero=turno.numero,
                 turno_estado=turno.turno_estado.nombre,
+                turno_tipo_id=turno.turno_tipo_id,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,
