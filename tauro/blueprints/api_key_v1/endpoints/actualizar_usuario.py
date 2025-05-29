@@ -2,10 +2,12 @@
 API-Key v1 Endpoint: Actualizar Usuario
 """
 
-from flask import request
+from flask import request, url_for
 from flask_restful import Resource
 from sqlalchemy import or_
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
+
+from lib.safe_string import safe_message
 
 from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import (
@@ -26,6 +28,8 @@ from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.blueprints.ventanillas.models import Ventanilla
 from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.usuarios_roles.models import UsuarioRol
+from tauro.blueprints.bitacoras.models import Bitacora
+from tauro.blueprints.modulos.models import Modulo
 
 
 class ActualizarUsuario(Resource):
@@ -124,6 +128,14 @@ class ActualizarUsuario(Resource):
 
         # Guardar
         usuario.save()
+
+        # Crear registro en bitácora
+        Bitacora(
+            modulo=Modulo.query.filter_by(nombre="USUARIOS").first(),
+            usuario=usuario,
+            descripcion=safe_message(f"El usuario {usuario.id}: {usuario.nombre} ha sido actualizado por Api-Key"),
+            url=url_for("usuarios.detail", usuario_id=usuario.id),
+        ).save()
 
         # Consultar Ventanilla
         ventanilla = None
