@@ -33,7 +33,9 @@ class Ventanilla(database.Model, UniversalMixin):
     @property
     def nombre_numero(self):
         """Junta clave y nombre de la ventanilla"""
-        return f"{self.nombre} - {self.numero}"
+        if self.numero:
+            return f"{self.nombre} - {self.numero}"
+        return self.nombre
 
     def __repr__(self):
         """Representación"""
