@@ -25,10 +25,22 @@
         <div class="row">
             <div class="col">
                 <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosTurnos.buscar(); return false;">
-                    <div class="col-1">
+                    <div class="col-3">
                         <div class="form-floating">
                             <input id="filtroId" type="text" class="form-control" aria-label="Id" style="text-transform: uppercase;">
                             <label for="filtroId">ID</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-floating">
+                            <input id="filtroFechaInicio" type="date" class="form-control" aria-label="FechaInicio" style="text-transform: uppercase;">
+                            <label for="filtroFechaInicio">Fecha Inicio</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-floating">
+                            <input id="filtroFechaTermino" type="date" class="form-control" aria-label="FechaTermino" style="text-transform: uppercase;">
+                            <label for="filtroFechaTermino">Fecha Término</label>
                         </div>
                     </div>
                     <div class="col-3">
@@ -44,8 +56,24 @@
                     </div>
                     <div class="col-3">
                         <div class="form-floating">
-                            <input id="filtroVentanilla" type="text" class="form-control" aria-label="Ventanilla" style="text-transform: uppercase;">
-                            <label for="filtroVentanilla">Ventanilla</label>
+                            <select class="form-select" id="turnoUnidadSelect" name="turnoUnidadSelect" aria-label="Todas" onchange="filtrosTurnos.buscar(); return false;" style="flex: inherit;">
+                                <option selected value=""></option>
+                                {% for unidad in unidades %}
+                                    <option value="{{unidad.id}}">{{unidad.clave}}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="turnoUnidadSelect">Unidad</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-floating">
+                            <select class="form-select" id="turnoVentanillaSelect" name="turnoVentanillaSelect" aria-label="Todas" onchange="filtrosTurnos.buscar(); return false;" style="flex: inherit;">
+                                <option selected value=""></option>
+                                {% for ventanilla in ventanillas %}
+                                    <option value="{{ventanilla.id}}">{{ventanilla.nombre_numero}}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="turnoVentanillaSelect">Ventanilla</label>
                         </div>
                     </div>
                     <div class="col-3">
@@ -59,7 +87,7 @@
                             <label for="turnoEstadoSelect">Estado</label>
                         </div>
                     </div>
-                    <div class="col-2 text-end">
+                    <div class="col-3 text-end">
                         <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosTurnos.buscar(); return false;" id="button-buscar"><span class="iconify" data-icon="mdi:magnify"></span></button>
                         <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosTurnos.limpiar();" id="button-limpiar"><span class="iconify" data-icon="mdi:broom"></span></button>
                     </div>
@@ -143,6 +171,10 @@
         // Filtros turnos
         const filtrosTurnos = new FiltrosDataTable('#turnos_datatable', configDataTable);
         filtrosTurnos.agregarInput('filtroId', 'turno_id');
+        filtrosTurnos.agregarInput('filtroFechaInicio', 'fecha_inicio');
+        filtrosTurnos.agregarInput('filtroFechaTermino', 'fecha_termino');
+        filtrosTurnos.agregarInput('turnoUnidadSelect', 'unidad_id');
+        filtrosTurnos.agregarInput('turnoVentanillaSelect', 'ventanilla_id');
         filtrosTurnos.agregarInput('turnoTipoSelect', 'turno_tipo_id');
         filtrosTurnos.agregarInput('turnoEstadoSelect', 'turno_estado_id');
         filtrosTurnos.precargar();

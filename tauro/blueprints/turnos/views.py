@@ -51,6 +51,18 @@ def datatable_json():
         turno_id = safe_string(request.form["turno_id"])
         if turno_id.isnumeric():
             consulta = consulta.filter(Turno.id == turno_id)
+    if "fecha_inicio" in request.form:
+        fecha_inicio = request.form["fecha_inicio"]
+        if fecha_inicio:
+            consulta = consulta.filter(Turno.creado >= fecha_inicio)
+    if "fecha_termino" in request.form:
+        fecha_termino = request.form["fecha_termino"]
+        if fecha_termino:
+            consulta = consulta.filter(Turno.creado <= fecha_termino)
+    if "unidad_id" in request.form:
+        consulta = consulta.filter(Turno.unidad_id == request.form["unidad_id"])
+    if "ventanilla_id" in request.form:
+        consulta = consulta.filter(Turno.ventanilla_id == request.form["ventanilla_id"])
     if "turno_tipo_id" in request.form:
         consulta = consulta.filter(Turno.turno_tipo_id == request.form["turno_tipo_id"])
     if "turno_estado_id" in request.form:
@@ -106,6 +118,8 @@ def list_active():
         titulo="Turnos",
         turnos_tipos=TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoTipo.nombre).all(),
         turnos_estados=TurnoEstado.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoEstado.nombre).all(),
+        unidades=Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
+        ventanillas=Ventanilla.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
         estatus="A",
     )
 
@@ -119,6 +133,8 @@ def list_inactive():
         filtros=json.dumps({"estatus": "B"}),
         turnos_tipos=TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoTipo.nombre).all(),
         turnos_estados=TurnoEstado.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoEstado.nombre).all(),
+        unidades=Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
+        ventanillas=Ventanilla.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
         titulo="Turnos inactivos",
         estatus="B",
     )

@@ -133,6 +133,10 @@ def datatable_json():
                     "url": url_for("usuarios.detail", usuario_id=resultado.id),
                 },
                 "nombre": resultado.nombre,
+                "ventanilla": {
+                    "nombre": resultado.ventanilla.nombre_numero,
+                    "url": url_for("ventanillas.detail", ventanilla_id=resultado.ventanilla.id),
+                },
                 "acceso_frontend": resultado.es_acceso_frontend,
             }
         )
