@@ -80,6 +80,7 @@ class TurnoOut(BaseModel):
 
     turno_id: int
     turno_numero: int
+    turno_fecha: str
     turno_estado: str
     turno_tipo_id: int
     turno_comentarios: str | None

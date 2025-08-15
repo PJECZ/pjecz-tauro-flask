@@ -4,6 +4,7 @@ API-OAuth2 v1 Schemas
 
 from pydantic import BaseModel
 
+
 from tauro.blueprints.api_v1.schemas import (
     ResponseSchema,
     RolOut,
@@ -41,6 +42,7 @@ class TurnoUnidadOut(BaseModel):
 
     turno_id: int
     turno_numero: int
+    turno_fecha: str
     turno_estado: str
     turno_tipo_id: int
     turno_comentarios: str | None

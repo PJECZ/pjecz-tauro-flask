@@ -57,6 +57,7 @@ class ConsultarTurnos(Resource):
             ultimo_turno = TurnoUnidadOut(
                 turno_id=ultimo_turno_atendiendo.id,
                 turno_numero=ultimo_turno_atendiendo.numero,
+                turno_fecha=ultimo_turno_atendiendo.creado.isoformat(),
                 turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
                 turno_tipo_id=ultimo_turno_atendiendo.turno_tipo_id,
                 turno_comentarios=ultimo_turno_atendiendo.comentarios,
@@ -84,6 +85,7 @@ class ConsultarTurnos(Resource):
                     TurnoUnidadOut(
                         turno_id=turno.id,
                         turno_numero=turno.numero,
+                        turno_fecha=turno.creado.isoformat(),
                         turno_estado=turno.turno_estado.nombre,
                         turno_tipo_id=turno.turno_tipo_id,
                         turno_comentarios=turno.comentarios,
