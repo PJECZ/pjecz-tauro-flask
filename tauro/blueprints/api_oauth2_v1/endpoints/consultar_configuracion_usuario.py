@@ -79,6 +79,7 @@ class ConsultarConfiguracionUsuario(Resource):
             ultimo_turno = TurnoOut(
                 turno_id=turnos.id,
                 turno_numero=turnos.numero,
+                turno_fecha=turnos.creado.isoformat(),
                 turno_estado=turnos.turno_estado.nombre,
                 turno_tipo_id=turnos.turno_tipo_id,
                 turno_comentarios=turnos.comentarios,

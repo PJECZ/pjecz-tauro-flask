@@ -121,6 +121,7 @@ class CrearTurno(Resource):
             data=TurnoOut(
                 turno_id=turno.id,
                 turno_numero=turno.numero,
+                turno_fecha=turno.creado.isoformat(),
                 turno_estado=turno.turno_estado.nombre,
                 turno_tipo_id=turno.turno_tipo_id,
                 turno_comentarios=turno.comentarios,
