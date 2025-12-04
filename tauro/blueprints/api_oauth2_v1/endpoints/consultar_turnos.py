@@ -26,7 +26,7 @@ class ConsultarTurnos(Resource):
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "ATENDIENDO"))
+            .filter(TurnoEstado.nombre != "COMPLETADO", TurnoEstado.nombre != "CANCELADO")
             .filter(Turno.estatus == "A")
             .order_by(TurnoTipo.nivel, Turno.numero)
             .limit(current_app.config["LIMITE_DE_TURNOS_LISTADOS"])
@@ -60,6 +60,7 @@ class ConsultarTurnos(Resource):
                 turno_fecha=ultimo_turno_atendiendo.creado.isoformat(),
                 turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
                 turno_tipo_id=ultimo_turno_atendiendo.turno_tipo_id,
+                turno_numero_cubiculo=ultimo_turno_atendiendo.numero_cubiculo,
                 turno_comentarios=ultimo_turno_atendiendo.comentarios,
                 unidad=UnidadOut(
                     id=unidades[ultimo_turno_atendiendo.unidad_id].id,
@@ -88,6 +89,7 @@ class ConsultarTurnos(Resource):
                         turno_fecha=turno.creado.isoformat(),
                         turno_estado=turno.turno_estado.nombre,
                         turno_tipo_id=turno.turno_tipo_id,
+                        turno_numero_cubiculo=turno.numero_cubiculo,
                         turno_comentarios=turno.comentarios,
                         unidad=UnidadOut(
                             id=unidades[turno.unidad_id].id,
