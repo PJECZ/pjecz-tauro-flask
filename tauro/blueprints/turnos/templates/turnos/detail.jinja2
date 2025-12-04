@@ -26,6 +26,7 @@
         {{ detail.label_value('Tipo', turno.turno_tipo.nombre, url_for("turnos_tipos.detail", turno_tipo_id=turno.turno_tipo.id)) }}
         {{ detail.label_value('Unidad', unidades[turno.unidad_id].clave_nombre, url_for("unidades.detail", unidad_id=turno.unidad_id)) }}
         {{ detail.label_value('Ventanilla', turno.ventanilla.nombre_numero, url_for("ventanillas.detail", ventanilla_id=turno.ventanilla.id)) }}
+        {{ detail.label_value('Cubículo', turno.numero_cubiculo )}}
         {{ detail.label_value('Inicio', moment(turno.inicio, local=False).format('DD MMM YYYY HH:mm')) }}
         {{ detail.label_value('Término', moment(turno.termino, local=False).format('DD MMM YYYY HH:mm')) }}
         {{ detail.label_value('Estado', turno.turno_estado.nombre, url_for("turnos_estados.detail", turno_estado_id=turno.turno_estado.id)) }}
