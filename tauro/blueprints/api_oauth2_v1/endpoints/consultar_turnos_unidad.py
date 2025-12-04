@@ -48,6 +48,9 @@ class ConsultarTurnosUnidad(Resource):
             return OneUnidadTurnosOut(
                 success=True,
                 message="No hay turnos en espera",
+                data=UnidadTurnosOut(
+                    unidad=UnidadOut(id=unidad.id, clave=unidad.clave, nombre=unidad.nombre), ultimo_turno=None, turnos=[]
+                ),
             ).model_dump()
 
         # Consultar Último turno en estado 'ATENDIENDO'
