@@ -68,6 +68,7 @@ class Authenticate(Resource):
         username = request.form.get("username")
         password = request.form.get("password")
 
+        print(username, ":", password)
         # Si username es None y password es None, entonces recibir por JSON
         if username is None and password is None:
             data = request.get_json()

@@ -24,6 +24,7 @@ class ActualizarTurnoEstadoIn(BaseModel):
 
     usuario_id: int
     turno_id: int
+    turno_numero_cubiculo: int | None
     turno_estado_id: int
 
 

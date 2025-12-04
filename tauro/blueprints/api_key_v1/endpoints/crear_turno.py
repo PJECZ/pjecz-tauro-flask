@@ -91,6 +91,7 @@ class CrearTurno(Resource):
             turno_tipo=turno_tipo,
             ventanilla=ventanilla,
             numero=numero,
+            numero_cubiculo=0,
             unidad_id=unidad.id,
             comentarios=safe_string(crear_turno_in.comentarios),
         )
@@ -123,6 +124,7 @@ class CrearTurno(Resource):
                 turno_fecha=turno.creado.isoformat(),
                 turno_estado=turno.turno_estado.nombre,
                 turno_tipo_id=turno.turno_tipo_id,
+                turno_numero_cubiculo=0,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,

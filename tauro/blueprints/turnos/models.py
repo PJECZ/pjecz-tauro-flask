@@ -37,6 +37,7 @@ class Turno(database.Model, UniversalMixin):
     inicio: Mapped[Optional[datetime]] = mapped_column(DateTime)
     termino: Mapped[Optional[datetime]] = mapped_column(DateTime)
     unidad_id: Mapped[Optional[int]]
+    numero_cubiculo: Mapped[Optional[int]]
     comentarios: Mapped[Optional[str]] = mapped_column(String(512))
 
     @property

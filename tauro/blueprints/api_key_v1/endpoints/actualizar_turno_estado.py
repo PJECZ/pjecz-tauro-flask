@@ -75,6 +75,12 @@ class ActualizarTurnoEstado(Resource):
         if turno_estado.nombre == "ATENDIENDO":
             turno.inicio = datetime.now()
 
+        # Actualizar número de cubículo si lo tiene
+        if actualizar_turno_estado_in.turno_numero_cubiculo and actualizar_turno_estado_in.turno_numero_cubiculo > 0:
+            turno.numero_cubiculo = actualizar_turno_estado_in.turno_numero_cubiculo
+        else:
+            turno.numero_cubiculo = 0
+
         # Guardar cambios
         turno.save()
 
@@ -108,6 +114,7 @@ class ActualizarTurnoEstado(Resource):
                 turno_estado=turno.turno_estado.nombre,
                 turno_tipo_id=turno.turno_tipo_id,
                 turno_tipo_nombre=turno.turno_tipo.nombre,
+                turno_numero_cubiculo=turno.numero_cubiculo,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,
