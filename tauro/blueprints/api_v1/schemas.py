@@ -83,6 +83,7 @@ class TurnoOut(BaseModel):
     turno_fecha: str
     turno_estado: str
     turno_tipo_id: int
+    turno_numero_cubiculo: int
     turno_comentarios: str | None
     ventanilla: VentanillaOut | None
     unidad: UnidadOut | None
