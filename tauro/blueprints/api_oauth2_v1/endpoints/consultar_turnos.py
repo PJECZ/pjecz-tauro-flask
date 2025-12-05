@@ -48,7 +48,7 @@ class ConsultarTurnos(Resource):
         ultimo_turno_atendiendo = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(TurnoEstado.nombre == "ATENDIENDO")
+            .filter(or_(TurnoEstado.nombre == "ATENDIENDO", TurnoEstado.nombre == "ATENDIENDO EN CUBICULO"))
             .filter(Turno.estatus == "A")
             .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
