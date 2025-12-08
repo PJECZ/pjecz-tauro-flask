@@ -3,6 +3,7 @@ Flask App
 """
 
 from flask import Flask
+from werkzeug.wrappers import Response
 
 from config.settings import Settings
 from tauro.blueprints.api_key_v1.resources import api_key_v1
@@ -27,6 +28,22 @@ from tauro.blueprints.ventanillas.views import ventanillas
 from tauro.extensions import csrf, database, login_manager, moment, socketio
 
 
+# Clase para interceptar las peticiones para que en producción se inyecte el prefijo PREFIX
+class PrefixMiddleware:
+    def __init__(self, app, prefix=""):
+        self.app = app
+        self.prefix = prefix
+
+    def __call__(self, environ, start_response):
+        if environ["PATH_INFO"].startswith(self.prefix):
+            environ["PATH_INFO"] = environ["PATH_INFO"][len(self.prefix) :]
+            environ["SCRIPT_NAME"] = self.prefix
+            return self.app(environ, start_response)
+        else:
+            res = Response("Not Found", status=404)
+            return res(environ, start_response)
+
+
 def create_app():
     """Crear app"""
     # Definir app
@@ -34,6 +51,10 @@ def create_app():
 
     # Cargar la configuración
     app.config.from_object(Settings())
+
+    # Aplicar el middleware de prefijo en producción
+    if app.config["ENVIRONMENT"].lower() == "production" and app.config["PREFIX"]:
+        app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config["PREFIX"])
 
     # Registrar blueprints
     app.register_blueprint(api_keys)

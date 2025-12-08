@@ -46,14 +46,14 @@
         {% if ventanilla.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar la ventanilla ' + ventanilla.nombre + '?') }}{% endif %}
     {% endif %}
     {# Carga de listados #}
-    <script src="/static/js/datatables-constructor.js"></script>
-    <script src="/static/js/datatables-filtros.js"></script>
+    <script src="{{ url_for('static', filename='js/datatables-constructor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datatables-filtros.js') }}"></script>
     {# DataTable unidadesVentanillas #}
     <script>
         // DataTable unidadesVentanillas
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDataTable = constructorDataTable.config();
-        configDataTable['ajax']['url'] = '/unidades_ventanillas/datatable_json';
+        configDataTable['ajax']['url'] = '{{ url_for("unidades_ventanillas.datatable_json") }}';
         configDataTable['ajax']['data'] = {'estatus': 'A', 'ventanilla_id': {{ ventanilla.id }}};
         configDataTable['columns'] = [
             { data: 'id' },
