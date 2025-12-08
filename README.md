@@ -85,7 +85,10 @@ TZ=America/Mexico_City
 LIMITE_DE_TURNOS_LISTADOS=20
 
 # Si esta en PRODUCTION se evita reiniciar la base de datos
-DEPLOYMENT_ENVIRONMENT=develop
+ENVIRONMENT=develop
+
+# Prefix para utilizar con otros sistemas. La variable ENVIRONMENT debe ser igual a: PRODUCTION
+PREFIX=
 ```
 
 Crear un archivo `.bashrc` que se ejecute al iniciar la terminal
