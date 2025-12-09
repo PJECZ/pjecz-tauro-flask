@@ -89,8 +89,8 @@
         {% if usuario.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + usuario.nombre + '?') }}{% endif %}
     {% endif %}
     <!-- Constructor de DataTables -->
-    <script src="/static/js/datatables-constructor.js"></script>
-    <script src="/static/js/datatables-filtros.js"></script>
+    <script src="{{ url_for('static', filename='js/datatables-constructor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datatables-filtros.js') }}"></script>
     <script>
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
     </script>
@@ -98,7 +98,7 @@
         <script>
             // DataTable UsuariosRoles
             let configDTUsuariosRoles = constructorDataTable.config();
-            configDTUsuariosRoles['ajax']['url'] = '/usuarios_roles/datatable_json';
+            configDTUsuariosRoles['ajax']['url'] = '{{ url_for("usuarios_roles.datatable_json") }}';
             configDTUsuariosRoles['ajax']['data'] = { 'estatus': "A", 'usuario_id': {{ usuario.id}} };
             configDTUsuariosRoles['columns'] = [
                 { data: "detalle" },
@@ -199,7 +199,7 @@
         <script>
             // DataTable Usuarios-TurnosTipos
             let configDTUsuariosTurnosTipos = constructorDataTable.config();
-            configDTUsuariosTurnosTipos['ajax']['url'] = '/usuarios_turnos_tipos/datatable_json';
+            configDTUsuariosTurnosTipos['ajax']['url'] = '{{ url_for("usuarios_turnos_tipos.datatable_json") }}';
             configDTUsuariosTurnosTipos['ajax']['data'] = { 'estatus': "A", 'usuario_id': {{ usuario.id}} };
             configDTUsuariosTurnosTipos['columns'] = [
                 { data: "detalle" },

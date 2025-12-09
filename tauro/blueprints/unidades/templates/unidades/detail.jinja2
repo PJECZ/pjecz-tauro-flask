@@ -87,14 +87,14 @@
         {% if unidad.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + unidad.clave + '?') }}{% endif %}
     {% endif %}
     {# Listados dinámicos #}
-    <script src="/static/js/datatables-constructor.js"></script>
-    <script src="/static/js/datatables-filtros.js"></script>
+    <script src="{{ url_for('static', filename='js/datatables-constructor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datatables-filtros.js') }}"></script>
     {# Listado de Usuarios #}
     <script>
         // DataTable usuarios
         const constructorDataTableUsuarios = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDTUsuarios = constructorDataTableUsuarios.config();
-        configDTUsuarios['ajax']['url'] = '/usuarios/datatable_json';
+        configDTUsuarios['ajax']['url'] = '{{ url_for("usuarios.datatable_json") }}';
         configDTUsuarios['ajax']['data'] = { 'estatus': 'A', 'unidad_id': '{{unidad.id}}' };
         configDTUsuarios['columns'] = [
             { data: "detalle" },
@@ -131,7 +131,7 @@
         // DataTable unidadesVentanillas
         const constructorDataTableUV = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDataTableUV = constructorDataTableUV.config();
-        configDataTableUV['ajax']['url'] = '/unidades_ventanillas/datatable_json';
+        configDataTableUV['ajax']['url'] = '{{ url_for("unidades_ventanillas.datatable_json") }}';
         configDataTableUV['ajax']['data'] = {'estatus': 'A', 'unidad_id': {{ unidad.id }}};
         configDataTableUV['columns'] = [
             { data: 'id' },
