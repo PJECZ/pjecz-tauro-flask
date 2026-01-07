@@ -219,6 +219,24 @@ def edit(turno_id):
     return render_template("turnos/edit.jinja2", form=form, turno=turno)
 
 
+@turnos.route("/turnos/reinicar_cubiculo/<int:turno_id>", methods=["GET", "POST"])
+@permission_required(MODULO, Permiso.MODIFICAR)
+def reset_cubiculo(turno_id):
+    """Reiniciar cubículo de un Turno"""
+    turno = Turno.query.get_or_404(turno_id)
+    turno.numero_cubiculo = None
+    turno.save()
+    bitacora = Bitacora(
+        modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+        usuario=current_user,
+        descripcion=safe_message(f"Reiniciado el número de cubículo del Turno Id: {turno.id}"),
+        url=url_for("turnos.detail", turno_id=turno.id),
+    )
+    bitacora.save()
+    flash(bitacora.descripcion, "success")
+    return redirect(bitacora.url)
+
+
 @turnos.route("/turnos/eliminar/<int:turno_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def delete(turno_id):
