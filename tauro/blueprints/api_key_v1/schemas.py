@@ -20,11 +20,11 @@ class ActualizarUsuarioIn(BaseModel):
 
 
 class ActualizarTurnoEstadoIn(BaseModel):
-    """Esquema para cambiar el estado de un turno"""
+    """Esquema para cambiar el valor de un campo de un turno"""
 
     usuario_id: int
     turno_id: int
-    turno_numero_cubiculo: int | None
+    turno_numero_cubiculo: int | None = None
     turno_estado_id: int
 
 
@@ -33,5 +33,6 @@ class CrearTurnoIn(BaseModel):
 
     usuario_id: int
     turno_tipo_id: int
+    turno_telefono: str | None = None
     unidad_id: int
-    comentarios: str | None
+    comentarios: str | None = None

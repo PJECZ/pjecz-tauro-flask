@@ -9,7 +9,7 @@ from flask_restful import Resource
 from pytz import timezone
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from lib.safe_string import safe_string, safe_message
+from lib.safe_string import safe_string, safe_message, safe_telefono
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, VentanillaOut
 from tauro.blueprints.api_oauth2_v1.schemas import CrearTurnoIn
@@ -45,6 +45,16 @@ class CrearTurno(Resource):
         # Recibir y validar el payload
         payload = request.get_json()
         turno_in = CrearTurnoIn.model_validate(payload)
+
+        # Validar el número de telefono
+        telefono = ""
+        if turno_in.turno_telefono is not None:
+            telefono = safe_telefono(turno_in.turno_telefono)
+            if telefono is None or telefono == "":
+                return OneTurnoOut(
+                    success=False,
+                    message="Número de teléfono inválido",
+                ).model_dump()
 
         # Consultar el tipo de turno
         turno_tipo = TurnoTipo.query.get(turno_in.turno_tipo_id)
@@ -91,6 +101,7 @@ class CrearTurno(Resource):
             turno_estado=turno_estado,
             turno_tipo=turno_tipo,
             numero_cubiculo=0,
+            telefono=telefono,
             ventanilla=ventanilla,
             numero=numero,
             unidad_id=unidad.id,
@@ -126,6 +137,7 @@ class CrearTurno(Resource):
                 turno_estado=turno.turno_estado.nombre,
                 turno_tipo_id=turno.turno_tipo_id,
                 turno_numero_cubiculo=turno.numero_cubiculo,
+                turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,

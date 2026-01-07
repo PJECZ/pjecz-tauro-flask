@@ -50,13 +50,6 @@ class ActualizarTurnoEstado(Resource):
                 message="Turno no encontrado",
             ).model_dump()
 
-        # Si el estado que tiene el turno es el mismo que se quiere asignar, no hacer nada
-        if turno.turno_estado_id == actualizar_turno_estado_in.turno_estado_id:
-            return OneTurnoOut(
-                success=False,
-                message="El estado del turno ya ha sido cambiado como se desea",
-            ).model_dump()
-
         # Consultar el NUEVO estado de turno
         turno_estado = TurnoEstado.query.get(actualizar_turno_estado_in.turno_estado_id)
         if turno_estado is None:
@@ -115,6 +108,7 @@ class ActualizarTurnoEstado(Resource):
                 turno_tipo_id=turno.turno_tipo_id,
                 turno_tipo_nombre=turno.turno_tipo.nombre,
                 turno_numero_cubiculo=turno.numero_cubiculo,
+                turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,

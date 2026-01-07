@@ -9,7 +9,7 @@ from flask_restful import Resource
 from pytz import timezone
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from lib.safe_string import safe_string, safe_message
+from lib.safe_string import safe_string, safe_message, safe_telefono
 from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, VentanillaOut
 from tauro.blueprints.api_key_v1.schemas import CrearTurnoIn
@@ -92,6 +92,7 @@ class CrearTurno(Resource):
             ventanilla=ventanilla,
             numero=numero,
             numero_cubiculo=0,
+            telefono=safe_telefono(crear_turno_in.turno_telefono),
             unidad_id=unidad.id,
             comentarios=safe_string(crear_turno_in.comentarios),
         )

@@ -32,7 +32,7 @@ class VentanillaOut(BaseModel):
 
     id: int
     nombre: str
-    numero: int | None
+    numero: int | None = None
 
 
 class ListVentanillasOut(ResponseSchema):
@@ -84,20 +84,21 @@ class TurnoOut(BaseModel):
     turno_estado: str
     turno_tipo_id: int
     turno_numero_cubiculo: int
-    turno_comentarios: str | None
-    ventanilla: VentanillaOut | None
-    unidad: UnidadOut | None
+    turno_comentarios: str | None = None
+    turno_telefono: str | None = None
+    ventanilla: VentanillaOut | None = None
+    unidad: UnidadOut | None = None
 
 
 class ConfiguracionUsuarioOut(BaseModel):
     """Esquema para entregar una ventanilla de un usuario"""
 
-    ventanilla: VentanillaOut | None
-    unidad: UnidadOut | None
+    ventanilla: VentanillaOut | None = None
+    unidad: UnidadOut | None = None
     rol: RolOut | None = None
-    turnos_tipos: list[TurnoTipoOut] | None
+    turnos_tipos: list[TurnoTipoOut] | None = None
     usuario_nombre_completo: str
-    ultimo_turno: TurnoOut | None
+    ultimo_turno: TurnoOut | None = None
 
 
 class OneConfiguracionUsuarioOut(ResponseSchema):

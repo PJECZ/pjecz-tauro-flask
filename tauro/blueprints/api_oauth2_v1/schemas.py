@@ -33,8 +33,8 @@ class UnidadTurnosOut(BaseModel):
     """Esquema para entregar una unidad con sus turnos"""
 
     unidad: UnidadOut
-    ultimo_turno: TurnoOut | None
-    turnos: list[TurnoOut] | None
+    ultimo_turno: TurnoOut | None = None
+    turnos: list[TurnoOut] | None = None
 
 
 class TurnoUnidadOut(BaseModel):
@@ -46,9 +46,10 @@ class TurnoUnidadOut(BaseModel):
     turno_estado: str
     turno_tipo_id: int
     turno_numero_cubiculo: int
-    turno_comentarios: str | None
+    turno_telefono: str | None = None
+    turno_comentarios: str | None = None
     unidad: UnidadOut
-    ventanilla: VentanillaOut | None
+    ventanilla: VentanillaOut | None = None
 
 
 class OneUnidadTurnosOut(ResponseSchema):
@@ -61,8 +62,9 @@ class CrearTurnoIn(BaseModel):
     """Esquema para crear un turno"""
 
     turno_tipo_id: int
+    turno_telefono: str | None = None
     unidad_id: int
-    comentarios: str | None
+    comentarios: str | None = None
 
 
 class ListTurnosOut(BaseModel):
@@ -83,7 +85,7 @@ class ActualizarTurnoEstadoIn(BaseModel):
 
     turno_id: int  # Turno ID
     turno_estado_id: int  # Turno Estado ID
-    turno_numero_cubiculo: int | None
+    turno_numero_cubiculo: int | None = None
 
 
 class ActualizarUsuarioIn(BaseModel):
