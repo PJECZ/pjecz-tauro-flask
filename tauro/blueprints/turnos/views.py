@@ -224,7 +224,7 @@ def edit(turno_id):
 def reset_cubiculo(turno_id):
     """Reiniciar cubículo de un Turno"""
     turno = Turno.query.get_or_404(turno_id)
-    turno.numero_cubiculo = None
+    turno.numero_cubiculo = 0
     turno.save()
     bitacora = Bitacora(
         modulo=Modulo.query.filter_by(nombre=MODULO).first(),
