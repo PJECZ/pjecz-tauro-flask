@@ -26,7 +26,16 @@
         {{ detail.label_value('Tipo', turno.turno_tipo.nombre, url_for("turnos_tipos.detail", turno_tipo_id=turno.turno_tipo.id)) }}
         {{ detail.label_value('Unidad', unidades[turno.unidad_id].clave_nombre, url_for("unidades.detail", unidad_id=turno.unidad_id)) }}
         {{ detail.label_value('Ventanilla', turno.ventanilla.nombre_numero, url_for("ventanillas.detail", ventanilla_id=turno.ventanilla.id)) }}
-        {{ detail.label_value('Cubículo', turno.numero_cubiculo )}}
+        {% if turno.numero_cubiculo and turno.numero_cubiculo > 0 %}
+            <div class="row">
+                <div class="col-md-3 text-end">Cubículo</div>
+                <div class="col-md-9">
+                    <strong>{{ turno.numero_cubiculo }}</strong> - 
+                    {{ modals.button_modal('Reiniciar', url_for('turnos.reset_cubiculo', turno_id=turno.id), 'Reiniciar', "mdi:recycle-variant", "¿Reiniciar el número del cubículo?", 'btn-outline-danger') }}
+                </div>
+            </div>
+        {% endif %}
+        {{ detail.label_value('Teléfono', turno.telefono )}}
         {{ detail.label_value('Inicio', moment(turno.inicio, local=False).format('DD MMM YYYY HH:mm')) }}
         {{ detail.label_value('Término', moment(turno.termino, local=False).format('DD MMM YYYY HH:mm')) }}
         {{ detail.label_value('Estado', turno.turno_estado.nombre, url_for("turnos_estados.detail", turno_estado_id=turno.turno_estado.id)) }}
@@ -39,4 +48,5 @@
         {% if turno.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + turno.numero | string + '?') }}{% endif %}
         {% if turno.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + turno.numero | string + '?') }}{% endif %}
     {% endif %}
+    {{ modals.custom_javascript('Reiniciar', '¿Reiniciar el número del cubículo?', id="Reiniciar") }}
 {% endblock %}

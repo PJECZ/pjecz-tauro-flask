@@ -61,6 +61,7 @@ class ConsultarTurnos(Resource):
                 turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
                 turno_tipo_id=ultimo_turno_atendiendo.turno_tipo_id,
                 turno_numero_cubiculo=ultimo_turno_atendiendo.numero_cubiculo,
+                turno_telefono=ultimo_turno_atendiendo.telefono,
                 turno_comentarios=ultimo_turno_atendiendo.comentarios,
                 unidad=UnidadOut(
                     id=unidades[ultimo_turno_atendiendo.unidad_id].id,
@@ -90,6 +91,7 @@ class ConsultarTurnos(Resource):
                         turno_estado=turno.turno_estado.nombre,
                         turno_tipo_id=turno.turno_tipo_id,
                         turno_numero_cubiculo=turno.numero_cubiculo,
+                        turno_telefono=turno.telefono,
                         turno_comentarios=turno.comentarios,
                         unidad=UnidadOut(
                             id=unidades[turno.unidad_id].id,
