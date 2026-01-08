@@ -79,6 +79,16 @@ class CrearTurno(Resource):
                 message="Ventanilla no encontrada",
             ).model_dump()
 
+        # Validar el número de teléfono
+        telefono = None
+        if crear_turno_in.turno_telefono is not None:
+            telefono = safe_telefono(crear_turno_in.turno_telefono)
+            if telefono is None or telefono == "":
+                return OneTurnoOut(
+                    success=False,
+                    message="Número de teléfono inválido",
+                ).model_dump()
+
         # Definir el numero de turno
         fecha_hoy = datetime.now(tz=timezone(current_app.config["TZ"])).date()
         timestamp_hoy = datetime(year=fecha_hoy.year, month=fecha_hoy.month, day=fecha_hoy.day, hour=0, minute=0, second=0)
@@ -92,7 +102,7 @@ class CrearTurno(Resource):
             ventanilla=ventanilla,
             numero=numero,
             numero_cubiculo=0,
-            telefono=safe_telefono(crear_turno_in.turno_telefono),
+            telefono=telefono,
             unidad_id=unidad.id,
             comentarios=safe_string(crear_turno_in.comentarios),
         )
@@ -126,6 +136,7 @@ class CrearTurno(Resource):
                 turno_estado=turno.turno_estado.nombre,
                 turno_tipo_id=turno.turno_tipo_id,
                 turno_numero_cubiculo=0,
+                turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,

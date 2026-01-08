@@ -46,8 +46,8 @@ class CrearTurno(Resource):
         payload = request.get_json()
         turno_in = CrearTurnoIn.model_validate(payload)
 
-        # Validar el número de telefono
-        telefono = ""
+        # Validar el número de teléfono
+        telefono = None
         if turno_in.turno_telefono is not None:
             telefono = safe_telefono(turno_in.turno_telefono)
             if telefono is None or telefono == "":
