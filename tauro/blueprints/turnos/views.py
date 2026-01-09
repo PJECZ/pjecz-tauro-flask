@@ -202,25 +202,36 @@ def edit(turno_id):
     turno = Turno.query.get_or_404(turno_id)
     form = TurnoForm()
     if form.validate_on_submit():
-        turno.usuario_id = form.usuario.data
-        turno.numero = form.numero.data
-        turno.turno_tipo_id = form.turnos_tipo.data
-        turno.unidad_id = form.unidad.data
-        turno.ventanilla_id = form.ventanilla.data
-        turno.numero_cubiculo = form.numero_cubiculo.data
-        turno.telefono = safe_telefono(form.telefono.data)
-        turno.turno_estado_id = form.turnos_estado.data
-        turno.comentarios = safe_string(form.comentarios.data)
-        turno.save()
-        bitacora = Bitacora(
-            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
-            usuario=current_user,
-            descripcion=safe_message(f"Editado Turno {turno.id}"),
-            url=url_for("turnos.detail", turno_id=turno.id),
-        )
-        bitacora.save()
-        flash(bitacora.descripcion, "success")
-        return redirect(bitacora.url)
+        es_valido = True
+        # Validar número de teléfono
+        telefono = None
+        if form.telefono.data:
+            telefono = safe_telefono(form.telefono.data)
+            if telefono == "":
+                flash("Número de teléfono inválido", "warning")
+                es_valido = False
+
+        # Actualizar registro
+        if es_valido:
+            turno.usuario_id = form.usuario.data
+            turno.numero = form.numero.data
+            turno.turno_tipo_id = form.turnos_tipo.data
+            turno.unidad_id = form.unidad.data
+            turno.ventanilla_id = form.ventanilla.data
+            turno.numero_cubiculo = form.numero_cubiculo.data
+            turno.telefono = safe_telefono(form.telefono.data)
+            turno.turno_estado_id = form.turnos_estado.data
+            turno.comentarios = safe_string(form.comentarios.data)
+            turno.save()
+            bitacora = Bitacora(
+                modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+                usuario=current_user,
+                descripcion=safe_message(f"Editado Turno {turno.id}"),
+                url=url_for("turnos.detail", turno_id=turno.id),
+            )
+            bitacora.save()
+            flash(bitacora.descripcion, "success")
+            return redirect(bitacora.url)
     form.usuario.data = turno.usuario.id
     form.numero.data = turno.numero
     form.turnos_tipo.data = turno.turno_tipo.id
