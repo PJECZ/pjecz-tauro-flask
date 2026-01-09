@@ -3,13 +3,13 @@
 {% import 'macros/modals.jinja2' as modals %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Turno {{ turno.numero | string }}{% endblock %}
+{% block title %}Turno {{ turno.id | string }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons('Turno ' + turno.numero | string) %}
+    {% call topbar.page_buttons('Turno ' + turno.id | string) %}
         {{ topbar.button_previous('Turnos', url_for('turnos.list_active')) }}
         {% if current_user.can_edit('TURNOS') %}
-            {# {{ topbar.button_edit('Editar', url_for('turnos.edit', turno_id=turno.id)) }} #}
+            {{ topbar.button_edit('Editar', url_for('turnos.edit', turno_id=turno.id)) }}
         {% endif %}
         {% if current_user.can_admin('TURNOS') %}
             {% if turno.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('turnos.delete', turno_id=turno.id)) }}{% endif %}

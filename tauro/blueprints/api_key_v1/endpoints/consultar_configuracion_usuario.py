@@ -87,6 +87,7 @@ class ConsultarConfiguracionUsuario(Resource):
                 turno_estado=turnos.turno_estado.nombre,
                 turno_tipo_id=turnos.turno_tipo_id,
                 turno_numero_cubiculo=turnos.numero_cubiculo,
+                turno_telefono=turnos.telefono,
                 turno_comentarios=turnos.comentarios,
                 ventanilla=VentanillaOut(
                     id=turnos.ventanilla.id,

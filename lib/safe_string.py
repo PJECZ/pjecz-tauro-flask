@@ -149,7 +149,7 @@ def safe_mac_address(input_str):
 
 
 def safe_telefono(input_str):
-    """Safe telefono, debe ser de 10 digitos"""
+    """Safe teléfono, debe ser de 10 dígitos"""
     if not isinstance(input_str, str) or input_str.strip() == "":
         return ""
     input_str = input_str.strip()

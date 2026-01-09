@@ -126,6 +126,7 @@ class TomarTurno(Resource):
                 turno_estado=turno.turno_estado.nombre,
                 turno_tipo_id=turno.turno_tipo_id,
                 turno_numero_cubiculo=turno.numero_cubiculo,
+                turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
                 ventanilla=VentanillaOut(
                     id=turno.ventanilla.id,
