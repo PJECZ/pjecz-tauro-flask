@@ -2,17 +2,24 @@
 {% import 'macros/form.jinja2' as f with context %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Editar Turno {{ turno.numero | string}}{% endblock %}
+{% block title %}Editar Turno {{ turno.id | string}}{% endblock %}
 
 {% block topbar_actions %}
-    {{ topbar.page('Editar ' + turno.numero | string) }}
+    {{ topbar.page('Editar ' + turno.id | string) }}
 {% endblock %}
 
 {% block content %}
     {% call f.card() %}
         {% set form_kwargs = {'turno_id': turno.id} %}
         {% call f.form_tag('turnos.edit', fid='turno_form', **form_kwargs) %}
-            {% call f.form_group(form.tipo) %}{% endcall %}
+            {% call f.form_group(form.usuario) %}{% endcall %}
+            {% call f.form_group(form.numero) %}{% endcall %}
+            {% call f.form_group(form.turnos_tipo) %}{% endcall %}
+            {% call f.form_group(form.unidad) %}{% endcall %}
+            {% call f.form_group(form.ventanilla) %}{% endcall %}
+            {% call f.form_group(form.numero_cubiculo) %}{% endcall %}
+            {% call f.form_group(form.telefono) %}{% endcall %}
+            {% call f.form_group(form.turnos_estado) %}{% endcall %}
             {% call f.form_group(form.comentarios) %}{% endcall %}
             {% call f.form_group(form.guardar) %}{% endcall %}
         {% endcall %}
