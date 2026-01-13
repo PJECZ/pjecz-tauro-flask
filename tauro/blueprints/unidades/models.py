@@ -2,11 +2,10 @@
 Unidades, modelos
 """
 
-from typing import List, Optional
+from typing import List
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql.functions import now
 
 from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
@@ -27,7 +26,7 @@ class Unidad(database.Model, UniversalMixin):
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos
-    unidades_ventanillas: Mapped[List["UnidadVentanilla"]] = relationship(back_populates="unidad")
+    unidades_ubicaciones: Mapped[List["UnidadUbicacion"]] = relationship(back_populates="unidad")
     usuarios: Mapped[List["Usuario"]] = relationship(back_populates="unidad")
 
     @property

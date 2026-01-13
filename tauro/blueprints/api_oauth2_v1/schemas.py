@@ -10,7 +10,7 @@ from tauro.blueprints.api_v1.schemas import (
     RolOut,
     TurnoOut,
     UnidadOut,
-    VentanillaOut,
+    UbicacionOut,
 )
 
 
@@ -26,7 +26,7 @@ class TokenSchema(BaseModel):
     usuario_nombre_completo: str | None = None
     rol: RolOut | None = None
     unidad: UnidadOut | None = None
-    ventanilla: VentanillaOut | None = None
+    ubicacion: UbicacionOut | None = None
 
 
 class UnidadTurnosOut(BaseModel):
@@ -49,7 +49,7 @@ class TurnoUnidadOut(BaseModel):
     turno_telefono: str | None = None
     turno_comentarios: str | None = None
     unidad: UnidadOut
-    ventanilla: VentanillaOut | None = None
+    ubicacion: UbicacionOut | None = None
 
 
 class OneUnidadTurnosOut(ResponseSchema):
@@ -91,5 +91,5 @@ class ActualizarTurnoEstadoIn(BaseModel):
 class ActualizarUsuarioIn(BaseModel):
     """Esquema para actualizar un usuario"""
 
-    ventanilla_id: int
+    ubicacion_id: int
     turnos_tipos_ids: list[int]

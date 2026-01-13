@@ -28,8 +28,8 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     # Clave foránea
     unidad_id: Mapped[int] = mapped_column(ForeignKey("unidades.id"))
     unidad: Mapped["Unidad"] = relationship(back_populates="usuarios")
-    ventanilla_id: Mapped[int] = mapped_column(ForeignKey("ventanillas.id"))
-    ventanilla: Mapped["Ventanilla"] = relationship(back_populates="usuarios")
+    ubicacion_id: Mapped[int] = mapped_column(ForeignKey("ubicaciones.id"))
+    ubicacion: Mapped["Ubicacion"] = relationship(back_populates="usuarios")
 
     # Columnas
     email: Mapped[str] = mapped_column(String(256), unique=True, index=True)

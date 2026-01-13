@@ -27,18 +27,18 @@ class ListUnidadesOut(ResponseSchema):
     data: list[UnidadOut]
 
 
-class VentanillaOut(BaseModel):
-    """Esquema para entregar una ventanilla"""
+class UbicacionOut(BaseModel):
+    """Esquema para entregar una ubicacion"""
 
     id: int
     nombre: str
     numero: int | None = None
 
 
-class ListVentanillasOut(ResponseSchema):
-    """Esquema para entregar una lista de ventanillas activas"""
+class ListUbicacionesOut(ResponseSchema):
+    """Esquema para entregar una lista de ubicaciones activas"""
 
-    data: list[VentanillaOut]
+    data: list[UbicacionOut]
 
 
 class TurnoEstadoOut(BaseModel):
@@ -86,14 +86,14 @@ class TurnoOut(BaseModel):
     turno_numero_cubiculo: int
     turno_comentarios: str | None = None
     turno_telefono: str | None = None
-    ventanilla: VentanillaOut | None = None
+    ubicacion: UbicacionOut | None = None
     unidad: UnidadOut | None = None
 
 
 class ConfiguracionUsuarioOut(BaseModel):
-    """Esquema para entregar una ventanilla de un usuario"""
+    """Esquema para entregar una ubicacion de un usuario"""
 
-    ventanilla: VentanillaOut | None = None
+    ubicacion: UbicacionOut | None = None
     unidad: UnidadOut | None = None
     rol: RolOut | None = None
     turnos_tipos: list[TurnoTipoOut] | None = None
@@ -102,7 +102,7 @@ class ConfiguracionUsuarioOut(BaseModel):
 
 
 class OneConfiguracionUsuarioOut(ResponseSchema):
-    """Esquema para entregar una ventanilla de un usuario"""
+    """Esquema para entregar una ubicacion de un usuario"""
 
     data: ConfiguracionUsuarioOut | None = None
 

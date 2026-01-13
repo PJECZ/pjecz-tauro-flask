@@ -11,14 +11,14 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from lib.safe_string import safe_string, safe_message, safe_telefono
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, VentanillaOut
+from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, UbicacionOut
 from tauro.blueprints.api_oauth2_v1.schemas import CrearTurnoIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.usuarios.models import Usuario
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
 
@@ -81,13 +81,13 @@ class CrearTurno(Resource):
                 message="Estado de turno no encontrado",
             ).model_dump()
 
-        # Consultar la ventanilla NO DEFINIDO
+        # Consultar la ubicacion NO DEFINIDO
         try:
-            ventanilla = Ventanilla.query.filter_by(nombre="NO DEFINIDO").filter_by(estatus="A").one()
+            ubicacion = Ubicacion.query.filter_by(nombre="NO DEFINIDO").filter_by(estatus="A").one()
         except (MultipleResultsFound, NoResultFound):
             return OneTurnoOut(
                 success=False,
-                message="Ventanilla no encontrada",
+                message="Ubicacion no encontrada",
             ).model_dump()
 
         # Definir el numero de turno
@@ -102,7 +102,7 @@ class CrearTurno(Resource):
             turno_tipo=turno_tipo,
             numero_cubiculo=0,
             telefono=telefono,
-            ventanilla=ventanilla,
+            ubicacion=ubicacion,
             numero=numero,
             unidad_id=unidad.id,
             comentarios=safe_string(turno_in.comentarios),
@@ -139,10 +139,10 @@ class CrearTurno(Resource):
                 turno_numero_cubiculo=turno.numero_cubiculo,
                 turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
-                ventanilla=VentanillaOut(
-                    id=turno.ventanilla.id,
-                    nombre=turno.ventanilla.nombre,
-                    numero=turno.ventanilla.numero,
+                ubicacion=UbicacionOut(
+                    id=turno.ubicacion.id,
+                    nombre=turno.ubicacion.nombre,
+                    numero=turno.ubicacion.numero,
                 ),
                 unidad=unidad_out,
             ),

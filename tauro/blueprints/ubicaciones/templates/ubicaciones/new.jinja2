@@ -2,16 +2,15 @@
 {% import 'macros/form.jinja2' as f with context %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Editar Ventanilla {{ ventanilla.nombre }}{% endblock %}
+{% block title %}Nueva Ubicacion{% endblock %}
 
 {% block topbar_actions %}
-    {{ topbar.page('Editar ' + ventanilla.nombre) }}
+    {{ topbar.page('Nueva Ubicacion') }}
 {% endblock %}
 
 {% block content %}
     {% call f.card() %}
-        {% set form_kwargs = {'ventanilla_id': ventanilla.id} %}
-        {% call f.form_tag('ventanillas.edit', fid='ventanilla_form', **form_kwargs) %}
+        {% call f.form_tag('ubicaciones.new', fid='ubicacion_form') %}
             {% call f.form_group(form.nombre) %}{% endcall %}
             {% call f.form_group(form.numero) %}{% endcall %}
             {% call f.form_group(form.es_activo) %}{% endcall %}

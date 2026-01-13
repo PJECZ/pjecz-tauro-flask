@@ -6,7 +6,7 @@ from flask import current_app
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from tauro.blueprints.api_oauth2_v1.schemas import ListTurnosOut, OneListTurnosOut, TurnoUnidadOut, UnidadOut, VentanillaOut
+from tauro.blueprints.api_oauth2_v1.schemas import ListTurnosOut, OneListTurnosOut, TurnoUnidadOut, UnidadOut, UbicacionOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -68,10 +68,10 @@ class ConsultarTurnos(Resource):
                     nombre=unidades[ultimo_turno_atendiendo.unidad_id].nombre,
                     clave=unidades[ultimo_turno_atendiendo.unidad_id].clave,
                 ),
-                ventanilla=VentanillaOut(
-                    id=ultimo_turno_atendiendo.ventanilla_id,
-                    nombre=ultimo_turno_atendiendo.ventanilla.nombre,
-                    numero=ultimo_turno_atendiendo.ventanilla.numero,
+                ubicacion=UbicacionOut(
+                    id=ultimo_turno_atendiendo.ubicacion_id,
+                    nombre=ultimo_turno_atendiendo.ubicacion.nombre,
+                    numero=ultimo_turno_atendiendo.ubicacion.numero,
                 ),
             )
         else:
@@ -98,10 +98,10 @@ class ConsultarTurnos(Resource):
                             nombre=unidades[turno.unidad_id].nombre,
                             clave=unidades[turno.unidad_id].clave,
                         ),
-                        ventanilla=VentanillaOut(
-                            id=turno.ventanilla_id,
-                            nombre=turno.ventanilla.nombre,
-                            numero=turno.ventanilla.numero,
+                        ubicacion=UbicacionOut(
+                            id=turno.ubicacion_id,
+                            nombre=turno.ubicacion.nombre,
+                            numero=turno.ubicacion.numero,
                         ),
                     )
                     for turno in turnos

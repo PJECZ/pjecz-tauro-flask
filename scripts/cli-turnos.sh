@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Restablecer la ventanilla de los Usuarios
+# Restablecer la ubicacion de los Usuarios
 # Desactivar los turnos-tipos de los Usuarios
 #
 # Guardar archivo en: /home/pjecz-tauro/.local/bin/cli-turnos.sh

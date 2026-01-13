@@ -14,7 +14,7 @@ import click
 from lib.pwgen import generar_api_key
 from tauro.app import create_app
 from tauro.blueprints.usuarios.models import Usuario
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.extensions import database, pwd_context
 
@@ -80,13 +80,13 @@ def nueva_contrasena(email):
 
 
 @click.command()
-def restablecer_ventanilla():
-    """Asignar la Ventanilla NO DEFINIDO a todos los usuarios"""
+def restablecer_ubicacion():
+    """Asignar la Ubicacion NO DEFINIDO a todos los usuarios"""
 
-    # Consultar cual es la ventanilla NO DEFINIDO
-    ventanilla_nd = Ventanilla.query.filter_by(nombre="NO DEFINIDO").first()
-    if ventanilla_nd is None:
-        click.echo("ERROR: No existe la ventanilla NO DEFINIDO")
+    # Consultar cual es la ubicacion NO DEFINIDO
+    ubicacion_nd = Ubicacion.query.filter_by(nombre="NO DEFINIDO").first()
+    if ubicacion_nd is None:
+        click.echo("ERROR: No existe la ubicacion NO DEFINIDO")
         sys.exit(1)
 
     # Contador
@@ -95,13 +95,13 @@ def restablecer_ventanilla():
     # Consultar todos los usuarios
     usuarios = Usuario.query.all()
     for usuario in usuarios:
-        if usuario.ventanilla_id != ventanilla_nd.id:
-            usuario.ventanilla_id = ventanilla_nd.id
+        if usuario.ubicacion_id != ubicacion_nd.id:
+            usuario.ubicacion_id = ubicacion_nd.id
             usuario.save()
             contador += 1
 
     # Mensaje de resultado
-    click.echo(f"Se han restablecido las ventanillas de {contador} usuarios")
+    click.echo(f"Se han restablecido las ubicaciones de {contador} usuarios")
 
 
 @click.command()
@@ -125,5 +125,5 @@ def restablecer_turnos_tipos():
 cli.add_command(mostrar_api_key)
 cli.add_command(nueva_api_key)
 cli.add_command(nueva_contrasena)
-cli.add_command(restablecer_ventanilla)
+cli.add_command(restablecer_ubicacion)
 cli.add_command(restablecer_turnos_tipos)

@@ -14,7 +14,7 @@ from tauro.blueprints.api_key_v1.endpoints.consultar_configuracion_usuario impor
 from tauro.blueprints.api_key_v1.endpoints.consultar_turnos_estados import ConsultarTurnosEstados
 from tauro.blueprints.api_key_v1.endpoints.consultar_turnos_tipos import ConsultarTurnosTipos
 from tauro.blueprints.api_key_v1.endpoints.consultar_unidades import ConsultarUnidades
-from tauro.blueprints.api_key_v1.endpoints.consultar_ventanillas import ConsultarVentanillas
+from tauro.blueprints.api_key_v1.endpoints.consultar_ubicaciones import ConsultarUbicaciones
 from tauro.blueprints.api_key_v1.endpoints.crear_turno import CrearTurno
 from tauro.blueprints.api_key_v1.endpoints.tomar_turno import TomarTurno
 
@@ -38,6 +38,6 @@ api.add_resource(ConsultarTurnosEstados, "/consultar_turnos_estados")
 api.add_resource(ConsultarTurnosTipos, "/consultar_turnos_tipos")
 api.add_resource(ConsultarConfiguracionUsuario, "/consultar_configuracion_usuario")
 api.add_resource(ConsultarUnidades, "/consultar_unidades")
-api.add_resource(ConsultarVentanillas, "/consultar_ventanillas")
+api.add_resource(ConsultarUbicaciones, "/consultar_ubicaciones")
 api.add_resource(CrearTurno, "/crear_turno")
 api.add_resource(TomarTurno, "/tomar_turno")

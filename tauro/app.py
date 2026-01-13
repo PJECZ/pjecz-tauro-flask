@@ -19,12 +19,12 @@ from tauro.blueprints.turnos.views import turnos
 from tauro.blueprints.turnos_estados.views import turnos_estados
 from tauro.blueprints.turnos_tipos.views import turnos_tipos
 from tauro.blueprints.unidades.views import unidades
-from tauro.blueprints.unidades_ventanillas.views import unidades_ventanillas
+from tauro.blueprints.unidades_ubicaciones.views import unidades_ubicaciones
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios.views import usuarios
 from tauro.blueprints.usuarios_roles.views import usuarios_roles
 from tauro.blueprints.usuarios_turnos_tipos.views import usuarios_turnos_tipos
-from tauro.blueprints.ventanillas.views import ventanillas
+from tauro.blueprints.ubicaciones.views import ubicaciones
 from tauro.extensions import csrf, database, login_manager, moment, socketio
 
 
@@ -70,9 +70,9 @@ def create_app():
     app.register_blueprint(usuarios)
     app.register_blueprint(usuarios_turnos_tipos)
     app.register_blueprint(unidades)
-    app.register_blueprint(unidades_ventanillas)
+    app.register_blueprint(unidades_ubicaciones)
     app.register_blueprint(usuarios_roles)
-    app.register_blueprint(ventanillas)
+    app.register_blueprint(ubicaciones)
 
     # Registrar blueprints de API OAuth2 sin csrf
     app.register_blueprint(api_oauth2_v1)

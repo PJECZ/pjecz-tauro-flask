@@ -22,7 +22,7 @@ from tauro.blueprints.permisos.models import Permiso
 from tauro.blueprints.usuarios.decorators import anonymous_required, permission_required
 from tauro.blueprints.usuarios.forms import AccesoForm, UsuarioForm
 from tauro.blueprints.usuarios.models import Usuario
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 
 MODULO = "USUARIOS"
 
@@ -133,9 +133,9 @@ def datatable_json():
                     "url": url_for("usuarios.detail", usuario_id=resultado.id),
                 },
                 "nombre": resultado.nombre,
-                "ventanilla": {
-                    "nombre": resultado.ventanilla.nombre_numero,
-                    "url": url_for("ventanillas.detail", ventanilla_id=resultado.ventanilla.id),
+                "ubicacion": {
+                    "nombre": resultado.ubicacion.nombre_numero,
+                    "url": url_for("ubicaciones.detail", ubicacion_id=resultado.ubicacion.id),
                 },
                 "acceso_frontend": resultado.es_acceso_frontend,
             }
@@ -197,8 +197,8 @@ def new():
             contrasena = pwd_context.hash(form.contrasena.data.strip())
         else:
             contrasena = pwd_context.hash(generar_contrasena())
-        # Determinar Ventanilla como NO DEFINIDO
-        ventanilla_nd = Ventanilla.query.filter_by(nombre="NO DEFINIDO").first()
+        # Determinar Ubicacion como NO DEFINIDO
+        ubicacion_nd = Ubicacion.query.filter_by(nombre="NO DEFINIDO").first()
         # Guardar
         if es_valido:
             usuario = Usuario(
@@ -209,7 +209,7 @@ def new():
                 contrasena=contrasena,
                 unidad_id=form.unidad.data,
                 es_acceso_frontend=form.es_acceso_frontend.data,
-                ventanilla=ventanilla_nd,
+                ubicacion=ubicacion_nd,
             )
             usuario.save()
             bitacora = Bitacora(
@@ -241,17 +241,17 @@ def edit(usuario_id):
             if usuario_existente and usuario_existente.id != usuario.id:
                 es_valido = False
                 flash("La e-mail ya está en uso. Debe de ser único.", "warning")
-        # Verificar que la ventanilla seleccionada no este siendo utilizada por alguien más.
-        ventanilla_seleccionada_id = form.ventanilla.data
-        usuario_ocupando_ventanilla = Usuario.query.filter_by(ventanilla_id=ventanilla_seleccionada_id).first()
+        # Verificar que la ubicacion seleccionada no este siendo utilizada por alguien más.
+        ubicacion_seleccionada_id = form.ubicacion.data
+        usuario_ocupando_ubicacion = Usuario.query.filter_by(ubicacion_id=ubicacion_seleccionada_id).first()
         if (
-            usuario_ocupando_ventanilla
-            and usuario_ocupando_ventanilla.ventanilla.nombre != "NO DEFINIDO"
-            and usuario_ocupando_ventanilla.id != usuario.id
+            usuario_ocupando_ubicacion
+            and usuario_ocupando_ubicacion.ubicacion.nombre != "NO DEFINIDO"
+            and usuario_ocupando_ubicacion.id != usuario.id
         ):
             es_valido = False
             flash(
-                f"La ventanilla '{usuario_ocupando_ventanilla.ventanilla.nombre} - {usuario_ocupando_ventanilla.ventanilla.numero}' está siendo utilizada por el usuario {usuario_ocupando_ventanilla.nombre}.",
+                f"La ubicacion '{usuario_ocupando_ubicacion.ubicacion.nombre} - {usuario_ocupando_ubicacion.ubicacion.numero}' está siendo utilizada por el usuario {usuario_ocupando_ubicacion.nombre}.",
                 "warning",
             )
         # Si es valido actualizar
@@ -263,7 +263,7 @@ def edit(usuario_id):
             if form.contrasena.data:
                 usuario.contrasena = pwd_context.hash(form.contrasena.data.strip())
             usuario.unidad_id = form.unidad.data
-            usuario.ventanilla_id = ventanilla_seleccionada_id
+            usuario.ubicacion_id = ubicacion_seleccionada_id
             usuario.es_acceso_frontend = form.es_acceso_frontend.data
             usuario.save()
             bitacora = Bitacora(
@@ -282,7 +282,7 @@ def edit(usuario_id):
     form.apellido_paterno.data = usuario.apellido_paterno
     form.apellido_materno.data = usuario.apellido_materno
     form.unidad.data = usuario.unidad_id
-    form.ventanilla.data = usuario.ventanilla_id
+    form.ubicacion.data = usuario.ubicacion_id
     form.es_acceso_frontend.data = usuario.es_acceso_frontend
     return render_template("usuarios/edit.jinja2", form=form, usuario=usuario)
 

@@ -17,7 +17,7 @@ from tauro.blueprints.usuarios.decorators import permission_required
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos.forms import TurnoForm
 from tauro.blueprints.usuarios.models import Usuario
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.blueprints.unidades.models import Unidad
 
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -61,8 +61,8 @@ def datatable_json():
             consulta = consulta.filter(Turno.creado <= fecha_termino)
     if "unidad_id" in request.form:
         consulta = consulta.filter(Turno.unidad_id == request.form["unidad_id"])
-    if "ventanilla_id" in request.form:
-        consulta = consulta.filter(Turno.ventanilla_id == request.form["ventanilla_id"])
+    if "ubicacion_id" in request.form:
+        consulta = consulta.filter(Turno.ubicacion_id == request.form["ubicacion_id"])
     if "turno_tipo_id" in request.form:
         consulta = consulta.filter(Turno.turno_tipo_id == request.form["turno_tipo_id"])
     if "turno_estado_id" in request.form:
@@ -95,13 +95,13 @@ def datatable_json():
                     "nombre": unidades[resultado.unidad_id].clave,
                     "url": url_for("unidades.detail", unidad_id=resultado.unidad_id),
                 },
-                "ventanilla": {
+                "ubicacion": {
                     "nombre": (
-                        resultado.ventanilla.nombre + f"{ - resultado.ventanilla.numero}"
-                        if resultado.ventanilla.numero is not None
+                        resultado.ubicacion.nombre + f"{ - resultado.ubicacion.numero}"
+                        if resultado.ubicacion.numero is not None
                         else ""
                     ),
-                    "url": url_for("ventanillas.detail", ventanilla_id=resultado.ventanilla_id),
+                    "url": url_for("ubicaciones.detail", ubicacion_id=resultado.ubicacion_id),
                 },
             }
         )
@@ -119,7 +119,7 @@ def list_active():
         turnos_tipos=TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoTipo.nombre).all(),
         turnos_estados=TurnoEstado.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoEstado.nombre).all(),
         unidades=Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
-        ventanillas=Ventanilla.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
+        ubicaciones=Ubicacion.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
         estatus="A",
     )
 
@@ -134,7 +134,7 @@ def list_inactive():
         turnos_tipos=TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoTipo.nombre).all(),
         turnos_estados=TurnoEstado.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoEstado.nombre).all(),
         unidades=Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
-        ventanillas=Ventanilla.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
+        ubicaciones=Ubicacion.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
         titulo="Turnos inactivos",
         estatus="B",
     )
@@ -162,9 +162,9 @@ def new():
         if usuario_no_definido is None:
             flash("ADVERTENCIA: Se necesita definir un usuario con nombre NO DEFINIDO", "warning")
             return render_template("turnos/new.jinja2", form=form)
-        ventanilla_no_definido = Ventanilla.query.filter_by(clave="ND").first()
-        if ventanilla_no_definido is None:
-            flash("ADVERTENCIA: Se necesita definir una ventanilla con clave ND", "warning")
+        ubicacion_no_definido = Ubicacion.query.filter_by(clave="ND").first()
+        if ubicacion_no_definido is None:
+            flash("ADVERTENCIA: Se necesita definir una ubicacion con clave ND", "warning")
             return render_template("turnos/new.jinja2", form=form)
         # Calcular el siguiente número - se reinicia la cuenta por día.
         fecha_hoy_inicio = datetime.combine(date.today(), time(0, 0, 0))
@@ -175,7 +175,7 @@ def new():
         # Crear registro
         turno = Turno(
             usuario=usuario_no_definido,
-            ventanilla=ventanilla_no_definido,
+            ubicacion=ubicacion_no_definido,
             numero=numero_turno + 1,
             turno_tipo=form.turno_tipo.data,
             inicio=datetime.now(),
@@ -217,7 +217,7 @@ def edit(turno_id):
             turno.numero = form.numero.data
             turno.turno_tipo_id = form.turnos_tipo.data
             turno.unidad_id = form.unidad.data
-            turno.ventanilla_id = form.ventanilla.data
+            turno.ubicacion_id = form.ubicacion.data
             turno.numero_cubiculo = form.numero_cubiculo.data
             turno.telefono = safe_telefono(form.telefono.data)
             turno.turno_estado_id = form.turnos_estado.data
@@ -236,7 +236,7 @@ def edit(turno_id):
     form.numero.data = turno.numero
     form.turnos_tipo.data = turno.turno_tipo.id
     form.unidad.data = turno.unidad_id
-    form.ventanilla.data = turno.ventanilla_id
+    form.ubicacion.data = turno.ubicacion_id
     form.numero_cubiculo.data = turno.numero_cubiculo
     form.telefono.data = turno.telefono
     form.turnos_estado.data = turno.turno_estado.id

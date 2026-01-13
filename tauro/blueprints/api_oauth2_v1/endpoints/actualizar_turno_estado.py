@@ -10,7 +10,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from lib.safe_string import safe_message
 
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import UnidadOut, TurnoOut, VentanillaOut, OneTurnoOut
+from tauro.blueprints.api_v1.schemas import UnidadOut, TurnoOut, UbicacionOut, OneTurnoOut
 from tauro.blueprints.api_oauth2_v1.schemas import ActualizarTurnoEstadoIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -49,13 +49,6 @@ class ActualizarTurnoEstado(Resource):
             return OneTurnoOut(
                 success=False,
                 message="Turno no encontrado",
-            ).model_dump()
-
-        # Si el estado que tiene el turno es el mismo que se quiere asignar, no hacer nada
-        if turno.turno_estado_id == turno_estado_in.turno_estado_id:
-            return OneTurnoOut(
-                success=False,
-                message="El estado del turno ya ha sido cambiado como se desea",
             ).model_dump()
 
         # Consultar el NUEVO estado de turno
@@ -116,10 +109,10 @@ class ActualizarTurnoEstado(Resource):
                 turno_tipo_id=turno.turno_tipo_id,
                 turno_numero_cubiculo=turno.numero_cubiculo,
                 turno_comentarios=turno.comentarios,
-                ventanilla=VentanillaOut(
-                    id=turno.ventanilla.id,
-                    nombre=turno.ventanilla.nombre,
-                    numero=turno.ventanilla.numero,
+                ubicacion=UbicacionOut(
+                    id=turno.ubicacion.id,
+                    nombre=turno.ubicacion.nombre,
+                    numero=turno.ubicacion.numero,
                 ),
                 unidad=unidad_out,
             ),

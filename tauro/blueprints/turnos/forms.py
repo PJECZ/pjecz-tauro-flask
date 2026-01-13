@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired, Length, Optional
 
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.unidades.models import Unidad
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 
@@ -20,7 +20,7 @@ class TurnoForm(FlaskForm):
     numero = IntegerField("Número", validators=[DataRequired()])
     turnos_tipo = SelectField("Tipo", coerce=int, validators=[DataRequired()])
     unidad = SelectField("Unidad", coerce=int, validators=[DataRequired()])
-    ventanilla = SelectField("Ventanilla", coerce=int, validators=[DataRequired()])
+    ubicacion = SelectField("Ubicacion", coerce=int, validators=[DataRequired()])
     numero_cubiculo = IntegerField("Cubículo", validators=[Optional()])
     telefono = StringField("Teléfono", validators=[Optional(), Length(max=20)])
     turnos_estado = SelectField("Estado", coerce=int, validators=[DataRequired()])
@@ -40,9 +40,9 @@ class TurnoForm(FlaskForm):
             (r.id, r.clave + " - " + r.nombre)
             for r in Unidad.query.filter_by(estatus="A").filter_by(estatus="A").order_by(Unidad.clave).all()
         ]
-        self.ventanilla.choices = [
+        self.ubicacion.choices = [
             (v.id, v.nombre + " - " + str(v.numero) if v.numero else "")
-            for v in Ventanilla.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(Ventanilla.nombre).all()
+            for v in Ubicacion.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(Ubicacion.nombre).all()
         ]
         self.turnos_estado.choices = [
             (e.id, e.nombre)

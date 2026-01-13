@@ -1,5 +1,5 @@
 """
-Ventanillas, modelos
+Ubicaciones, modelos
 """
 
 from typing import List, Optional
@@ -11,11 +11,11 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class Ventanilla(database.Model, UniversalMixin):
-    """Ventanilla"""
+class Ubicacion(database.Model, UniversalMixin):
+    """Ubicación"""
 
     # Nombre de la tabla
-    __tablename__ = "ventanillas"
+    __tablename__ = "ubicaciones"
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -26,17 +26,17 @@ class Ventanilla(database.Model, UniversalMixin):
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos
-    turnos: Mapped[List["Turno"]] = relationship(back_populates="ventanilla")
-    unidades_ventanillas: Mapped[List["UnidadVentanilla"]] = relationship(back_populates="ventanilla")
-    usuarios: Mapped[List["Usuario"]] = relationship(back_populates="ventanilla")
+    turnos: Mapped[List["Turno"]] = relationship(back_populates="ubicacion")
+    unidades_ubicaciones: Mapped[List["UnidadUbicacion"]] = relationship(back_populates="ubicacion")
+    usuarios: Mapped[List["Usuario"]] = relationship(back_populates="ubicacion")
 
     @property
     def nombre_numero(self):
-        """Junta clave y nombre de la ventanilla"""
+        """Junta clave y nombre de la ubicación"""
         if self.numero:
             return f"{self.nombre} - {self.numero}"
         return self.nombre
 
     def __repr__(self):
         """Representación"""
-        return f"<Ventanilla {self.id}>"
+        return f"<Ubicación {self.id}>"
