@@ -1,5 +1,5 @@
 """
-Unidades_Ventanillas, modelos
+Unidades_Ubicaciones, modelos
 """
 
 from sqlalchemy import ForeignKey
@@ -9,24 +9,24 @@ from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
 
 
-class UnidadVentanilla(database.Model, UniversalMixin):
-    """UnidadVentanilla"""
+class UnidadUbicacion(database.Model, UniversalMixin):
+    """UnidadUbicación"""
 
     # Nombre de la tabla
-    __tablename__ = "unidades_ventanillas"
+    __tablename__ = "unidades_ubicaciones"
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Clave foránea
     unidad_id: Mapped[int] = mapped_column(ForeignKey("unidades.id"))
-    unidad: Mapped["Unidad"] = relationship(back_populates="unidades_ventanillas")
-    ventanilla_id: Mapped[int] = mapped_column(ForeignKey("ventanillas.id"))
-    ventanilla: Mapped["Ventanilla"] = relationship(back_populates="unidades_ventanillas")
+    unidad: Mapped["Unidad"] = relationship(back_populates="unidades_ubicaciones")
+    ubicacion_id: Mapped[int] = mapped_column(ForeignKey("ubicaciones.id"))
+    ubicacion: Mapped["Ubicacion"] = relationship(back_populates="unidades_ubicaciones")
 
     # Columnas
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     def __repr__(self):
         """Representación"""
-        return f"<UnidadVentanilla {self.id}>"
+        return f"<UnidadUbicación {self.id}>"

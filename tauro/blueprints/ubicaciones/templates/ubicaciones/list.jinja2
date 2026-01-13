@@ -6,22 +6,22 @@
 
 {% block topbar_actions %}
     {% call topbar.page_buttons(titulo) %}
-        {% if current_user.can_admin('VENTANILLAS') %}
-            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('ventanillas.list_inactive')) }}{% endif %}
-            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('ventanillas.list_active')) }}{% endif %}
+        {% if current_user.can_admin('UBICACIONES') %}
+            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('ubicaciones.list_inactive')) }}{% endif %}
+            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('ubicaciones.list_active')) }}{% endif %}
         {% endif %}
-        {% if current_user.can_insert('VENTANILLAS') %}
-            {{ topbar.button_new('Nueva Ventanilla', url_for('ventanillas.new')) }}
+        {% if current_user.can_insert('UBICACIONES') %}
+            {{ topbar.button_new('Nueva Ubicacion', url_for('ubicaciones.new')) }}
         {% endif %}
     {% endcall %}
 {% endblock %}
 
 {% block content %}
     {% call list.card() %}
-        <!-- Filtros ventanillas -->
+        <!-- Filtros ubicaciones -->
         <div class="row">
             <div class="col">
-                <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosVentanilla.buscar(); return false;">
+                <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosUbicacion.buscar(); return false;">
                     <div class="col-6">
                         <div class="form-floating">
                             <input id="filtroNombre" type="text" class="form-control" aria-label="Nombre" style="text-transform: uppercase;">
@@ -29,14 +29,14 @@
                         </div>
                     </div>
                     <div class="col-2 text-end">
-                        <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosVentanilla.buscar(); return false;" id="button-buscar"><span class="iconify" data-icon="mdi:magnify"></span></button>
-                        <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosVentanilla.limpiar();" id="button-limpiar"><span class="iconify" data-icon="mdi:broom"></span></button>
+                        <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosUbicacion.buscar(); return false;" id="button-buscar"><span class="iconify" data-icon="mdi:magnify"></span></button>
+                        <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosUbicacion.limpiar();" id="button-limpiar"><span class="iconify" data-icon="mdi:broom"></span></button>
                     </div>
                 </form>
             </div>
         </div>
-        <!-- DataTable ventanillas -->
-        <table id="ventanillas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+        <!-- DataTable ubicaciones -->
+        <table id="ubicaciones_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -53,10 +53,10 @@
     <script src="{{ url_for('static', filename='js/datatables-constructor.js') }}"></script>
     <script src="{{ url_for('static', filename='js/datatables-filtros.js') }}"></script>
     <script>
-        // DataTable ventanillas
+        // DataTable ubicaciones
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDataTable = constructorDataTable.config();
-        configDataTable['ajax']['url'] = '{{ url_for("ventanillas.datatable_json") }}';
+        configDataTable['ajax']['url'] = '{{ url_for("ubicaciones.datatable_json") }}';
         configDataTable['ajax']['data'] = {{ filtros }};
         configDataTable['columns'] = [
             { data: 'detalle' },
@@ -83,9 +83,9 @@
                 }
             }
         ];
-        // Filtros ventanillas
-        const filtrosVentanilla = new FiltrosDataTable('#ventanillas_datatable', configDataTable);
-        filtrosVentanilla.agregarInput('filtroNombre', 'nombre');
-        filtrosVentanilla.precargar();
+        // Filtros ubicaciones
+        const filtrosUbicacion = new FiltrosDataTable('#ubicaciones_datatable', configDataTable);
+        filtrosUbicacion.agregarInput('filtroNombre', 'nombre');
+        filtrosUbicacion.precargar();
     </script>
 {% endblock %}

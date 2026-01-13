@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Restablecer la ventanilla de los Usuarios
+# Restablecer la ubicación de los Usuarios
 # Desactivar los turnos-tipos de los Usuarios
 #
 # Guardar archivo en: /home/pjecz-tauro/.local/bin/cli-usuarios.sh
@@ -19,6 +19,6 @@ export PYTHONPATH=$(pwd)
 
 # Restablecer asignaciones de los usuarios
 .venv/bin/python3 cli/app.py usuarios restablecer-turnos-tipos
-.venv/bin/python3 cli/app.py usuarios restablecer-ventanilla
+.venv/bin/python3 cli/app.py usuarios restablecer-ubicacion
 
 echo "Termina cli-usuarios.sh"

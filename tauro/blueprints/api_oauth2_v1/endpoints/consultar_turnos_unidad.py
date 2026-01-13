@@ -6,7 +6,7 @@ from flask import current_app
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from tauro.blueprints.api_oauth2_v1.schemas import OneUnidadTurnosOut, TurnoOut, UnidadOut, UnidadTurnosOut, VentanillaOut
+from tauro.blueprints.api_oauth2_v1.schemas import OneUnidadTurnosOut, TurnoOut, UnidadOut, UnidadTurnosOut, UbicacionOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -73,10 +73,10 @@ class ConsultarTurnosUnidad(Resource):
                 turno_numero_cubiculo=ultimo_turno_atendiendo.numero_cubiculo,
                 turno_telefono=ultimo_turno_atendiendo.telefono,
                 turno_comentarios=ultimo_turno_atendiendo.comentarios,
-                ventanilla=VentanillaOut(
-                    id=ultimo_turno_atendiendo.ventanilla.id,
-                    nombre=ultimo_turno_atendiendo.ventanilla.nombre,
-                    numero=ultimo_turno_atendiendo.ventanilla.numero,
+                ubicacion=UbicacionOut(
+                    id=ultimo_turno_atendiendo.ubicacion.id,
+                    nombre=ultimo_turno_atendiendo.ubicacion.nombre,
+                    numero=ultimo_turno_atendiendo.ubicacion.numero,
                 ),
                 unidad=UnidadOut(id=unidad.id, clave=unidad.clave, nombre=unidad.nombre),
             )
@@ -100,10 +100,10 @@ class ConsultarTurnosUnidad(Resource):
                         turno_numero_cubiculo=turno.numero_cubiculo,
                         turno_telefono=turno.telefono,
                         turno_comentarios=turno.comentarios,
-                        ventanilla=VentanillaOut(
-                            id=turno.ventanilla.id,
-                            nombre=turno.ventanilla.nombre,
-                            numero=turno.ventanilla.numero,
+                        ubicacion=UbicacionOut(
+                            id=turno.ubicacion.id,
+                            nombre=turno.ubicacion.nombre,
+                            numero=turno.ubicacion.numero,
                         ),
                         unidad=UnidadOut(id=unidad.id, clave=unidad.clave, nombre=unidad.nombre),
                     )

@@ -66,14 +66,14 @@
             </thead>
         </table>
     {% endcall %}
-    {# Listado de Unidades-Ventanillas #}
-    {% call detail.card(title='Unidades-Ventanillas') %}
-        <!-- DataTable unidadesVentanillas -->
-        <table id="unidades_ventanillas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+    {# Listado de Unidades-Ubicaciones #}
+    {% call detail.card(title='Unidades-Ubicaciones') %}
+        <!-- DataTable unidadesUbicaciones -->
+        <table id="unidades_ubicaciones_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Ventanilla</th>
+                    <th>Ubicacion</th>
                     <th>Activo</th>
                 </tr>
             </thead>
@@ -126,21 +126,21 @@
         filtrosDTUsuarios.agregarInput('filtroApellidoPaterno', 'apellido_paterno');
         filtrosDTUsuarios.precargar();
     </script>
-    {# DataTable unidadesVentanillas #}
+    {# DataTable unidadesUbicaciones #}
     <script>
-        // DataTable unidadesVentanillas
+        // DataTable unidadesUbicaciones
         const constructorDataTableUV = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDataTableUV = constructorDataTableUV.config();
-        configDataTableUV['ajax']['url'] = '{{ url_for("unidades_ventanillas.datatable_json") }}';
+        configDataTableUV['ajax']['url'] = '{{ url_for("unidades_ubicaciones.datatable_json") }}';
         configDataTableUV['ajax']['data'] = {'estatus': 'A', 'unidad_id': {{ unidad.id }}};
         configDataTableUV['columns'] = [
             { data: 'id' },
-            { data: 'ventanilla' },
+            { data: 'ubicacion' },
             { data: 'es_activo' }
         ];
         configDataTableUV['columnDefs'] = [
             {
-                targets: 1, // ventanilla
+                targets: 1, // ubicacion
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.nombre + '</a>';
@@ -157,7 +157,7 @@
                 }
             }
         ];
-        const filtrosUnidadesVentanillas = new FiltrosDataTable('#unidades_ventanillas_datatable', configDataTableUV);
-        filtrosUnidadesVentanillas.precargar();
+        const filtrosUnidadesUbicaciones = new FiltrosDataTable('#unidades_ubicaciones_datatable', configDataTableUV);
+        filtrosUnidadesUbicaciones.precargar();
     </script>
 {% endblock %}

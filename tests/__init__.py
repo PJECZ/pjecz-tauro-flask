@@ -15,5 +15,5 @@ config = {
     "turnos_tipos_ids": os.getenv("TURNOS_TIPOS_IDS").split(","),
     "unidades_ids": os.getenv("UNIDADES_IDS").split(","),
     "usuarios_ids": os.getenv("USUARIOS_IDS").split(","),
-    "ventanillas_ids": os.getenv("VENTANILLAS_IDS").split(","),
+    "ubicaciones_ids": os.getenv("UBICACIONES_IDS").split(","),
 }

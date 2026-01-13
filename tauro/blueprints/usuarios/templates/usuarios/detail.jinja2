@@ -24,7 +24,7 @@
             <div class="col-md-6">
                 {{ detail.label_value('Nombre', usuario.nombre) }}
                 {{ detail.label_value('Unidad', usuario.unidad.clave + ': ' + usuario.unidad.nombre, url_for('unidades.detail', unidad_id=usuario.unidad.id)) }}
-                {{ detail.label_value('Ventanilla', usuario.ventanilla.nombre + ' - ' + usuario.ventanilla.numero | string, url_for('ventanillas.detail', ventanilla_id=usuario.ventanilla.id)) }}
+                {{ detail.label_value('Ubicacion', usuario.ubicacion.nombre + ' - ' + usuario.ubicacion.numero | string, url_for('ubicaciones.detail', ubicacion_id=usuario.ubicacion.id)) }}
                 <div class="row">
                     <div class="col-md-3 text-end">Acceso al Frontend</div>
                     <div class="col-md-9">

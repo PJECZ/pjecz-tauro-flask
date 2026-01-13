@@ -16,14 +16,14 @@ from cli.commands.alimentar_usuarios_roles import alimentar_usuarios_roles
 from cli.commands.alimentar_unidades import alimentar_unidades
 from cli.commands.alimentar_turnos_estados import alimentar_turnos_estados
 from cli.commands.alimentar_turnos_tipos import alimentar_turnos_tipos
-from cli.commands.alimentar_ventanillas import alimentar_ventanillas
+from cli.commands.alimentar_ubicaciones import alimentar_ubicaciones
 from cli.commands.respaldar_modulos import respaldar_modulos
 from cli.commands.respaldar_roles_permisos import respaldar_roles_permisos
 from cli.commands.respaldar_unidades import respaldar_unidades
 from cli.commands.respaldar_usuarios_roles import respaldar_usuarios_roles
 from cli.commands.respaldar_turnos_estados import respaldar_turnos_estados
 from cli.commands.respaldar_turnos_tipos import respaldar_turnos_tipos
-from cli.commands.respaldar_ventanillas import respaldar_ventanillas
+from cli.commands.respaldar_ubicaciones import respaldar_ubicaciones
 from tauro.app import create_app
 from tauro.extensions import database
 
@@ -61,7 +61,7 @@ def alimentar():
     alimentar_roles()
     alimentar_permisos()
     alimentar_unidades()
-    alimentar_ventanillas()
+    alimentar_ubicaciones()
     alimentar_usuarios()
     alimentar_usuarios_roles()
     alimentar_turnos_estados()
@@ -86,7 +86,7 @@ def respaldar():
     respaldar_turnos_estados()
     respaldar_turnos_tipos()
     respaldar_unidades()
-    respaldar_ventanillas()
+    respaldar_ubicaciones()
     click.echo("Termina respaldar.")
 
 

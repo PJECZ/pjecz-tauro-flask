@@ -25,7 +25,7 @@
         {{ detail.label_value('Usuario', turno.usuario.nombre, url_for("usuarios.detail", usuario_id=turno.usuario.id)) }}
         {{ detail.label_value('Tipo', turno.turno_tipo.nombre, url_for("turnos_tipos.detail", turno_tipo_id=turno.turno_tipo.id)) }}
         {{ detail.label_value('Unidad', unidades[turno.unidad_id].clave_nombre, url_for("unidades.detail", unidad_id=turno.unidad_id)) }}
-        {{ detail.label_value('Ventanilla', turno.ventanilla.nombre_numero, url_for("ventanillas.detail", ventanilla_id=turno.ventanilla.id)) }}
+        {{ detail.label_value('Ubicacion', turno.ubicacion.nombre_numero, url_for("ubicaciones.detail", ubicacion_id=turno.ubicacion.id)) }}
         {% if turno.numero_cubiculo and turno.numero_cubiculo > 0 %}
             <div class="row">
                 <div class="col-md-3 text-end">Cubículo</div>

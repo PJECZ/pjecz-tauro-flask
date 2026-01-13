@@ -1,5 +1,5 @@
 """
-Respaldar Ventanillas
+Respaldar Ubicaciones
 """
 
 import csv
@@ -8,41 +8,41 @@ from pathlib import Path
 
 import click
 
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 
-VENTANILLAS_CSV = "seed/ventanillas.csv"
+UBICACIONES_CSV = "seed/ubicaciones.csv"
 
 
-def respaldar_ventanillas():
-    """Respaldar Ventanillas"""
-    ruta = Path(VENTANILLAS_CSV)
+def respaldar_ubicaciones():
+    """Respaldar Ubicaciones"""
+    ruta = Path(UBICACIONES_CSV)
     if ruta.exists():
-        click.echo(f"AVISO: {VENTANILLAS_CSV} ya existe, no voy a sobreescribirlo.")
+        click.echo(f"AVISO: {UBICACIONES_CSV} ya existe, no voy a sobreescribirlo.")
         sys.exit(1)
-    click.echo("Respaldando Ventanillas: ", nl=False)
+    click.echo("Respaldando Ubicaciones: ", nl=False)
     contador = 0
     with open(ruta, "w", encoding="utf8") as puntero:
         respaldo = csv.writer(puntero)
         respaldo.writerow(
             [
-                "ventanilla_id",
+                "ubicacion_id",
                 "nombre",
                 "numero",
                 "es_activo",
                 "estatus",
             ]
         )
-        for ventanilla in Ventanilla.query.order_by(Ventanilla.id).all():
+        for ubicacion in Ubicacion.query.order_by(Ubicacion.id).all():
             respaldo.writerow(
                 [
-                    ventanilla.id,
-                    ventanilla.nombre,
-                    ventanilla.numero,
-                    int(ventanilla.es_activo),
-                    ventanilla.estatus,
+                    ubicacion.id,
+                    ubicacion.nombre,
+                    ubicacion.numero,
+                    int(ubicacion.es_activo),
+                    ubicacion.estatus,
                 ]
             )
             contador += 1
             click.echo(click.style(".", fg="green"), nl=False)
     click.echo()
-    click.echo(click.style(f"  {contador} ventanillas respaldadas.", fg="green"))
+    click.echo(click.style(f"  {contador} ubicaciones respaldadas.", fg="green"))

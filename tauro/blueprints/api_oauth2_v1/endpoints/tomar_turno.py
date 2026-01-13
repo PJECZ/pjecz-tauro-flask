@@ -10,7 +10,7 @@ from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 from lib.safe_string import safe_message
 
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, VentanillaOut, UnidadOut
+from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, UbicacionOut, UnidadOut
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -84,10 +84,10 @@ class TomarTurno(Resource):
                 message="Estado de turno no encontrado",
             ).model_dump()
 
-        # Cambiar el usuario, el estado a "ATENDIENDO" y la ventanilla, así como el tiempo de inicio
+        # Cambiar el usuario, el estado a "ATENDIENDO" y la ubicacion, así como el tiempo de inicio
         turno.usuario_id = usuario.id
         turno.turno_estado_id = turno_estado.id
-        turno.ventanilla_id = usuario.ventanilla_id
+        turno.ubicacion_id = usuario.ubicacion_id
         turno.inicio = datetime.now()
 
         # Guardar
@@ -125,10 +125,10 @@ class TomarTurno(Resource):
                 turno_numero_cubiculo=turno.numero_cubiculo,
                 turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
-                ventanilla=VentanillaOut(
-                    id=turno.ventanilla.id,
-                    nombre=turno.ventanilla.nombre,
-                    numero=turno.ventanilla.numero,
+                ubicacion=UbicacionOut(
+                    id=turno.ubicacion.id,
+                    nombre=turno.ubicacion.nombre,
+                    numero=turno.ubicacion.numero,
                 ),
                 unidad=unidad_out,
             ),

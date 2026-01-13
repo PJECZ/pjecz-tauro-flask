@@ -59,7 +59,7 @@
                 <tr>
                     <th>Correo electrónico</th>
                     <th>Nombre completo</th>
-                    <th>Ventanilla</th>
+                    <th>Ubicacion</th>
                     <th>Acceso al Frontend</th>
                 </tr>
             </thead>
@@ -79,7 +79,7 @@
         configDTUsuarios['columns'] = [
             { data: "detalle" },
             { data: "nombre" },
-            { data: "ventanilla" },
+            { data: "ubicacion" },
             { data: "acceso_frontend" }
         ];
         configDTUsuarios['columnDefs'] = [
@@ -101,7 +101,7 @@
                 }
             },
             {
-                targets: 2, // ventanilla
+                targets: 2, // ubicacion
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.nombre + '</a>';

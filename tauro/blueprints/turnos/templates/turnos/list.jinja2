@@ -67,13 +67,13 @@
                     </div>
                     <div class="col-3">
                         <div class="form-floating">
-                            <select class="form-select" id="turnoVentanillaSelect" name="turnoVentanillaSelect" aria-label="Todas" onchange="filtrosTurnos.buscar(); return false;" style="flex: inherit;">
+                            <select class="form-select" id="turnoUbicacionSelect" name="turnoUbicacionSelect" aria-label="Todas" onchange="filtrosTurnos.buscar(); return false;" style="flex: inherit;">
                                 <option selected value=""></option>
-                                {% for ventanilla in ventanillas %}
-                                    <option value="{{ventanilla.id}}">{{ventanilla.nombre_numero}}</option>
+                                {% for ubicacion in ubicaciones %}
+                                    <option value="{{ubicacion.id}}">{{ubicacion.nombre_numero}}</option>
                                 {% endfor %}
                             </select>
-                            <label for="turnoVentanillaSelect">Ventanilla</label>
+                            <label for="turnoUbicacionSelect">Ubicacion</label>
                         </div>
                     </div>
                     <div class="col-3">
@@ -103,7 +103,7 @@
                     <th>Fecha y Hora</th>
                     <th>Tipo</th>
                     <th>Unidad</th>
-                    <th>Ventanilla</th>
+                    <th>Ubicacion</th>
                     <th>Estado</th>
                 </tr>
             </thead>
@@ -126,7 +126,7 @@
             { data: 'fecha_hora' },
             { data: 'tipo' },
             { data: 'unidad' },
-            { data: 'ventanilla' },
+            { data: 'ubicacion' },
             { data: 'estado' }
         ];
         configDataTable['columnDefs'] = [
@@ -138,7 +138,7 @@
                 }
             },
             {
-                targets: [4, 5], // unidad, ventanilla
+                targets: [4, 5], // unidad, ubicacion
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.nombre + '</a>';
@@ -174,7 +174,7 @@
         filtrosTurnos.agregarInput('filtroFechaInicio', 'fecha_inicio');
         filtrosTurnos.agregarInput('filtroFechaTermino', 'fecha_termino');
         filtrosTurnos.agregarInput('turnoUnidadSelect', 'unidad_id');
-        filtrosTurnos.agregarInput('turnoVentanillaSelect', 'ventanilla_id');
+        filtrosTurnos.agregarInput('turnoUbicacionSelect', 'ubicacion_id');
         filtrosTurnos.agregarInput('turnoTipoSelect', 'turno_tipo_id');
         filtrosTurnos.agregarInput('turnoEstadoSelect', 'turno_estado_id');
         filtrosTurnos.precargar();

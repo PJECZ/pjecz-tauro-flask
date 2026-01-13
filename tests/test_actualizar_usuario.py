@@ -18,7 +18,7 @@ class TestActualizarUsuario(unittest.TestCase):
         # Cargar los IDs de los turnos, unidades y usuarios desde la configuración
         turnos_tipos_ids = [int(id) for id in config["turnos_tipos_ids"]]
         usuarios_ids = [int(id) for id in config["usuarios_ids"]]
-        ventanillas_ids = [int(id) for id in config["ventanillas_ids"]]
+        ubicaciones_ids = [int(id) for id in config["ubicaciones_ids"]]
         # Inicializar Faker para generar datos aleatorios en español
         faker = Faker("es_ES")
         # Bucle
@@ -30,7 +30,7 @@ class TestActualizarUsuario(unittest.TestCase):
             # Preparar el payload
             payload = {
                 "usuario_id": usuario_id,
-                "ventanilla_id": faker.random_element(ventanillas_ids),
+                "ubicacion_id": faker.random_element(ubicaciones_ids),
                 "turnos_tipos_ids": turnos_tipos_ids,
             }
             response = requests.post(
@@ -46,7 +46,7 @@ class TestActualizarUsuario(unittest.TestCase):
             self.assertTrue(
                 (
                     (payload["success"] is True and payload["message"] == "Usuario actualizado")
-                    or (payload["success"] is False and payload["message"].startswith("Ventanilla ocupada por"))
+                    or (payload["success"] is False and payload["message"].startswith("Ubicacion ocupada por"))
                 )
             )
             self.assertTrue("message" in payload)

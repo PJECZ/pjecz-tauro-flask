@@ -12,7 +12,7 @@ from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import (
     TurnoTipoOut,
     TurnoOut,
-    VentanillaOut,
+    UbicacionOut,
     UnidadOut,
     RolOut,
     ConfiguracionUsuarioOut,
@@ -24,7 +24,7 @@ from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.usuarios_roles.models import UsuarioRol
 from tauro.blueprints.bitacoras.models import Bitacora
@@ -89,34 +89,34 @@ class ActualizarUsuario(Resource):
                     usuario_turno_tipo.es_activo = True
                     usuario_turno_tipo.save()
 
-        # Consultar la ventanilla
-        ventanilla = Ventanilla.query.get(actualizar_usuario_in.ventanilla_id)
-        if ventanilla is None:
+        # Consultar la ubicacion
+        ubicacion = Ubicacion.query.get(actualizar_usuario_in.ubicacion_id)
+        if ubicacion is None:
             return OneConfiguracionUsuarioOut(
                 success=False,
-                message="Ventanilla no encontrada",
+                message="Ubicacion no encontrada",
             ).model_dump()
-        if ventanilla.estatus != "A":
+        if ubicacion.estatus != "A":
             return OneConfiguracionUsuarioOut(
                 success=False,
-                message="Ventanilla eliminada",
+                message="Ubicacion eliminada",
             ).model_dump()
-        if ventanilla.es_activo is False:
+        if ubicacion.es_activo is False:
             return OneConfiguracionUsuarioOut(
                 success=False,
-                message="Ventanilla no activa",
+                message="Ubicacion no activa",
             ).model_dump()
 
-        # Consultar los usuarios por la ventanilla, si la ventanilla la tiene otro usuario, se le manda un error
-        usuarios = Usuario.query.filter_by(ventanilla_id=ventanilla.id).filter_by(estatus="A").first()
+        # Consultar los usuarios por la ubicacion, si la ubicacion la tiene otro usuario, se le manda un error
+        usuarios = Usuario.query.filter_by(ubicacion_id=ubicacion.id).filter_by(estatus="A").first()
         if usuarios is not None and usuarios.id != usuario.id:
             return OneConfiguracionUsuarioOut(
                 success=False,
-                message=f"Ventanilla ocupada por {usuarios.nombre}",
+                message=f"Ubicacion ocupada por {usuarios.nombre}",
             ).model_dump()
 
-        # Actualizar la ventanilla del usuario
-        usuario.ventanilla_id = ventanilla.id
+        # Actualizar la ubicacion del usuario
+        usuario.ubicacion_id = ubicacion.id
 
         # Guardar
         usuario.save()
@@ -129,14 +129,14 @@ class ActualizarUsuario(Resource):
             url=url_for("usuarios.detail", usuario_id=usuario.id),
         ).save()
 
-        # Consultar Ventanilla
-        ventanilla = None
-        ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
-        if ventanilla_sql:
-            ventanilla = VentanillaOut(
-                id=ventanilla_sql.id,
-                nombre=ventanilla_sql.nombre,
-                numero=ventanilla_sql.numero,
+        # Consultar Ubicacion
+        ubicacion = None
+        ubicacion_sql = Ubicacion.query.get(usuario.ubicacion_id)
+        if ubicacion_sql:
+            ubicacion = UbicacionOut(
+                id=ubicacion_sql.id,
+                nombre=ubicacion_sql.nombre,
+                numero=ubicacion_sql.numero,
             )
 
         # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
@@ -167,10 +167,10 @@ class ActualizarUsuario(Resource):
                 turno_tipo_id=turnos.turno_tipo_id,
                 turno_numero_cubiculo=turnos.numero_cubiculo,
                 turno_comentarios=turnos.comentarios,
-                ventanilla=VentanillaOut(
-                    id=turnos.ventanilla.id,
-                    nombre=turnos.ventanilla.nombre,
-                    numero=turnos.ventanilla.numero,
+                ubicacion=UbicacionOut(
+                    id=turnos.ubicacion.id,
+                    nombre=turnos.ubicacion.nombre,
+                    numero=turnos.ubicacion.numero,
                 ),
                 unidad=unidad_out,
             )
@@ -197,7 +197,7 @@ class ActualizarUsuario(Resource):
             success=True,
             message="Usuario actualizado",
             data=ConfiguracionUsuarioOut(
-                ventanilla=ventanilla,
+                ubicacion=ubicacion,
                 unidad=unidad,
                 rol=RolOut(
                     id=rol.id,

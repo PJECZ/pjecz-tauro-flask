@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired, Email, Length, Optional, Regexp
 
 from lib.safe_string import CONTRASENA_REGEXP
 from tauro.blueprints.unidades.models import Unidad
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 
 CONTRASENA_MENSAJE = "De 8 a 48 caracteres con al menos una mayúscula, una minúscula y un número. No acentos, ni eñe."
 
@@ -39,7 +39,7 @@ class UsuarioForm(FlaskForm):
         validators=[Optional(), Length(8, 48), Regexp(CONTRASENA_REGEXP, 0, CONTRASENA_MENSAJE)],
     )
     unidad = SelectField("Unidad", coerce=int, validators=[DataRequired()])
-    ventanilla = SelectField("Ventanilla", coerce=int, validators=[Optional()])
+    ubicacion = SelectField("Ubicacion", coerce=int, validators=[Optional()])
     es_acceso_frontend = BooleanField("Acceso al Frontend")
     guardar = SubmitField("Guardar")
 
@@ -50,11 +50,11 @@ class UsuarioForm(FlaskForm):
             (u.id, u.clave + ": " + u.nombre)
             for u in Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(Unidad.clave).all()
         ]
-        self.ventanilla.choices = [
+        self.ubicacion.choices = [
             (v.id, v.nombre + " - " + str(v.numero))
-            for v in Ventanilla.query.filter_by(estatus="A")
+            for v in Ubicacion.query.filter_by(estatus="A")
             .filter_by(es_activo=True)
-            .order_by(Ventanilla.nombre)
-            .order_by(Ventanilla.numero)
+            .order_by(Ubicacion.nombre)
+            .order_by(Ubicacion.numero)
             .all()
         ]

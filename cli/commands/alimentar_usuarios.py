@@ -14,7 +14,7 @@ from lib.pwgen import generar_contrasena
 from lib.safe_string import safe_email, safe_string
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.unidades.models import Unidad
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.extensions import pwd_context
 
 USUARIOS_CSV = "seed/usuarios_roles.csv"
@@ -31,9 +31,9 @@ def alimentar_usuarios():
         sys.exit(1)
     try:
         unidad_nd = Unidad.query.filter_by(nombre="NO DEFINIDO").one()
-        ventanilla_nd = Ventanilla.query.filter_by(nombre="NO DEFINIDO").one()
+        ubicacion_nd = Ubicacion.query.filter_by(nombre="NO DEFINIDO").one()
     except (MultipleResultsFound, NoResultFound):
-        click.echo("AVISO: No se encontró la unidad y/o ventanilla 'NO DEFINIDO'.")
+        click.echo("AVISO: No se encontró la unidad y/o ubicacion 'NO DEFINIDO'.")
         sys.exit(1)
     click.echo("Alimentando usuarios: ", nl=False)
     contador = 0
@@ -48,7 +48,7 @@ def alimentar_usuarios():
                     break
                 Usuario(
                     unidad_id=unidad_nd.id,
-                    ventanilla_id=ventanilla_nd.id,
+                    ubicacion_id=ubicacion_nd.id,
                     email=f"no-existe-{contador}@server.com",
                     nombres="NO EXISTE",
                     apellido_paterno="",
@@ -64,7 +64,7 @@ def alimentar_usuarios():
             estatus = row["estatus"]
             Usuario(
                 unidad=unidad_nd,
-                ventanilla=ventanilla_nd,
+                ubicacion=ubicacion_nd,
                 email=email,
                 nombres=nombres,
                 apellido_paterno=apellido_paterno,

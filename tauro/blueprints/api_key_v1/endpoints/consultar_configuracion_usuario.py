@@ -13,7 +13,7 @@ from tauro.blueprints.api_v1.schemas import (
     UnidadOut,
     TurnoTipoOut,
     TurnoOut,
-    VentanillaOut,
+    UbicacionOut,
     OneConfiguracionUsuarioOut,
     ConfiguracionUsuarioOut,
 )
@@ -22,7 +22,7 @@ from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
-from tauro.blueprints.ventanillas.models import Ventanilla
+from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.usuarios_roles.models import UsuarioRol
 
@@ -89,16 +89,16 @@ class ConsultarConfiguracionUsuario(Resource):
                 turno_numero_cubiculo=turnos.numero_cubiculo,
                 turno_telefono=turnos.telefono,
                 turno_comentarios=turnos.comentarios,
-                ventanilla=VentanillaOut(
-                    id=turnos.ventanilla.id,
-                    nombre=turnos.ventanilla.nombre,
-                    numero=turnos.ventanilla.numero,
+                ubicacion=UbicacionOut(
+                    id=turnos.ubicacion.id,
+                    nombre=turnos.ubicacion.nombre,
+                    numero=turnos.ubicacion.numero,
                 ),
                 unidad=unidad_out,
             )
-        # Consultar la ventanilla del usuario
-        ventanilla_sql = Ventanilla.query.get(usuario.ventanilla_id)
-        ventanilla = VentanillaOut(id=ventanilla_sql.id, nombre=ventanilla_sql.nombre, numero=ventanilla_sql.numero)
+        # Consultar la ubicacion del usuario
+        ubicacion_sql = Ubicacion.query.get(usuario.ubicacion_id)
+        ubicacion = UbicacionOut(id=ubicacion_sql.id, nombre=ubicacion_sql.nombre, numero=ubicacion_sql.numero)
         # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
@@ -121,7 +121,7 @@ class ConsultarConfiguracionUsuario(Resource):
             success=True,
             message=f"Se ha consultado la configuración del usuario {usuario.nombre}",
             data=ConfiguracionUsuarioOut(
-                ventanilla=ventanilla,
+                ubicacion=ubicacion,
                 unidad=unidad,
                 turnos_tipos=turnos_tipos,
                 usuario_nombre_completo=usuario.nombre,
