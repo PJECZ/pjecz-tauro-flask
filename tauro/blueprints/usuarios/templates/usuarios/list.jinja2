@@ -57,6 +57,7 @@
         <table id="usuarios_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Correo electrónico</th>
                     <th>Nombre completo</th>
                     <th>Ubicacion</th>
@@ -77,6 +78,7 @@
         configDTUsuarios['ajax']['url'] = '{{ url_for("usuarios.datatable_json") }}';
         configDTUsuarios['ajax']['data'] = {{ filtros }};
         configDTUsuarios['columns'] = [
+            { data: "id" },
             { data: "detalle" },
             { data: "nombre" },
             { data: "ubicacion" },
@@ -84,14 +86,14 @@
         ];
         configDTUsuarios['columnDefs'] = [
             {
-                targets: 0, // detalle
+                targets: 1, // detalle
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.email + '</a>';
                 }
             },
             {
-                targets: 1, // nombre
+                targets: 2, // nombre
                 data: null,
                 render: function(data, type, row, meta) {
                     if (data.length > 24) {
@@ -101,14 +103,14 @@
                 }
             },
             {
-                targets: 2, // ubicacion
+                targets: 3, // ubicacion
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.nombre + '</a>';
                 }
             },
             {
-                targets: 3, // acceso_frontend
+                targets: 4, // acceso_frontend
                 data: null,
                 render: function(data, type, row, meta) {
                     if (data) {

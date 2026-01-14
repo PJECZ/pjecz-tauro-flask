@@ -128,6 +128,7 @@ def datatable_json():
     for resultado in registros:
         data.append(
             {
+                "id": resultado.id,
                 "detalle": {
                     "email": resultado.email,
                     "url": url_for("usuarios.detail", usuario_id=resultado.id),
