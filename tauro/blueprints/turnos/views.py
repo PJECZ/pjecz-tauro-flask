@@ -22,6 +22,9 @@ from tauro.blueprints.unidades.models import Unidad
 
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.turnos_estados.models import TurnoEstado
+from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, UbicacionOut, UnidadOut
+from tauro.extensions import socketio
+
 
 MODULO = "TURNOS"
 
@@ -190,6 +193,7 @@ def new():
             url=url_for("turnos.detail", turno_id=turno.id),
         )
         bitacora.save()
+        _send_turno_change_socketio(turno.id)
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
     return render_template("turnos/new.jinja2", form=form)
@@ -230,6 +234,7 @@ def edit(turno_id):
                 url=url_for("turnos.detail", turno_id=turno.id),
             )
             bitacora.save()
+            _send_turno_change_socketio(turno.id)
             flash(bitacora.descripcion, "success")
             return redirect(bitacora.url)
     form.usuario.data = turno.usuario.id
@@ -258,6 +263,7 @@ def reset_cubiculo(turno_id):
         url=url_for("turnos.detail", turno_id=turno.id),
     )
     bitacora.save()
+    _send_turno_change_socketio(turno.id)
     flash(bitacora.descripcion, "success")
     return redirect(bitacora.url)
 
@@ -276,6 +282,7 @@ def delete(turno_id):
             url=url_for("turnos.detail", turno_id=turno.id),
         )
         bitacora.save()
+        _send_turno_change_socketio(turno.id)
         flash(bitacora.descripcion, "success")
     return redirect(url_for("turnos.detail", turno_id=turno.id))
 
@@ -294,5 +301,55 @@ def recover(turno_id):
             url=url_for("turnos.detail", turno_id=turno.id),
         )
         bitacora.save()
+        _send_turno_change_socketio(turno.id)
         flash(bitacora.descripcion, "success")
     return redirect(url_for("turnos.detail", turno_id=turno.id))
+
+
+def _send_turno_change_socketio(turno_id):
+    "Envía por socketio la actualización del turno"
+
+    # Consultar el turno
+    turno = Turno.query.get(turno_id)
+    if turno is None:
+        return OneTurnoOut(
+            success=False,
+            message="Turno no encontrado",
+        ).model_dump()
+
+    # Consultar la unidad
+    unidad = Unidad.query.get(turno.unidad_id)
+    # Extraer la unidad
+    unidad_out = None
+    if unidad is not None:
+        unidad_out = UnidadOut(
+            id=unidad.id,
+            clave=unidad.clave,
+            nombre=unidad.nombre,
+        )
+
+    # Crear objeto OneTurnoOut
+    one_turno_out = OneTurnoOut(
+        success=True,
+        message=f"Se han actualizado campos en el turno {turno.numero} por {current_user.nombre}",
+        data=TurnoOut(
+            turno_id=turno.id,
+            turno_numero=turno.numero,
+            turno_fecha=turno.creado.isoformat(),
+            turno_estado=turno.turno_estado.nombre,
+            turno_tipo_id=turno.turno_tipo_id,
+            turno_tipo_nombre=turno.turno_tipo.nombre,
+            turno_numero_cubiculo=turno.numero_cubiculo,
+            turno_telefono=turno.telefono,
+            turno_comentarios=turno.comentarios,
+            ubicacion=UbicacionOut(
+                id=turno.ubicacion.id,
+                nombre=turno.ubicacion.nombre,
+                numero=turno.ubicacion.numero,
+            ),
+            unidad=unidad_out,
+        ),
+    ).model_dump()
+
+    # Enviar mensaje vía socketio
+    socketio.send(one_turno_out)
