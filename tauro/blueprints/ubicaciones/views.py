@@ -160,14 +160,14 @@ def edit(ubicacion_id):
 @ubicaciones.route("/ubicaciones/eliminar/<int:ubicacion_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def delete(ubicacion_id):
-    """Eliminar Ubicacion"""
+    """Eliminar Ubicación"""
     ubicacion = Ubicacion.query.get_or_404(ubicacion_id)
     if ubicacion.estatus == "A":
         ubicacion.delete()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Eliminado Ubicacion {ubicacion.clave}"),
+            descripcion=safe_message(f"Eliminado Ubicación {ubicacion.nombre} {ubicacion.numero}"),
             url=url_for("ubicaciones.detail", ubicacion_id=ubicacion.id),
         )
         bitacora.save()
@@ -178,7 +178,7 @@ def delete(ubicacion_id):
 @ubicaciones.route("/ubicaciones/recuperar/<int:ubicacion_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def recover(ubicacion_id):
-    """Recuperar Ubicacion"""
+    """Recuperar Ubicación"""
     ubicacion = Ubicacion.query.get_or_404(ubicacion_id)
     if ubicacion.estatus == "B":
         ubicacion.recover()
