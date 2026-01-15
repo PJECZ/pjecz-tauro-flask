@@ -22,7 +22,7 @@ from tauro.blueprints.unidades.models import Unidad
 
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.turnos_estados.models import TurnoEstado
-from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, UbicacionOut, UnidadOut
+from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, TurnoEstadoOut, TurnoTipoOut, UbicacionOut, UnidadOut
 from tauro.extensions import socketio
 
 
@@ -331,17 +331,24 @@ def _send_turno_change_socketio(turno_id):
     # Crear objeto OneTurnoOut
     one_turno_out = OneTurnoOut(
         success=True,
-        message=f"Se han actualizado campos en el turno {turno.numero} por {current_user.nombre}",
+        message=f"Se han actualizado campos en el turno {turno.numero} por {current_user.nombre} vía Socketio",
         data=TurnoOut(
             turno_id=turno.id,
             turno_numero=turno.numero,
             turno_fecha=turno.creado.isoformat(),
-            turno_estado=turno.turno_estado.nombre,
-            turno_tipo_id=turno.turno_tipo_id,
             turno_tipo_nombre=turno.turno_tipo.nombre,
             turno_numero_cubiculo=turno.numero_cubiculo,
             turno_telefono=turno.telefono,
             turno_comentarios=turno.comentarios,
+            turno_estado=TurnoEstadoOut(
+                id=turno.turno_estado.id,
+                nombre=turno.turno_estado.nombre,
+            ),
+            turno_tipo=TurnoTipoOut(
+                id=turno.turno_tipo.id,
+                nombre=turno.turno_tipo.nombre,
+                nivel=turno.turno_tipo.nivel,
+            ),
             ubicacion=UbicacionOut(
                 id=turno.ubicacion.id,
                 nombre=turno.ubicacion.nombre,
