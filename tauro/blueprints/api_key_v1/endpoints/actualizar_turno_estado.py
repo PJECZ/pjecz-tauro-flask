@@ -9,7 +9,14 @@ from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
-from tauro.blueprints.api_v1.schemas import UnidadOut, TurnoOut, UbicacionOut, OneTurnoOut
+from tauro.blueprints.api_v1.schemas import (
+    UnidadOut,
+    TurnoOut,
+    UbicacionOut,
+    OneTurnoOut,
+    TurnoEstadoOut,
+    TurnoTipoOut,
+)
 from tauro.blueprints.api_key_v1.schemas import ActualizarTurnoEstadoIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -68,7 +75,7 @@ class ActualizarTurnoEstado(Resource):
         if turno_estado.nombre == "ATENDIENDO":
             turno.inicio = datetime.now()
 
-        # Actualizar número de cubículo si lo tiene
+        # Actualizar número de cubículo si lo envía
         if actualizar_turno_estado_in.turno_numero_cubiculo and actualizar_turno_estado_in.turno_numero_cubiculo > 0:
             turno.numero_cubiculo = actualizar_turno_estado_in.turno_numero_cubiculo
         else:
@@ -81,11 +88,11 @@ class ActualizarTurnoEstado(Resource):
         Bitacora(
             modulo=Modulo.query.filter_by(nombre="TURNOS").first(),
             usuario=usuario,
-            descripcion=safe_message(f"El turno {turno.id} ha sido cambiado a {turno_estado.nombre} por Api-Key"),
+            descripcion=safe_message(f"El turno {turno.id} ha sido actualizado por Api-Key"),
             url=url_for("turnos.detail", turno_id=turno.id),
         ).save()
 
-        # Consultar la unidad
+        # Consultar la unidad, se hace así porque unidad_id no es una relación fuerte con Turnos.
         unidad = Unidad.query.get(turno.unidad_id)
         # Extraer la unidad
         unidad_out = None
@@ -99,17 +106,24 @@ class ActualizarTurnoEstado(Resource):
         # Crear objeto OneTurnoOut
         one_turno_out = OneTurnoOut(
             success=True,
-            message=f"Se ha cambiado el turno {turno.numero} a {turno_estado.nombre} por {usuario.nombre}",
+            message=f"Se ha actualizado información del turno {turno.numero} por el usuario {usuario.nombre}",
             data=TurnoOut(
                 turno_id=turno.id,
                 turno_numero=turno.numero,
                 turno_fecha=turno.creado.isoformat(),
-                turno_estado=turno.turno_estado.nombre,
-                turno_tipo_id=turno.turno_tipo_id,
                 turno_tipo_nombre=turno.turno_tipo.nombre,
                 turno_numero_cubiculo=turno.numero_cubiculo,
                 turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
+                turno_estado=TurnoEstadoOut(
+                    id=turno.turno_estado.id,
+                    nombre=turno.turno_estado.nombre,
+                ),
+                turno_tipo=TurnoTipoOut(
+                    id=turno.turno_tipo.id,
+                    nombre=turno.turno_tipo.nombre,
+                    nivel=turno.turno_tipo.nivel,
+                ),
                 ubicacion=UbicacionOut(
                     id=turno.ubicacion.id,
                     nombre=turno.ubicacion.nombre,
