@@ -12,6 +12,8 @@ from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import (
     TurnoTipoOut,
     TurnoOut,
+    TurnoEstadoOut,
+    TurnoTipoOut,
     UbicacionOut,
     UnidadOut,
     RolOut,
@@ -90,25 +92,25 @@ class ActualizarUsuario(Resource):
                     usuario_turno_tipo.save()
 
         # Consultar la ubicacion
-        ubicacion = Ubicacion.query.get(actualizar_usuario_in.ubicacion_id)
-        if ubicacion is None:
+        ubicacion_usuario = Ubicacion.query.get(actualizar_usuario_in.ubicacion_id)
+        if ubicacion_usuario is None:
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Ubicacion no encontrada",
             ).model_dump()
-        if ubicacion.estatus != "A":
+        if ubicacion_usuario.estatus != "A":
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Ubicacion eliminada",
             ).model_dump()
-        if ubicacion.es_activo is False:
+        if ubicacion_usuario.es_activo is False:
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Ubicacion no activa",
             ).model_dump()
 
         # Consultar los usuarios por la ubicacion, si la ubicacion la tiene otro usuario, se le manda un error
-        usuarios = Usuario.query.filter_by(ubicacion_id=ubicacion.id).filter_by(estatus="A").first()
+        usuarios = Usuario.query.filter_by(ubicacion_id=ubicacion_usuario.id).filter_by(estatus="A").first()
         if usuarios is not None and usuarios.id != usuario.id:
             return OneConfiguracionUsuarioOut(
                 success=False,
@@ -116,7 +118,7 @@ class ActualizarUsuario(Resource):
             ).model_dump()
 
         # Actualizar la ubicacion del usuario
-        usuario.ubicacion_id = ubicacion.id
+        usuario.ubicacion_id = ubicacion_usuario.id
 
         # Guardar
         usuario.save()
@@ -129,11 +131,11 @@ class ActualizarUsuario(Resource):
             url=url_for("usuarios.detail", usuario_id=usuario.id),
         ).save()
 
-        # Consultar Ubicacion
-        ubicacion = None
+        # Consultar Ubicación
+        ubicacion_usuario = None
         ubicacion_sql = Ubicacion.query.get(usuario.ubicacion_id)
         if ubicacion_sql:
-            ubicacion = UbicacionOut(
+            ubicacion_usuario = UbicacionOut(
                 id=ubicacion_sql.id,
                 nombre=ubicacion_sql.nombre,
                 numero=ubicacion_sql.numero,
@@ -142,6 +144,7 @@ class ActualizarUsuario(Resource):
         # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
+            .join(TurnoTipo)
             .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "ATENDIENDO"))
             .filter(Turno.usuario_id == usuario.id)
             .order_by(Turno.id.desc())
@@ -150,23 +153,30 @@ class ActualizarUsuario(Resource):
         ultimo_turno = None
         if turnos:
             # Consultar la unidad
-            unidad = Unidad.query.get(turnos.unidad_id)
+            unidad_usuario = Unidad.query.get(turnos.unidad_id)
             # Extraer la unidad
             unidad_out = None
-            if unidad:
+            if unidad_usuario:
                 unidad_out = UnidadOut(
-                    id=unidad.id,
-                    clave=unidad.clave,
-                    nombre=unidad.nombre,
+                    id=unidad_usuario.id,
+                    clave=unidad_usuario.clave,
+                    nombre=unidad_usuario.nombre,
                 )
             ultimo_turno = TurnoOut(
                 turno_id=turnos.id,
                 turno_numero=turnos.numero,
                 turno_fecha=turnos.creado.isoformat(),
-                turno_estado=turnos.turno_estado.nombre,
-                turno_tipo_id=turnos.turno_tipo_id,
                 turno_numero_cubiculo=turnos.numero_cubiculo,
                 turno_comentarios=turnos.comentarios,
+                turno_estado=TurnoEstadoOut(
+                    id=turnos.turno_estado.id,
+                    nombre=turnos.turno_estado.nombre,
+                ),
+                turno_tipo=TurnoTipoOut(
+                    id=turnos.turno_tipo_id,
+                    nombre=turnos.turno_tipo.nombre,
+                    nivel=turnos.turno_tipo.nivel,
+                ),
                 ubicacion=UbicacionOut(
                     id=turnos.ubicacion.id,
                     nombre=turnos.ubicacion.nombre,
@@ -184,9 +194,10 @@ class ActualizarUsuario(Resource):
             ).model_dump()
         rol = usuarios_roles.rol
         # Consultar la unidad
+        unidad_usuario = None
         unidad_sql = Unidad.query.get(usuario.unidad_id)
         if unidad_sql:
-            unidad = UnidadOut(
+            unidad_usuario = UnidadOut(
                 id=unidad_sql.id,
                 clave=unidad_sql.clave,
                 nombre=unidad_sql.nombre,
@@ -197,8 +208,8 @@ class ActualizarUsuario(Resource):
             success=True,
             message="Usuario actualizado",
             data=ConfiguracionUsuarioOut(
-                ubicacion=ubicacion,
-                unidad=unidad,
+                ubicacion=ubicacion_usuario,
+                unidad=unidad_usuario,
                 rol=RolOut(
                     id=rol.id,
                     nombre=rol.nombre,

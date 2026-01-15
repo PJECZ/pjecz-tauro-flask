@@ -11,6 +11,7 @@ from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
 from tauro.blueprints.api_v1.schemas import (
     RolOut,
     UnidadOut,
+    TurnoEstadoOut,
     TurnoTipoOut,
     TurnoOut,
     UbicacionOut,
@@ -19,6 +20,7 @@ from tauro.blueprints.api_v1.schemas import (
 )
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
+from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.blueprints.ubicaciones.models import Ubicacion
@@ -57,6 +59,7 @@ class ConsultarConfiguracionUsuario(Resource):
         # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
+            .join(TurnoTipo)
             .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "ATENDIENDO"))
             .filter(Turno.usuario_id == usuario.id)
             .filter(Turno.estatus == "A")
@@ -65,7 +68,7 @@ class ConsultarConfiguracionUsuario(Resource):
         )
         ultimo_turno = None
         if turnos:
-            # Consultar la unidad
+            # Consultar la unidad, porque no es una relación fuerte sino libre.
             unidad = Unidad.query.get(turnos.unidad_id)
             # Extraer la unidad
             unidad_out = None
@@ -80,11 +83,18 @@ class ConsultarConfiguracionUsuario(Resource):
                 turno_id=turnos.id,
                 turno_numero=turnos.numero,
                 turno_fecha=turnos.creado.isoformat(),
-                turno_estado=turnos.turno_estado.nombre,
-                turno_tipo_id=turnos.turno_tipo_id,
                 turno_numero_cubiculo=turnos.numero_cubiculo,
                 turno_telefono=turnos.telefono,
                 turno_comentarios=turnos.comentarios,
+                turno_estado=TurnoEstadoOut(
+                    id=turnos.turno_estado.id,
+                    nombre=turnos.turno_estado.nombre,
+                ),
+                turno_tipo=TurnoTipoOut(
+                    id=turnos.turno_tipo_id,
+                    nombre=turnos.turno_tipo.nombre,
+                    nivel=turnos.turno_tipo.nivel,
+                ),
                 ubicacion=UbicacionOut(
                     id=turnos.ubicacion.id,
                     nombre=turnos.ubicacion.nombre,
@@ -94,7 +104,7 @@ class ConsultarConfiguracionUsuario(Resource):
             )
         # Consultar la ubicacion del usuario
         ubicacion_sql = Ubicacion.query.get(usuario.ubicacion_id)
-        ubicacion = UbicacionOut(id=ubicacion_sql.id, nombre=ubicacion_sql.nombre, numero=ubicacion_sql.numero)
+        ubicacion_usuario = UbicacionOut(id=ubicacion_sql.id, nombre=ubicacion_sql.nombre, numero=ubicacion_sql.numero)
         # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
@@ -104,9 +114,10 @@ class ConsultarConfiguracionUsuario(Resource):
             ).model_dump()
         rol = usuarios_roles.rol
         # Consultar la unidad
+        unidad_usuario = None
         unidad_sql = Unidad.query.get(usuario.unidad_id)
         if unidad_sql:
-            unidad = UnidadOut(
+            unidad_usuario = UnidadOut(
                 id=unidad_sql.id,
                 clave=unidad_sql.clave,
                 nombre=unidad_sql.nombre,
@@ -117,10 +128,10 @@ class ConsultarConfiguracionUsuario(Resource):
             success=True,
             message=f"Se ha consultado la configuración del usuario de {username}",
             data=ConfiguracionUsuarioOut(
-                ubicacion=ubicacion,
-                unidad=unidad,
-                turnos_tipos=turnos_tipos,
                 usuario_nombre_completo=usuario.nombre,
+                ubicacion=ubicacion_usuario,
+                unidad=unidad_usuario,
+                turnos_tipos=turnos_tipos,
                 rol=RolOut(
                     id=rol.id,
                     nombre=rol.nombre,

@@ -81,11 +81,11 @@ class TurnoOut(BaseModel):
     turno_id: int
     turno_numero: int
     turno_fecha: str
-    turno_estado: str
-    turno_tipo_id: int
     turno_numero_cubiculo: int
-    turno_comentarios: str | None = None
     turno_telefono: str | None = None
+    turno_comentarios: str | None = None
+    turno_estado: TurnoEstadoOut
+    turno_tipo: TurnoTipoOut
     ubicacion: UbicacionOut | None = None
     unidad: UnidadOut | None = None
 

@@ -6,7 +6,15 @@ from flask import current_app
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from tauro.blueprints.api_oauth2_v1.schemas import ListTurnosOut, OneListTurnosOut, TurnoUnidadOut, UnidadOut, UbicacionOut
+from tauro.blueprints.api_oauth2_v1.schemas import (
+    ListTurnosOut,
+    OneListTurnosOut,
+    TurnoUnidadOut,
+    UnidadOut,
+    UbicacionOut,
+    TurnoEstadoOut,
+    TurnoTipoOut,
+)
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -44,7 +52,15 @@ class ConsultarTurnos(Resource):
         unidades_sql = Unidad.query.all()
         unidades = {unidad.id: unidad for unidad in unidades_sql}
 
-        # Consultar Último turno en estado 'ATENDIENDO'
+        # Consultar Estados
+        estados_sql = TurnoEstado.query.all()
+        estados = {estado.id: estado for estado in estados_sql}
+
+        # Consultar Tipos
+        tipos_sql = TurnoTipo.query.all()
+        tipos = {tipo.id: tipo for tipo in tipos_sql}
+
+        # Consultar Último turno en estado 'ATENDIENDO' o 'ATENDIENDO EN CUBÍCULO'
         ultimo_turno_atendiendo = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
@@ -58,11 +74,18 @@ class ConsultarTurnos(Resource):
                 turno_id=ultimo_turno_atendiendo.id,
                 turno_numero=ultimo_turno_atendiendo.numero,
                 turno_fecha=ultimo_turno_atendiendo.creado.isoformat(),
-                turno_estado=ultimo_turno_atendiendo.turno_estado.nombre,
-                turno_tipo_id=ultimo_turno_atendiendo.turno_tipo_id,
                 turno_numero_cubiculo=ultimo_turno_atendiendo.numero_cubiculo,
                 turno_telefono=ultimo_turno_atendiendo.telefono,
                 turno_comentarios=ultimo_turno_atendiendo.comentarios,
+                turno_estado=TurnoEstadoOut(
+                    id=estados[ultimo_turno_atendiendo.turno_estado_id].id,
+                    nombre=estados[ultimo_turno_atendiendo.turno_estado_id].nombre,
+                ),
+                turno_tipo=TurnoTipoOut(
+                    id=tipos[ultimo_turno_atendiendo.turno_tipo_id].id,
+                    nombre=tipos[ultimo_turno_atendiendo.turno_tipo_id].nombre,
+                    nivel=tipos[ultimo_turno_atendiendo.turno_tipo_id].nivel,
+                ),
                 unidad=UnidadOut(
                     id=unidades[ultimo_turno_atendiendo.unidad_id].id,
                     nombre=unidades[ultimo_turno_atendiendo.unidad_id].nombre,
@@ -88,11 +111,18 @@ class ConsultarTurnos(Resource):
                         turno_id=turno.id,
                         turno_numero=turno.numero,
                         turno_fecha=turno.creado.isoformat(),
-                        turno_estado=turno.turno_estado.nombre,
-                        turno_tipo_id=turno.turno_tipo_id,
                         turno_numero_cubiculo=turno.numero_cubiculo,
                         turno_telefono=turno.telefono,
                         turno_comentarios=turno.comentarios,
+                        turno_estado=TurnoEstadoOut(
+                            id=estados[turno.turno_estado_id].id,
+                            nombre=estados[turno.turno_estado_id].nombre,
+                        ),
+                        turno_tipo=TurnoTipoOut(
+                            id=tipos[turno.turno_tipo_id].id,
+                            nombre=tipos[turno.turno_tipo_id].nombre,
+                            nivel=tipos[turno.turno_tipo_id].nivel,
+                        ),
                         unidad=UnidadOut(
                             id=unidades[turno.unidad_id].id,
                             nombre=unidades[turno.unidad_id].nombre,
