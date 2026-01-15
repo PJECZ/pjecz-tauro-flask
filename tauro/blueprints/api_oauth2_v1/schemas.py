@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from tauro.blueprints.api_v1.schemas import (
     ResponseSchema,
     RolOut,
+    TurnoEstadoOut,
+    TurnoTipoOut,
     TurnoOut,
     UnidadOut,
     UbicacionOut,
@@ -43,11 +45,11 @@ class TurnoUnidadOut(BaseModel):
     turno_id: int
     turno_numero: int
     turno_fecha: str
-    turno_estado: str
-    turno_tipo_id: int
     turno_numero_cubiculo: int
     turno_telefono: str | None = None
     turno_comentarios: str | None = None
+    turno_estado: TurnoEstadoOut
+    turno_tipo: TurnoTipoOut
     unidad: UnidadOut
     ubicacion: UbicacionOut | None = None
 

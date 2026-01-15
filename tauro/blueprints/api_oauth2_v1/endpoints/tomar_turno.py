@@ -10,7 +10,14 @@ from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 from lib.safe_string import safe_message
 
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, UbicacionOut, UnidadOut
+from tauro.blueprints.api_v1.schemas import (
+    OneTurnoOut,
+    TurnoOut,
+    UbicacionOut,
+    UnidadOut,
+    TurnoEstadoOut,
+    TurnoTipoOut,
+)
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.turnos_tipos.models import TurnoTipo
@@ -84,7 +91,7 @@ class TomarTurno(Resource):
                 message="Estado de turno no encontrado",
             ).model_dump()
 
-        # Cambiar el usuario, el estado a "ATENDIENDO" y la ubicacion, así como el tiempo de inicio
+        # Cambiar el usuario, el estado a "ATENDIENDO" y la ubicación, así como el tiempo de inicio
         turno.usuario_id = usuario.id
         turno.turno_estado_id = turno_estado.id
         turno.ubicacion_id = usuario.ubicacion_id
@@ -120,11 +127,18 @@ class TomarTurno(Resource):
                 turno_id=turno.id,
                 turno_numero=turno.numero,
                 turno_fecha=turno.creado.isoformat(),
-                turno_estado=turno.turno_estado.nombre,
-                turno_tipo_id=turno.turno_tipo_id,
                 turno_numero_cubiculo=turno.numero_cubiculo,
                 turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
+                turno_estado=TurnoEstadoOut(
+                    id=turno.turno_estado.id,
+                    nombre=turno.turno_estado.nombre,
+                ),
+                turno_tipo=TurnoTipoOut(
+                    id=turno.turno_tipo_id,
+                    nombre=turno.turno_tipo.nombre,
+                    nivel=turno.turno_tipo.nivel,
+                ),
                 ubicacion=UbicacionOut(
                     id=turno.ubicacion.id,
                     nombre=turno.ubicacion.nombre,

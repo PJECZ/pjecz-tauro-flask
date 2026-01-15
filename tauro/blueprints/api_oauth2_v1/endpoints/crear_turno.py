@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from lib.safe_string import safe_string, safe_message, safe_telefono
 from tauro.blueprints.api_oauth2_v1.endpoints.autenticar import token_required
-from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, UbicacionOut
+from tauro.blueprints.api_v1.schemas import OneTurnoOut, UnidadOut, TurnoOut, UbicacionOut, TurnoEstadoOut, TurnoTipoOut
 from tauro.blueprints.api_oauth2_v1.schemas import CrearTurnoIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
@@ -126,6 +126,23 @@ class CrearTurno(Resource):
                 nombre=unidad.nombre,
             )
 
+        # Extraer el Tipo de Turno
+        turno_tipo_out = None
+        if turno_tipo is not None:
+            turno_tipo_out = TurnoTipoOut(
+                id=turno_tipo.id,
+                nombre=turno_tipo.nombre,
+                nivel=turno_tipo.nivel,
+            )
+
+        # Extraer el Estado del Turno
+        turno_estado_out = None
+        if turno_estado is not None:
+            turno_estado_out = TurnoEstadoOut(
+                id=turno_estado.id,
+                nombre=turno_estado.nombre,
+            )
+
         # Crear nuevo objeto OneTurnoOut
         turno_out = OneTurnoOut(
             success=True,
@@ -134,11 +151,11 @@ class CrearTurno(Resource):
                 turno_id=turno.id,
                 turno_numero=turno.numero,
                 turno_fecha=turno.creado.isoformat(),
-                turno_estado=turno.turno_estado.nombre,
-                turno_tipo_id=turno.turno_tipo_id,
                 turno_numero_cubiculo=turno.numero_cubiculo,
                 turno_telefono=turno.telefono,
                 turno_comentarios=turno.comentarios,
+                turno_estado=turno_estado_out,
+                turno_tipo=turno_tipo_out,
                 ubicacion=UbicacionOut(
                     id=turno.ubicacion.id,
                     nombre=turno.ubicacion.nombre,

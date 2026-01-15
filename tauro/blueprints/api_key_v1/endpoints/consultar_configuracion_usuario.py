@@ -12,6 +12,7 @@ from tauro.blueprints.api_v1.schemas import (
     RolOut,
     UnidadOut,
     TurnoTipoOut,
+    TurnoEstadoOut,
     TurnoOut,
     UbicacionOut,
     OneConfiguracionUsuarioOut,
@@ -20,6 +21,7 @@ from tauro.blueprints.api_v1.schemas import (
 from tauro.blueprints.api_key_v1.schemas import ConsultarUsuarioIn
 from tauro.blueprints.turnos.models import Turno
 from tauro.blueprints.turnos_estados.models import TurnoEstado
+from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.usuarios_turnos_tipos.models import UsuarioTurnoTipo
 from tauro.blueprints.ubicaciones.models import Ubicacion
@@ -61,6 +63,7 @@ class ConsultarConfiguracionUsuario(Resource):
         # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
+            .join(TurnoTipo)
             .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "ATENDIENDO"))
             .filter(Turno.usuario_id == usuario.id)
             .filter(Turno.estatus == "A")
@@ -84,11 +87,18 @@ class ConsultarConfiguracionUsuario(Resource):
                 turno_id=turnos.id,
                 turno_numero=turnos.numero,
                 turno_fecha=turnos.creado.isoformat(),
-                turno_estado=turnos.turno_estado.nombre,
-                turno_tipo_id=turnos.turno_tipo_id,
                 turno_numero_cubiculo=turnos.numero_cubiculo,
                 turno_telefono=turnos.telefono,
                 turno_comentarios=turnos.comentarios,
+                turno_estado=TurnoEstadoOut(
+                    id=turnos.turno_estado.id,
+                    nombre=turnos.turno_estado.nombre,
+                ),
+                turno_tipo=TurnoTipoOut(
+                    id=turnos.turno_tipo.id,
+                    nombre=turnos.turno_tipo.nombre,
+                    nivel=turnos.turno_tipo.nivel,
+                ),
                 ubicacion=UbicacionOut(
                     id=turnos.ubicacion.id,
                     nombre=turnos.ubicacion.nombre,
@@ -96,7 +106,7 @@ class ConsultarConfiguracionUsuario(Resource):
                 ),
                 unidad=unidad_out,
             )
-        # Consultar la ubicacion del usuario
+        # Consultar la ubicación del usuario
         ubicacion_sql = Ubicacion.query.get(usuario.ubicacion_id)
         ubicacion = UbicacionOut(id=ubicacion_sql.id, nombre=ubicacion_sql.nombre, numero=ubicacion_sql.numero)
         # Extraer un único rol
@@ -121,10 +131,10 @@ class ConsultarConfiguracionUsuario(Resource):
             success=True,
             message=f"Se ha consultado la configuración del usuario {usuario.nombre}",
             data=ConfiguracionUsuarioOut(
+                usuario_nombre_completo=usuario.nombre,
                 ubicacion=ubicacion,
                 unidad=unidad,
                 turnos_tipos=turnos_tipos,
-                usuario_nombre_completo=usuario.nombre,
                 rol=RolOut(
                     id=rol.id,
                     nombre=rol.nombre,
