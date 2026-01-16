@@ -52,7 +52,12 @@ def cancelar_turnos_pasados():
     turnos_estados = {turno_estado.nombre: turno_estado for turno_estado in TurnoEstado.query.all()}
 
     # Consultar turnos anteriores a la fecha de hoy que se encuentren en estado diferente a COMPLETADO.
-    turnos = Turno.query.filter(Turno.creado < timestamp_hoy).filter(Turno.turno_estado != turnos_estados["COMPLETADO"]).all()
+    turnos = (
+        Turno.query.filter(Turno.creado < timestamp_hoy)
+        .filter(Turno.turno_estado != turnos_estados["COMPLETADO"])
+        .filter(Turno.turno_estado != turnos_estados["CANCELADO"])
+        .all()
+    )
 
     # Cambiar el estado de los turnos resultantes a CANCELADO
     for turno in turnos:
