@@ -12,7 +12,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            {% call card.card(title='Sistema Integral de Calidad y Gestión Documental') %}
+            {% call card.card(title='Sistema de Turnos') %}
                 <h4>Política Integral</h4>
                 <p class="lead">
                     El Poder Judicial del Estado de Coahuila de Zaragoza
@@ -22,10 +22,15 @@
                     </span>
                     que brinda certeza jurídica, confianza e imparcialidad a la ciudadanía,
                     comprometido a proporcionar atención y servicios bajo una cultura de calidad,
-                    gestión documental y mejora contínua,
+                    gestión documental y mejora continua,
                     con un enfoque centrado en la persona y sus derechos humanos.
                 </p>
             {% endcall %}
+            {% if current_user.can_admin('UBICACIONES') %}
+                {% call card.card() %}
+                    <a class="btn btn-success" href="{{ url_for('sistemas.refresh_screens') }}">Actualizar Pantallas</a>
+                {% endcall %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -2,8 +2,11 @@
 Sistemas
 """
 
-from flask import Blueprint, redirect, render_template, send_from_directory, url_for
+from flask import Blueprint, redirect, render_template, send_from_directory, url_for, flash
 from flask_login import current_user
+
+from tauro.extensions import socketio
+from tauro.blueprints.api_v1.schemas import ResponseSchema
 
 sistemas = Blueprint("sistemas", __name__, template_folder="templates")
 
@@ -18,6 +21,24 @@ def start():
 
     # No está autenticado, debe de iniciar sesión
     return redirect(url_for("usuarios.login"))
+
+
+@sistemas.route("/refresh_screens")
+def refresh_screens():
+    """Envía señal vía socketio para refrescar las pantallas"""
+
+    # Crear estructura de respuesta
+    response_refresh = ResponseSchema(
+        success=True,
+        message="Señal de actualización de pantallas",
+        data={"signal": "refresh"},
+    ).model_dump()
+
+    # Enviar mensaje vía socketio
+    socketio.send(response_refresh)
+
+    flash("Señal enviada correctamente, espere a que se actualicen las pantallas de turnos.", "success")
+    return redirect(url_for(("sistemas.start")))
 
 
 @sistemas.route("/favicon.ico")
