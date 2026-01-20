@@ -31,11 +31,11 @@ def refresh_screens():
     response_refresh = ResponseSchema(
         success=True,
         message="Señal de actualización de pantallas",
-        data={"signal": "refresh"},
+        data={"signal": True},
     ).model_dump()
 
-    # Enviar mensaje vía socketio
-    socketio.send(response_refresh)
+    # Enviar mensaje vía socketio a todos los clientes conectados
+    socketio.emit("refresh_screens", response_refresh)
 
     flash("Señal enviada correctamente, espere a que se actualicen las pantallas de turnos.", "success")
     return redirect(url_for(("sistemas.start")))
