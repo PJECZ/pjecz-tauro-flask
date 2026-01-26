@@ -88,13 +88,14 @@ class CrearTurno(Resource):
 
         # Validar el número de teléfono
         telefono = None
-        if crear_turno_in.turno_telefono is not None:
-            telefono = safe_telefono(crear_turno_in.turno_telefono)
-            if telefono is None or telefono == "":
-                return OneTurnoOut(
-                    success=False,
-                    message="Número de teléfono inválido",
-                ).model_dump()
+        if crear_turno_in.turno_telefono != "":
+            if crear_turno_in.turno_telefono is not None:
+                telefono = safe_telefono(crear_turno_in.turno_telefono)
+                if telefono is None or telefono == "":
+                    return OneTurnoOut(
+                        success=False,
+                        message="Número de teléfono inválido",
+                    ).model_dump()
 
         # Definir el numero de turno
         fecha_hoy = datetime.now(tz=timezone(current_app.config["TZ"])).date()
