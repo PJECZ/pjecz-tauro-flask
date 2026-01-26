@@ -48,13 +48,14 @@ class CrearTurno(Resource):
 
         # Validar el número de teléfono
         telefono = None
-        if turno_in.turno_telefono is not None:
-            telefono = safe_telefono(turno_in.turno_telefono)
-            if telefono is None or telefono == "":
-                return OneTurnoOut(
-                    success=False,
-                    message="Número de teléfono inválido",
-                ).model_dump()
+        if turno_in.turno_telefono != "":
+            if turno_in.turno_telefono is not None:
+                telefono = safe_telefono(turno_in.turno_telefono)
+                if telefono is None or telefono == "":
+                    return OneTurnoOut(
+                        success=False,
+                        message="Número de teléfono inválido",
+                    ).model_dump()
 
         # Consultar el tipo de turno
         turno_tipo = TurnoTipo.query.get(turno_in.turno_tipo_id)

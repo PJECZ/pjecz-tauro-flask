@@ -209,11 +209,12 @@ def edit(turno_id):
         es_valido = True
         # Validar número de teléfono
         telefono = None
-        if form.telefono.data:
-            telefono = safe_telefono(form.telefono.data)
-            if telefono == "":
-                flash("Número de teléfono inválido", "warning")
-                es_valido = False
+        if telefono != "":
+            if form.telefono.data:
+                telefono = safe_telefono(form.telefono.data)
+                if telefono == "":
+                    flash("Número de teléfono inválido", "warning")
+                    es_valido = False
 
         # Actualizar registro
         if es_valido:
@@ -223,7 +224,7 @@ def edit(turno_id):
             turno.unidad_id = form.unidad.data
             turno.ubicacion_id = form.ubicacion.data
             turno.numero_cubiculo = form.numero_cubiculo.data
-            turno.telefono = safe_telefono(form.telefono.data)
+            turno.telefono = telefono
             turno.turno_estado_id = form.turnos_estado.data
             turno.comentarios = safe_string(form.comentarios.data)
             turno.save()
