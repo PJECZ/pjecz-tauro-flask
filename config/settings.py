@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: str = ""
     TZ: str = "America/Mexico_City"
     LIMITE_DE_TURNOS_LISTADOS: int = 20
+    TOKEN_OAUTH2_EXPIRES_IN_SEG: int = 24 * 60 * 60  # Un día
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     PREFIX: str = os.getenv("PREFIX", "")
 

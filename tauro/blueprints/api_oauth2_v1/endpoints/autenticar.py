@@ -145,7 +145,7 @@ class Authenticate(Resource):
             message="Token generado",
             access_token=access_token,
             token_type="Bearer",
-            expires_in=30 * 60,  # 30 minutos
+            expires_in=current_app.config["TOKEN_OAUTH2_EXPIRES_IN_SEG"],
             username=username,
             usuario_nombre_completo=usuario.nombre,
             rol=RolOut(
