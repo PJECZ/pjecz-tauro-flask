@@ -4,7 +4,7 @@ API v1 Endpoint: Consultar Turnos
 
 from flask import current_app
 from flask_restful import Resource
-from sqlalchemy import or_
+from sqlalchemy import or_, case
 
 from tauro.blueprints.api_oauth2_v1.schemas import (
     ListTurnosOut,
@@ -36,7 +36,16 @@ class ConsultarTurnos(Resource):
             .join(TurnoTipo)
             .filter(TurnoEstado.nombre != "COMPLETADO", TurnoEstado.nombre != "CANCELADO")
             .filter(Turno.estatus == "A")
-            .order_by(TurnoTipo.nivel, Turno.numero)
+            .order_by(
+                # 1. Prioridad por estado: ATENDIENDO primero (valor 0), el resto después (valor 1)
+                case(
+                    (TurnoEstado.nombre == "ATENDIENDO", 0),
+                    else_=1
+                ),
+                # 2. Dentro de cada grupo, ordenar por número de turno
+                Turno.numero
+            )
+            #.order_by(TurnoTipo.nivel, Turno.numero)
             .limit(current_app.config["LIMITE_DE_TURNOS_LISTADOS"])
             .all()
         )
