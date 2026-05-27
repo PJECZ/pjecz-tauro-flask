@@ -17,6 +17,7 @@ from tauro.blueprints.api_key_v1.endpoints.consultar_unidades import ConsultarUn
 from tauro.blueprints.api_key_v1.endpoints.consultar_ubicaciones import ConsultarUbicaciones
 from tauro.blueprints.api_key_v1.endpoints.crear_turno import CrearTurno
 from tauro.blueprints.api_key_v1.endpoints.tomar_turno import TomarTurno
+from tauro.blueprints.api_key_v1.endpoints.test_conexion import TestConexion
 
 api_key_v1 = Blueprint("api_key_v1", __name__, url_prefix="/api_key/v1")
 
@@ -41,3 +42,4 @@ api.add_resource(ConsultarUnidades, "/consultar_unidades")
 api.add_resource(ConsultarUbicaciones, "/consultar_ubicaciones")
 api.add_resource(CrearTurno, "/crear_turno")
 api.add_resource(TomarTurno, "/tomar_turno")
+api.add_resource(TestConexion, "/test_conexion")
