@@ -7,6 +7,8 @@ from datetime import datetime, date
 from flask import current_app, request, url_for
 from flask_restful import Resource
 from pytz import timezone
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+
 
 from lib.safe_string import safe_string, safe_message, safe_telefono
 from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
