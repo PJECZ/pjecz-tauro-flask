@@ -25,13 +25,13 @@ api_key_v1 = Blueprint("api_key_v1", __name__, url_prefix="/api_key/v1")
 # Crear la API
 api = Api(api_key_v1)
 
-# CORS
-CORS(api_key_v1)
+# Configuración de CORS
 origins = ["http://localhost:5000", "http://127.0.0.1:5000"]
 settings = get_settings()
 if settings.HOST:
     origins.append(settings.HOST)
-CORS(api_key_v1, origins=origins)
+
+CORS(api_key_v1, origins=origins, supports_credentials=True)
 
 # Agregar los recursos a la API
 api.add_resource(ActualizarTurnoEstado, "/actualizar_turno_estado")

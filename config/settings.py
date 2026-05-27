@@ -24,7 +24,7 @@ SERVICE_PREFIX = os.getenv("SERVICE_PREFIX", "pjecz_tauro_flask")
 class Settings(BaseSettings):
     """Settings"""
 
-    HOST: str = ""
+    HOST: str = os.getenv("HOST", "http://localhost:5000")
     SALT: str = ""
     SECRET_KEY: str = ""
     SQLALCHEMY_DATABASE_URI: str = ""
