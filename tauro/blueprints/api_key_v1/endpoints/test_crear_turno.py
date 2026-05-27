@@ -4,13 +4,13 @@ API-Key v1 Endpoint: Test Crear Turno
 
 from datetime import datetime, date
 
-from flask import current_app, request, url_for
+from flask import current_app, request
 from flask_restful import Resource
 from pytz import timezone
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 
-from lib.safe_string import safe_string, safe_message, safe_telefono
+from lib.safe_string import safe_telefono
 from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import (
     OneTurnoOut,
@@ -27,8 +27,6 @@ from tauro.blueprints.turnos_tipos.models import TurnoTipo
 from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.ubicaciones.models import Ubicacion
-from tauro.blueprints.bitacoras.models import Bitacora
-from tauro.blueprints.modulos.models import Modulo
 
 from tauro.extensions import socketio
 
@@ -47,7 +45,7 @@ class TestCrearTurno(Resource):
         # Consultar el usuario
         try:
             usuario = Usuario.query.filter_by(id=crear_turno_in.usuario_id).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -72,7 +70,7 @@ class TestCrearTurno(Resource):
         # Consultar el estado de turno "EN ESPERA"
         try:
             turno_estado = TurnoEstado.query.filter_by(nombre="EN ESPERA").filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Estado de turno no encontrado",
@@ -81,7 +79,7 @@ class TestCrearTurno(Resource):
         # Consultar la ubicacion NO DEFINIDO
         try:
             ubicacion = Ubicacion.query.filter_by(nombre="NO DEFINIDO").filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Ubicacion no encontrada",
@@ -117,7 +115,7 @@ class TestCrearTurno(Resource):
             success=True,
             message=f"Se ha creado el turno {numero} en {unidad.clave} por {usuario.nombre}",
             data=TurnoOut(
-                turno_id=0,
+                turno_id=1,
                 turno_numero=numero,
                 turno_fecha=date.today().isoformat(),
                 turno_numero_cubiculo=0,
