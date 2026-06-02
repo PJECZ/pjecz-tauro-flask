@@ -39,7 +39,7 @@ class ConsultarConfiguracionUsuario(Resource):
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Usuario no encontrado o email duplicado",
@@ -56,11 +56,11 @@ class ConsultarConfiguracionUsuario(Resource):
                 for utt in usuarios_turnos_tipos
             ]
 
-        # Consultar el último turno en "EN ESPERA" o "ATENDIENDO" del usuario
+        # Consultar el último turno en "EN ESPERA" o "PASE A VENTANILLA" del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "ATENDIENDO"))
+            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "PASE A VENTANILLA"))
             .filter(Turno.usuario_id == usuario.id)
             .filter(Turno.estatus == "A")
             .order_by(Turno.id.desc())

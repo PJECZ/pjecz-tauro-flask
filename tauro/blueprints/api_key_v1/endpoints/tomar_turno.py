@@ -37,7 +37,7 @@ class TomarTurno(Resource):
         # Consultar el usuario
         try:
             usuario = Usuario.query.filter_by(id=usuario_in.usuario_id).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -78,16 +78,16 @@ class TomarTurno(Resource):
                 message="No hay turnos en espera",
             ).model_dump()
 
-        # Consultar el estado de turno "ATENDIENDO"
+        # Consultar el estado de turno "PASE A VENTANILLA"
         try:
-            turno_estado = TurnoEstado.query.filter_by(nombre="ATENDIENDO").one()
-        except (MultipleResultsFound, NoResultFound):
+            turno_estado = TurnoEstado.query.filter_by(nombre="PASE A VENTANILLA").one()
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Estado de turno no encontrado",
             ).model_dump()
 
-        # Cambiar el usuario, el estado a "ATENDIENDO" y la ubicacion, así como el tiempo de inicio
+        # Cambiar el usuario, el estado a "PASE A VENTANILLA" y la ubicación, así como el tiempo de inicio
         turno.usuario_id = usuario.id
         turno.turno_estado_id = turno_estado.id
         turno.ubicacion_id = usuario.ubicacion_id
