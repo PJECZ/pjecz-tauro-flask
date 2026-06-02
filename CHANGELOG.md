@@ -1,0 +1,25 @@
+# 📝 Historial de Cambios (Changelog)
+
+Todos los cambios notables en este proyecto serán documentados en este archivo.
+El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
+
+## [1.2.0] - 2026-06-05
+
+### ✨ Mejoras
+
+- Se añadió un estado nuevo para turnos 'PASE A VENTANILLA' entre el estado 'EN ESPERA' y 'ATENDIENDO'. Servirá para que cuando el turno se crea (EN ESPERA) y un usuario del PJECZ tome el turno, este pase a 'PASE A VENTANILLA'. Cuando llegue el cliente, el usuario presionará otro botón y el estado pasará ahora a 'ATENDIENDO'.
+
+
+## [1.1.0] - 2026-05-29
+
+### ✨ Mejoras
+
+- Creación de turno de prueba por API-Key.
+- Prueba de conexión por API-Key.
+
+
+## [1.0.0] - 2026-01-09
+
+### ✨ Mejoras
+
+  - Aumentar el tiempo de vida del token en la api oauth2.

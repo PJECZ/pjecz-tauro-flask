@@ -22,30 +22,27 @@ from tauro.blueprints.unidades.models import Unidad
 
 
 class ConsultarTurnos(Resource):
-    """Consultar los turnos EN ESPERA y ATENDIENDO"""
+    """Consultar los turnos EN ESPERA y PASE A VENTANILLA"""
 
     def get(self) -> OneListTurnosOut:
-        """Consultar los turnos EN ESPERA y ATENDIENDO, aquí NO SE USA el decorador porque es para pantallas"""
+        """Consultar los turnos EN ESPERA y PASE A VENTANILLA, aquí NO SE USA el decorador porque es para pantallas"""
 
         # Consultar los turnos...
-        # - Filtrar por los estados EN ESPERA y ATENDIENDO,
+        # - Filtrar por los estados EN ESPERA y PASE A VENTANILLA,
         # - Filtrar por el estatus A (activo),
         # - Y ordenar por el nombre de tipo de turno ATENCION URGENTE, CON CITA, NORMAL y luego por el número
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(TurnoEstado.nombre != "COMPLETADO", TurnoEstado.nombre != "CANCELADO")
+            .filter(TurnoEstado.nombre != "ATENDIENDO", TurnoEstado.nombre != "COMPLETADO", TurnoEstado.nombre != "CANCELADO")
             .filter(Turno.estatus == "A")
             .order_by(
-                # 1. Prioridad por estado: ATENDIENDO primero (valor 0), el resto después (valor 1)
-                case(
-                    (TurnoEstado.nombre == "ATENDIENDO", 0),
-                    else_=1
-                ),
+                # 1. Prioridad por estado: EN ESPERA primero (valor 0), el resto después (valor 1)
+                case((TurnoEstado.nombre == "EN ESPERA", 0), else_=1),
                 # 2. Dentro de cada grupo, ordenar por número de turno
-                Turno.numero
+                Turno.numero,
             )
-            #.order_by(TurnoTipo.nivel, Turno.numero)
+            # .order_by(TurnoTipo.nivel, Turno.numero)
             .limit(current_app.config["LIMITE_DE_TURNOS_LISTADOS"])
             .all()
         )
@@ -69,15 +66,22 @@ class ConsultarTurnos(Resource):
         tipos_sql = TurnoTipo.query.all()
         tipos = {tipo.id: tipo for tipo in tipos_sql}
 
-        # Consultar Último turno en estado 'ATENDIENDO' o 'ATENDIENDO EN CUBÍCULO'
+        # Consultar Último turno en estado 'EN ESPERA' o 'PASE A VENTANILLA' o 'ATENDIENDO EN CUBÍCULO'
         ultimo_turno_atendiendo = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(or_(TurnoEstado.nombre == "ATENDIENDO", TurnoEstado.nombre == "ATENDIENDO EN CUBICULO"))
+            .filter(
+                or_(
+                    TurnoEstado.nombre == "EN ESPERA",
+                    TurnoEstado.nombre == "PASE A VENTANILLA",
+                    TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                )
+            )
             .filter(Turno.estatus == "A")
-            .order_by(TurnoTipo.nivel, Turno.numero)
+            .order_by(Turno.modificado.desc())
             .first()
         )
+        ultimo_turno = None
         if ultimo_turno_atendiendo:
             ultimo_turno = TurnoUnidadOut(
                 turno_id=ultimo_turno_atendiendo.id,
@@ -106,8 +110,6 @@ class ConsultarTurnos(Resource):
                     numero=ultimo_turno_atendiendo.ubicacion.numero,
                 ),
             )
-        else:
-            ultimo_turno = None
 
         # Entregar JSON
         return OneListTurnosOut(

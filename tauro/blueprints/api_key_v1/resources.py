@@ -17,19 +17,21 @@ from tauro.blueprints.api_key_v1.endpoints.consultar_unidades import ConsultarUn
 from tauro.blueprints.api_key_v1.endpoints.consultar_ubicaciones import ConsultarUbicaciones
 from tauro.blueprints.api_key_v1.endpoints.crear_turno import CrearTurno
 from tauro.blueprints.api_key_v1.endpoints.tomar_turno import TomarTurno
+from tauro.blueprints.api_key_v1.endpoints.test_conexion import TestConexion
+from tauro.blueprints.api_key_v1.endpoints.test_crear_turno import TestCrearTurno
 
 api_key_v1 = Blueprint("api_key_v1", __name__, url_prefix="/api_key/v1")
 
 # Crear la API
 api = Api(api_key_v1)
 
-# CORS
-CORS(api_key_v1)
+# Configuración de CORS
 origins = ["http://localhost:5000", "http://127.0.0.1:5000"]
 settings = get_settings()
 if settings.HOST:
     origins.append(settings.HOST)
-CORS(api_key_v1, origins=origins)
+
+CORS(api_key_v1, origins=origins, supports_credentials=True)
 
 # Agregar los recursos a la API
 api.add_resource(ActualizarTurnoEstado, "/actualizar_turno_estado")
@@ -41,3 +43,5 @@ api.add_resource(ConsultarUnidades, "/consultar_unidades")
 api.add_resource(ConsultarUbicaciones, "/consultar_ubicaciones")
 api.add_resource(CrearTurno, "/crear_turno")
 api.add_resource(TomarTurno, "/tomar_turno")
+api.add_resource(TestConexion, "/test_conexion")
+api.add_resource(TestCrearTurno, "/test_crear_turno")
