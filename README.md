@@ -1,172 +1,83 @@
-# pjecz-tauro-flask
+# 🏛️ [pjecz-tauro-flask]
 
-Sistema de Turnos
+> Aplicación Web para la administración y control de los turnos dentro del PJECZ Ciudad Judicial.
+> Proyectos relaccionados:
+> - [pjecz-tauro-reactjs](https://github.com/PJECZ/pjecz-tauro-reactjs) (Sistema _Frontend_)
+> - pjecz-casiopea (Sistema de Citas)
+> - pjecz-... (Sistema de Voceo)
 
-## Requerimientos
+---
 
-Los requerimientos son
+## 📖 Descripción General
 
-- Python 3.11
-- PostgreSQL 15
-- Redis
+El sistema contiene la parte web administrativa, que puede administrar los turnos existentes, controlar los usuarios que entran vía web y las API-Keys para los demás sistemas que quieran comunicarse con este.
+Hay dos partes tipo API una API-Oauth2 para comunicarse con el _frontend_ y otra tipo API-Key para comunicarse con otros sistemas (los sistemas de gestión).
+Puedes crear, tomar, o cambiar el estado a uno ya definido de un turno. El listado de turnos aparece en dos televisiones en el _lobby_ del edificio de ciudad judicial.
 
-## Instalación
+## 🛠️ Tecnologías Utilizadas
 
-Crear el entorno virtual
+* **Lenguaje:** Python 3.14
+* **Framework:** Flask
+* **Base de Datos:** PostgreSQL
+* **Servidor:** Nginx
+* **Otros:** SocketIO
 
-```bash
-python3.11 -m venv .venv
+## ⚙️ Requisitos Previos
+
+Lista de herramientas necesarias para correr el proyecto localmente:
+- Git
+- Python
+- uv - manejador de paquetes para Python
+
+## 🚀 Instalación y Configuración
+
+### 1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/PJECZ/pjecz-tauro-flask.git
+   cd pjecz-tauro-flask
+   ```
+
+### 2. Configurar variables de entorno:
+Copia el archivo de ejemplo y edita las credenciales necesarias (Base de datos, API Keys):
+```
+cp .env.example .env
 ```
 
-Ingresar al entorno virtual
-
+### 3. Instalar dependencias:
 ```bash
-source venv/bin/activate
+uv sync
 ```
 
-Actualizar el gestor de paquetes **pip**
-
+### 4. Iniciar el servidor de desarrollo:
 ```bash
-pip install --upgrade pip
+uv run flask run --host=0.0.0.0 --port=5020
 ```
 
-Instalar el paquete **wheel** para compilar las dependencias
+## 🌿 Estructura de Ramas
+
+Este proyecto sigue el flujo de trabajo institucional:
+- `main`: Rama de producción (Solo código estable).
+- `dev`: Rama de integración y pruebas (_Staging_).
+- `feature/*`: Ramas temporales para nuevas funcionalidades.
+
+Ver más sobre como contribuir: [CONTRIBUTING](CONTRIBUTING.md)
+
+## 🚢 Despliegue
+
+Ejecutar comando en servidor de producción después de haber integrado el PR en la rama `dev`:
 
 ```bash
-pip install wheel
+actualizar-proyecto-tauro
 ```
 
-Instalar **poetry** en el entorno virtual si no lo tiene desde el sistema operativo
+---
 
-```bash
-pip install poetry==1.8.5
-```
+## ✉️ Contacto
 
-Configurar **poetry** para que use el entorno virtual dentro del proyecto
+- **Departamento:** Dirección de Informática - PJECZ
+- **Responsable:** Dir. Guillermo Valdés, Carlos Hernández y Ricardo Valdés
+- **Email:** [correo@pjecz.gob.mx]
 
-```bash
-poetry config virtualenvs.in-project true
-```
+---
 
-Instalar las dependencias por medio de **poetry**
-
-```bash
-poetry install
-```
-
-## Configuración
-
-Crear un archivo `.env` en la raíz del proyecto con las variables, establecer sus propios SECRET_KEY, DB_PASS, CLOUD_STORAGE_DEPOSITO y SALT.
-
-```bash
-# Flask, para SECRET_KEY use openssl rand -hex 24
-FLASK_APP=tauro.app
-FLASK_DEBUG=1
-SECRET_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-# Base de datos
-DB_NAME=pjecz_tauro
-DB_PASS=XXXXXXXXXXXXXXXX
-DB_USER=adminpjecztauro
-DB_HOST=127.0.0.1
-DB_PORT=5432
-SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://adminpjecztauro:XXXXXXXXXXXXXXXX@127.0.0.1:5432/pjecz_tauro"
-
-# Host se usa por CORS en la API
-HOST=http://127.0.0.1:5000
-
-# Salt sirve para cifrar el ID con HashID, debe ser igual en la API
-SALT=XXXXXXXXXXXXXXXX
-
-# Huso horario
-TZ=America/Mexico_City
-
-# Límite de registros mostrados en el listado de turno
-LIMITE_DE_TURNOS_LISTADOS=20
-
-# Si esta en PRODUCTION se evita reiniciar la base de datos
-ENVIRONMENT=develop
-
-# Prefix para utilizar con otros sistemas. La variable ENVIRONMENT debe ser igual a: PRODUCTION
-PREFIX=
-```
-
-Crear un archivo `.bashrc` que se ejecute al iniciar la terminal
-
-```bash
-if [ -f ~/.bashrc ]
-then
-    . ~/.bashrc
-fi
-
-if command -v figlet &> /dev/null
-then
-    figlet Tauro Flask
-else
-    echo "== Tauro Flask"
-fi
-echo
-
-if [ -f .env ]
-then
-    echo "-- Variables de entorno"
-    # export $(grep -v '^#' .env | xargs)
-    source .env && export $(sed '/^#/d' .env | cut -d= -f1)
-    echo "   DB_HOST: ${DB_HOST}"
-    echo "   DB_PORT: ${DB_PORT}"
-    echo "   DB_NAME: ${DB_NAME}"
-    echo "   DB_USER: ${DB_USER}"
-    echo "   DB_PASS: ${DB_PASS}"
-    echo "   DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT}"
-    echo "   FLASK_APP: ${FLASK_APP}"
-    echo "   HOST: ${HOST}"
-    echo "   SALT: ${SALT}"
-    echo "   SECRET_KEY: ${SECRET_KEY}"
-    echo "   SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}"
-    echo
-    export PGHOST=$DB_HOST
-    export PGPORT=$DB_PORT
-    export PGDATABASE=$DB_NAME
-    export PGUSER=$DB_USER
-    export PGPASSWORD=$DB_PASS
-fi
-
-if [ -d .venv ]
-then
-    echo "-- Python Virtual Environment"
-    source .venv/bin/activate
-    echo "   $(python3 --version)"
-    export PYTHONPATH=$(pwd)
-    echo "   PYTHONPATH: ${PYTHONPATH}"
-    echo
-    echo "-- Poetry"
-    export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
-    echo "   $(poetry --version)"
-    echo
-    if [ -f cli/app.py ]
-    then
-        echo "-- Ejecutar el CLI"
-        alias cli="python3 ${PWD}/cli/app.py"
-        echo "   cli --help"
-        echo
-    fi
-    echo "-- Flask 127.0.0.1:5000"
-    alias arrancar="flask run --port=5000"
-    echo "   arrancar = flask run --port=5000"
-    echo
-fi
-```
-
-## Arrancar
-
-Antes de usar el CLI o de arrancar el servidor de **Flask** debe cargar las variables de entorno y el entorno virtual.
-
-```bash
-source .bashrc
-```
-
-Para lanzar el front-end Flask, abrir una terminal, cargar `source .bashrc` y ejecutar
-
-```bash
-arrancar
-```
+© 2026 Poder Judicial del Estado de Coahuila de Zaragoza.
