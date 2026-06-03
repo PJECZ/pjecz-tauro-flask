@@ -7,7 +7,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
-- Se añadió un estado nuevo para turnos 'PASE A VENTANILLA' entre el estado 'EN ESPERA' y 'ATENDIENDO'. Servirá para que cuando el turno se crea (EN ESPERA) y un usuario del PJECZ tome el turno, este pase a 'PASE A VENTANILLA'. Cuando llegue el cliente, el usuario presionará otro botón y el estado pasará ahora a 'ATENDIENDO'.
+- Mientras el estado del turno se encuentre el 'PASE A VENTANILLA' será voceado por el sistema de voceo.
+- Se añadió un estado nuevo para turnos 'PASE A VENTANILLA' entre el estado 'EN ESPERA' y 'ATENDIENDO'. Servirá para que cuando el turno se crea (EN ESPERA) y un cliente del PJECZ tome el turno, este pase a 'PASE A VENTANILLA'. Cuando llegue el cliente, el usuario presionará otro botón y el estado pasará ahora a 'ATENDIENDO'.
 
 
 ## [1.1.0] - 2026-05-29
