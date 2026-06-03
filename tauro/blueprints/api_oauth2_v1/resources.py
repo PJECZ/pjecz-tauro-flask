@@ -25,7 +25,7 @@ api_oauth2_v1 = Blueprint("api_oauth2_v1", __name__, url_prefix="/api_oauth2/v1"
 # Crear la API
 api = Api(api_oauth2_v1)
 
-# CORS
+# CORS para OAuth2
 CORS(api_oauth2_v1)
 origins = ["http://localhost:5000", "http://127.0.0.1:5000"]
 settings = get_settings()
