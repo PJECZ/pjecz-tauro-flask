@@ -16,13 +16,11 @@ class Mensaje(BaseModel):
     Esquema para el payload del servicio de voceo.
 
     id: Id del turno que sirve como identificador del id del voceador
-    texto: Texto que quieres que se vocee.
-    minutos: Tiempo de vida del mensaje, una vez sobrepasado se elimina del voceador.
+    mensaje: Texto que quieres que se vocee.
     """
 
     id: int
-    texto: str
-    minutos: int | None = 10
+    mensaje: str
 
 
 class MyAnyError(Exception):
@@ -51,9 +49,9 @@ class Voceador:
         :return: Una tupla con el estado de éxito (bool) y un mensaje (str).
         """
 
-        url = f"{self._settings.VOCEADOR_API_KEY_URL}/vocear"
+        url = f"{self._settings.VOCEADOR_API_KEY_URL}/hablar"
         headers = {
-            "X-API-KEY": self._settings.VOCEADOR_API_KEY,
+            # "X-API-KEY": self._settings.VOCEADOR_API_KEY,
             "Content-Type": "application/json",
         }
 
