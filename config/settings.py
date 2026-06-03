@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     TZ: str = "America/Mexico_City"
     LIMITE_DE_TURNOS_LISTADOS: int = 20
     TOKEN_OAUTH2_EXPIRES_IN_SEG: int = 24 * 60 * 60  # Un día
+    VOCEADOR_API_KEY: str = os.getenv("VOCEADOR_API_KEY", "")
+    VOCEADOR_API_KEY_URL: str = os.getenv("VOCEADOR_API_KEY_URL", "")
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     PREFIX: str = os.getenv("PREFIX", "")
 
