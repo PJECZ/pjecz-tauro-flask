@@ -34,7 +34,7 @@ class ConsultarTurnos(Resource):
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre != "PASE A VENTANILLA"))
+            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "PASE A VENTANILLA"))
             .filter(Turno.estatus == "A")
             .order_by(
                 # 1. Prioridad por estado: EN ESPERA primero (valor 0), el resto después (valor 1)
