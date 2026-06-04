@@ -3,8 +3,8 @@
 > Aplicación Web para la administración y control de los turnos dentro del PJECZ Ciudad Judicial.
 > Proyectos relaccionados:
 > - [pjecz-tauro-reactjs](https://github.com/PJECZ/pjecz-tauro-reactjs) (Sistema _Frontend_)
+> - [pjecz-columba-cli-typer](https://github.com/ricval/pjecz-columba-cli-typer) (Sistema de Voceo)
 > - pjecz-casiopea (Sistema de Citas)
-> - pjecz-... (Sistema de Voceo)
 
 ---
 
