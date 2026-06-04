@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Incluir los turnos en estado de ATENDIENDO en el último turno.
 - Añadido servicio de voceador. Se envía un mensaje al sistema de voceo o se puede indicar que lo quite de la cola de mensajes voceados.
 - Se añadió un estado nuevo para turnos 'PASE A VENTANILLA' entre el estado 'EN ESPERA' y 'ATENDIENDO'. Servirá para que cuando el turno se crea (EN ESPERA) y un cliente del PJECZ tome el turno, este pase a 'PASE A VENTANILLA'. Cuando llegue el cliente, el usuario presionará otro botón y el estado pasará ahora a 'ATENDIENDO'.
 
@@ -15,6 +16,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Variables de entorno:
   - `VOCEADOR_API_KEY`: Es la API-Key para autentificarse con el sistema voceador.
   - `VOCEADOR_API_KEY_URL`: Es la URL de la API del sistema voceador.
+
 
 ## [1.1.0] - 2026-05-29
 
