@@ -28,13 +28,19 @@ class ConsultarTurnos(Resource):
         """Consultar los turnos EN ESPERA y PASE A VENTANILLA, aquí NO SE USA el decorador porque es para pantallas"""
 
         # Consultar los turnos...
-        # - Filtrar por los estados EN ESPERA y PASE A VENTANILLA,
+        # - Filtrar por los estados EN ESPERA o PASE A VENTANILLA o ATENDIENDO,
         # - Filtrar por el estatus A (activo),
         # - Y ordenar por el nombre de tipo de turno ATENCION URGENTE, CON CITA, NORMAL y luego por el número
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "PASE A VENTANILLA"))
+            .filter(
+                or_(
+                    TurnoEstado.nombre == "EN ESPERA",
+                    TurnoEstado.nombre == "PASE A VENTANILLA",
+                    TurnoEstado.nombre == "ATENDIENDO",
+                )
+            )
             .filter(Turno.estatus == "A")
             .order_by(
                 # 1. Prioridad por estado: EN ESPERA primero (valor 0), el resto después (valor 1)
@@ -66,7 +72,7 @@ class ConsultarTurnos(Resource):
         tipos_sql = TurnoTipo.query.all()
         tipos = {tipo.id: tipo for tipo in tipos_sql}
 
-        # Consultar Último turno en estado 'EN ESPERA' o 'PASE A VENTANILLA' o 'ATENDIENDO EN CUBÍCULO'
+        # Consultar Último turno en estado 'ATENDIENDO' o 'ATENDIENDO EN CUBÍCULO'
         ultimo_turno_atendiendo = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
