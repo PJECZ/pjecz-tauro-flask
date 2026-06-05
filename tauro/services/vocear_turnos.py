@@ -61,7 +61,7 @@ class VocearTurnos:
 
         # Generar los mensajes
         for turno in turnos:
-            mensaje = self.contruir_mensaje_turno(turno, unidades[turno.unidad_id].clave)
+            mensaje = self.contruir_mensaje_turno(turno, unidades[turno.unidad_id])
 
             try:
                 respuesta, mensaje_resp = self._voceador.enviar_mensaje(mensaje)
@@ -73,14 +73,22 @@ class VocearTurnos:
 
         return True, "Mensaje enviado al voceador exitosamente"
 
-    def contruir_mensaje_turno(self, turno: Turno, unidad_clave: str) -> Mensaje:
+    def contruir_mensaje_turno(self, turno: Turno, unidad: Unidad) -> Mensaje:
         """Construye el mensaje para cada turno"""
 
-        unidad_vocear = ".".join(unidad_clave)
+        unidad_clave_deletreada = ".".join(unidad.clave)
+
+        # Si no tiene ubicación mencionar la unidad
+        texto = f"El Turno {unidad_clave_deletreada} {turno.numero}"
+
+        if turno.ubicacion.nombre == "NO DEFINIDO":
+            texto = f" {texto} pase a {unidad.nombre}"
+        else:
+            texto = f" {texto} pase a la {turno.ubicacion.nombre} número {turno.ubicacion.numero}"
 
         mensaje = Mensaje(
             id=turno.id,
-            mensaje=f"El Turno {unidad_vocear} {turno.numero} pase a la {turno.ubicacion.nombre} número {turno.ubicacion.numero}",
+            mensaje=texto,
         )
 
         return mensaje
