@@ -3,6 +3,9 @@ Servicio para conectar con la API del sistema voceador
 """
 
 import requests
+
+from datetime import datetime
+
 from requests.exceptions import RequestException
 from json.decoder import JSONDecodeError
 from typing import Tuple, Any
@@ -21,6 +24,7 @@ class Mensaje(BaseModel):
 
     id: int
     mensaje: str
+    tiempo: str = datetime.now().isoformat()
 
 
 class MyAnyError(Exception):
