@@ -21,6 +21,7 @@ from tauro.blueprints.usuarios.models import Usuario
 from tauro.blueprints.ubicaciones.models import Ubicacion
 from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
+from tauro.services.vocear_turnos import VocearTurnos
 
 from tauro.extensions import socketio
 
@@ -36,7 +37,7 @@ class CrearTurno(Resource):
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -76,7 +77,7 @@ class CrearTurno(Resource):
         # Consultar el estado de turno "EN ESPERA"
         try:
             turno_estado = TurnoEstado.query.filter_by(nombre="EN ESPERA").filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Estado de turno no encontrado",
@@ -85,7 +86,7 @@ class CrearTurno(Resource):
         # Consultar la ubicacion NO DEFINIDO
         try:
             ubicacion = Ubicacion.query.filter_by(nombre="NO DEFINIDO").filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Ubicacion no encontrada",
@@ -168,6 +169,19 @@ class CrearTurno(Resource):
 
         # Ejecutar send socket-io. Envía una variable "message" con la estructura json
         socketio.send(turno_out)
+
+        # Vocear los turnos
+        voceador_turnos = VocearTurnos()
+        try:
+            resultado, mensaje_resp = voceador_turnos.vocear_turnos()
+        except Exception as e:
+            return False, f"Ocurrió un error con el servicio de voceo: {e}"
+
+        if resultado is False:
+            return OneTurnoOut(
+                success=False,
+                message=mensaje_resp,
+            ).model_dump()
 
         # Entregar JSON
         return turno_out
