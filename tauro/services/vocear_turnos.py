@@ -73,6 +73,40 @@ class VocearTurnos:
 
         return True, "Mensaje enviado al voceador exitosamente"
 
+    def agregar_mensaje(self, turno: Turno) -> Tuple[bool, str]:
+        """
+        Agregar mensaje de turno a la lista del voceador
+        """
+        # Consultar Unidades
+        unidades_sql = Unidad.query.all()
+        unidades = {unidad.id: unidad for unidad in unidades_sql}
+
+        mensaje = self.contruir_mensaje_turno(turno, unidades[turno.unidad_id])
+
+        try:
+            respuesta, mensaje_resp = self._voceador.enviar_mensaje(mensaje)
+        except Exception as e:
+            return False, f"Ocurrió un error con el servicio de voceo: {e}"
+
+        if respuesta is False:
+            return False, f"Error con el servicio de voceador: {mensaje_resp}"
+
+        return True, "Mensaje enviado al voceador exitosamente"
+
+    def quitar_mensaje(self, turno: Turno) -> Tuple[bool, str]:
+        """
+        Quitar de la lista del voceado un turno
+        """
+        try:
+            respuesta, mensaje_resp = self._voceador.quitar_mensaje(turno.id)
+        except Exception as e:
+            return False, f"Ocurrió un error con el servicio de voceo: {e}"
+
+        if respuesta is False:
+            return False, f"Error con el servicio de voceador: {mensaje_resp}"
+
+        return True, "Mensaje eliminado del voceador exitosamente"
+
     def contruir_mensaje_turno(self, turno: Turno, unidad: Unidad) -> Mensaje:
         """Construye el mensaje para cada turno"""
 

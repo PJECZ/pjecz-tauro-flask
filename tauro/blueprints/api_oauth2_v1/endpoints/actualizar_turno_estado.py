@@ -141,7 +141,19 @@ class ActualizarTurnoEstado(Resource):
         if turno.turno_estado.nombre == "PASE A VENTANILLA":
             voceador_turnos = VocearTurnos()
             try:
-                resultado, mensaje_resp = voceador_turnos.vocear_turnos()
+                resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
+            except Exception as e:
+                return False, f"Ocurrió un error con el servicio de voceo: {e}"
+
+            if resultado is False:
+                return OneTurnoOut(
+                    success=False,
+                    message=mensaje_resp,
+                ).model_dump()
+        elif turno.turno_estado.nombre in ["ATENDIENDO", "CANCELADO"]:
+            voceador_turnos = VocearTurnos()
+            try:
+                resultado, mensaje_resp = voceador_turnos.quitar_mensaje(turno)
             except Exception as e:
                 return False, f"Ocurrió un error con el servicio de voceo: {e}"
 
