@@ -53,7 +53,7 @@ class Voceador:
         :return: Una tupla con el estado de éxito (bool) y un mensaje (str).
         """
 
-        url = f"{self._settings.VOCEADOR_API_KEY_URL}/hablar"
+        url = f"{self._settings.VOCEADOR_API_KEY_URL}/agregar"
         headers = {
             # "X-API-KEY": self._settings.VOCEADOR_API_KEY,
             "Content-Type": "application/json",
@@ -85,13 +85,14 @@ class Voceador:
         :return: Una tupla con el estado de éxito (bool) y un mensaje (str).
         """
 
-        url = f"{self._settings.VOCEADOR_API_KEY_URL}/quitar_mensaje"
+        url = f"{self._settings.VOCEADOR_API_KEY_URL}/quitar"
         headers = {
-            "X-API-KEY": self._settings.VOCEADOR_API_KEY,
+            # "X-API-KEY": self._settings.VOCEADOR_API_KEY,
+            "Content-Type": "application/json",
         }
 
         try:
-            response = requests.post(url, headers=headers, params=id, timeout=5)
+            response = requests.post(url, headers=headers, json={"id": id}, timeout=5)
             response.raise_for_status()
 
             try:
