@@ -27,6 +27,8 @@ from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
 
+from tauro.services.vocear_turnos import VocearTurnos
+
 from tauro.extensions import socketio
 
 
@@ -150,6 +152,19 @@ class TomarTurno(Resource):
 
         # Enviar mensaje socketio
         socketio.send(one_turno_out)
+
+        # Pasar a la lista de voceador
+        voceador_turnos = VocearTurnos()
+        try:
+            resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
+        except Exception as e:
+            return False, f"Ocurrió un error con el servicio de voceo: {e}"
+        # Regresa msg si falla el servicio de voceador
+        if resultado is False:
+            return OneTurnoOut(
+                success=False,
+                message=mensaje_resp,
+            ).model_dump()
 
         # Entregar JSON
         return one_turno_out

@@ -8,6 +8,7 @@ from flask import request, url_for
 from flask_restful import Resource
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
+from lib.safe_string import safe_message
 from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import (
     UnidadOut,
@@ -25,7 +26,8 @@ from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
 
-from lib.safe_string import safe_message
+from tauro.services.vocear_turnos import VocearTurnos
+
 from tauro.extensions import socketio
 
 
@@ -43,7 +45,7 @@ class ActualizarTurnoEstado(Resource):
         # Consultar el usuario
         try:
             usuario = Usuario.query.filter_by(id=actualizar_turno_estado_in.usuario_id).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -135,6 +137,29 @@ class ActualizarTurnoEstado(Resource):
 
         # Enviar mensaje vía socketio
         socketio.send(one_turno_out)
+
+        # Vocear los turnos
+        if turno.turno_estado.nombre in ["PASE A VENTANILLA", "ATENDIENDO", "CANCELADO"]:
+            resultado = False
+            mensaje_resp = ""
+            if turno.turno_estado.nombre == "PASE A VENTANILLA":
+                voceador_turnos = VocearTurnos()
+                try:
+                    resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
+                except Exception as e:
+                    return False, f"Ocurrió un error con el servicio de voceo: {e}"
+            elif turno.turno_estado.nombre in ["ATENDIENDO", "CANCELADO"]:
+                voceador_turnos = VocearTurnos()
+                try:
+                    resultado, mensaje_resp = voceador_turnos.quitar_mensaje(turno)
+                except Exception as e:
+                    return False, f"Ocurrió un error con el servicio de voceo: {e}"
+            # Si el resultado del servicio de voceador es falso
+            if resultado is False:
+                return OneTurnoOut(
+                    success=False,
+                    message=mensaje_resp,
+                ).model_dump()
 
         # Entregar JSON
         return one_turno_out

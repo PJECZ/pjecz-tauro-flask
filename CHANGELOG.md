@@ -3,6 +3,13 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [1.3.0] - 2026-06-09
+
+### ✨ Mejoras
+
+- Actualización de la integración con el sistema voceador. En `api-key` y `api-oauth2`
+
+
 ## [1.2.0] - 2026-06-05
 
 ### ✨ Mejoras
