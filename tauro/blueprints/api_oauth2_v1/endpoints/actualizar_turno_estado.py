@@ -140,7 +140,10 @@ class ActualizarTurnoEstado(Resource):
         # Vocear el turno
         if turno.turno_estado.nombre in ["PASE A VENTANILLA", "ATENDIENDO", "CANCELADO", "ATENDIENDO EN CUBICULO"]:
             voceador_turnos = VocearTurnos()
-            resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
+            try:
+                resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
+            except Exception as e:
+                pass
 
         # Entregar JSON
         return one_turno_out

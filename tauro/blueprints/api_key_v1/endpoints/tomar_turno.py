@@ -154,13 +154,7 @@ class TomarTurno(Resource):
         try:
             resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
         except Exception as e:
-            return False, f"Ocurrió un error con el servicio de voceo: {e}"
-        # Regresa msg si falla el servicio de voceador
-        if resultado is False:
-            return OneTurnoOut(
-                success=False,
-                message=mensaje_resp,
-            ).model_dump()
+            pass
 
         # Entregar JSON
         return one_turno_out
