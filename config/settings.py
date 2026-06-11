@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     VOCEADOR_API_KEY: str = os.getenv("VOCEADOR_API_KEY", "")
     VOCEADOR_API_KEY_URL: str = os.getenv("VOCEADOR_API_KEY_URL", "")
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+    CORS: str = os.getenv("CORS", "")
     PREFIX: str = os.getenv("PREFIX", "")
 
     class Config:
