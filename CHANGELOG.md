@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Añade vocear cuando el estado del turno es pasar a un cubículo.
 - Añade personalización de CORS por variables de entorno.
 
 ### 🐞 Arreglado
