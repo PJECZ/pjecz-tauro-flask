@@ -138,28 +138,10 @@ class ActualizarTurnoEstado(Resource):
         # Enviar mensaje vía socketio
         socketio.send(one_turno_out)
 
-        # Vocear los turnos
-        if turno.turno_estado.nombre in ["PASE A VENTANILLA", "ATENDIENDO", "CANCELADO"]:
-            resultado = False
-            mensaje_resp = ""
-            if turno.turno_estado.nombre == "PASE A VENTANILLA":
-                voceador_turnos = VocearTurnos()
-                try:
-                    resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
-                except Exception as e:
-                    return False, f"Ocurrió un error con el servicio de voceo: {e}"
-            elif turno.turno_estado.nombre in ["ATENDIENDO", "CANCELADO"]:
-                voceador_turnos = VocearTurnos()
-                try:
-                    resultado, mensaje_resp = voceador_turnos.quitar_mensaje(turno)
-                except Exception as e:
-                    return False, f"Ocurrió un error con el servicio de voceo: {e}"
-            # Si el resultado del servicio de voceador es falso
-            if resultado is False:
-                return OneTurnoOut(
-                    success=False,
-                    message=mensaje_resp,
-                ).model_dump()
+        # Vocear el turno
+        if turno.turno_estado.nombre in ["PASE A VENTANILLA", "ATENDIENDO", "CANCELADO", "ATENDIENDO EN CUBICULO"]:
+            voceador_turnos = VocearTurnos()
+            resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
 
         # Entregar JSON
         return one_turno_out

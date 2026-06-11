@@ -81,7 +81,11 @@ class VocearTurnos:
         unidades_sql = Unidad.query.all()
         unidades = {unidad.id: unidad for unidad in unidades_sql}
 
-        mensaje = self.contruir_mensaje_turno(turno, unidades[turno.unidad_id])
+        mensaje = ""
+        if turno.numero_cubiculo == 0:
+            mensaje = self.contruir_mensaje_turno(turno, unidades[turno.unidad_id])
+        else:
+            mensaje = self.construir_mensaje_cubiculo(turno, unidades[turno.unidad_id])
 
         try:
             respuesta, mensaje_resp = self._voceador.enviar_mensaje(mensaje)
@@ -108,7 +112,7 @@ class VocearTurnos:
         return True, "Mensaje eliminado del voceador exitosamente"
 
     def contruir_mensaje_turno(self, turno: Turno, unidad: Unidad) -> Mensaje:
-        """Construye el mensaje para cada turno"""
+        """Construye el mensaje para cada turno que pasen a una ubicación"""
 
         unidad_clave_deletreada = ".".join(unidad.clave)
 
@@ -119,6 +123,26 @@ class VocearTurnos:
             texto = f" {texto} pase a {unidad.nombre}"
         else:
             texto = f" {texto} pase a la {turno.ubicacion.nombre} número {turno.ubicacion.numero}"
+
+        mensaje = Mensaje(
+            id=turno.id,
+            mensaje=texto,
+        )
+
+        return mensaje
+
+    def construir_mensaje_cubiculo(self, turno: Turno, unidad: Unidad) -> Mensaje:
+        """Construye el mensaje para cada turno que son llamados a cubículos"""
+
+        unidad_clave_deletreada = ".".join(unidad.clave)
+
+        # Si no tiene ubicación mencionar la unidad
+        texto = f"El Turno {unidad_clave_deletreada} {turno.numero}"
+
+        if turno.numero_cubiculo == 0:
+            texto = f" {texto} pase al cubículo número {turno.numero_cubiculo}"
+        else:
+            texto = f" {texto} pase al cubículo número {turno.numero_cubiculo}"
 
         mensaje = Mensaje(
             id=turno.id,
