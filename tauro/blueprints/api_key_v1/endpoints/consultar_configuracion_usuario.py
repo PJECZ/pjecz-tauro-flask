@@ -60,11 +60,17 @@ class ConsultarConfiguracionUsuario(Resource):
                 for utt in usuarios_turnos_tipos
             ]
 
-        # Consultar el último turno en "EN ESPERA" o "PASE A VENTANILLA" del usuario
+        # Consultar el último turno en "EN ESPERA" o "PASE A VENTANILLA" o "ATENDIENDO" del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "PASE A VENTANILLA"))
+            .filter(
+                or_(
+                    TurnoEstado.nombre == "EN ESPERA",
+                    TurnoEstado.nombre == "PASE A VENTANILLA",
+                    TurnoEstado.nombre == "ATENDIENDO",
+                )
+            )
             .filter(Turno.usuario_id == usuario.id)
             .filter(Turno.estatus == "A")
             .order_by(Turno.id.desc())
