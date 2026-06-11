@@ -30,6 +30,8 @@ origins = ["http://localhost:5000", "http://127.0.0.1:5000"]
 settings = get_settings()
 if settings.HOST:
     origins.append(settings.HOST)
+if settings.CORS:
+    origins.append(settings.CORS)
 
 CORS(api_key_v1, origins=origins, supports_credentials=True)
 
