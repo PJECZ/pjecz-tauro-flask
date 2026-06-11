@@ -9,6 +9,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 - Añade personalización de CORS por variables de entorno.
 
+### 🐞 Arreglado
+
+- Enviar el último turno al cambiar el estado de un turno en el _endpoint_ API-Key `consultar_configuracion_usuario`.
+
 
 ## [1.3.0] - 2026-06-09
 
