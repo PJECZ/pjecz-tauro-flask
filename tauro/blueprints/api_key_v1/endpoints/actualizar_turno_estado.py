@@ -138,15 +138,21 @@ class ActualizarTurnoEstado(Resource):
         # Enviar mensaje vía socketio
         socketio.send(one_turno_out)
 
-        # Vocear el turno
-        if turno.turno_estado.nombre in ["PASE A VENTANILLA", "ATENDIENDO EN CUBICULO"]:
+        # Añadir al voceador el turno
+        if turno.turno_estado.nombre in ["PASE A UBICACION", "PASE A CUBICULO"]:
             voceador_turnos = VocearTurnos()
             try:
                 resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
             except Exception as e:
                 pass
         # Quitar del voceador
-        elif turno.turno_estado.nombre in ["ATENDIENDO", "EN ESPERA DE CUBICULO", "CANCELADO", "COMPLETADO"]:
+        elif turno.turno_estado.nombre in [
+            "EN ESPERA DE CUBICULO",
+            "ATENDIENDO",
+            "ATENDIENDO EN CUBICULO",
+            "CANCELADO",
+            "COMPLETADO",
+        ]:
             voceador_turnos = VocearTurnos()
             try:
                 resultado, mensaje_resp = voceador_turnos.quitar_mensaje(turno)
