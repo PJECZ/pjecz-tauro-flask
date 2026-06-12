@@ -3,13 +3,15 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [1.4.0] - 2026-06-12
+## [1.3.0] - 2026-06-12 (Aún en desarrollo)
 
 ### ✨ Mejoras
 
 - Nuevo estado de turno añadido: `ATENDIENDO EN CUBICULO`.
 - Añade vocear cuando el estado del turno es pasar a un cubículo. "PASE A VENTANILLA", "ATENDIENDO EN CUBICULO".
 - Añade personalización de CORS por variables de entorno.
+- Actualización de la integración con el sistema voceador. En `api-key` y `api-oauth2`.
+- Se muestra el número de versión del proyecto en la vista admin.
 
 ### ✏️ Cambios
 
@@ -23,13 +25,6 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### ⚙️ Requerimiento
 
 - Añadir nuevos tipos de estado turnos: `PASE A UBICACION` = 7, `PASE A CUBICULO` = 8.
-
-
-## [1.3.0] - 2026-06-09
-
-### ✨ Mejoras
-
-- Actualización de la integración con el sistema voceador. En `api-key` y `api-oauth2`
 
 
 ## [1.2.0] - 2026-06-05
