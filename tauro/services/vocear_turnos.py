@@ -114,7 +114,10 @@ class VocearTurnos:
     def contruir_mensaje_turno(self, turno: Turno, unidad: Unidad) -> Mensaje:
         """Construye el mensaje para cada turno que pasen a una ubicación"""
 
-        unidad_clave_deletreada = ".".join(unidad.clave)
+        if unidad.pronunciacion:
+            unidad_clave_deletreada = unidad.pronunciacion
+        else:
+            unidad_clave_deletreada = ".".join(unidad.clave)
 
         # Si no tiene ubicación mencionar la unidad
         texto = f"El Turno {unidad_clave_deletreada} {turno.numero}"
@@ -134,7 +137,10 @@ class VocearTurnos:
     def construir_mensaje_cubiculo(self, turno: Turno, unidad: Unidad) -> Mensaje:
         """Construye el mensaje para cada turno que son llamados a cubículos"""
 
-        unidad_clave_deletreada = ".".join(unidad.clave)
+        if unidad.pronunciacion:
+            unidad_clave_deletreada = unidad.pronunciacion
+        else:
+            unidad_clave_deletreada = ".".join(unidad.clave)
 
         # Si no tiene ubicación mencionar la unidad
         texto = f"El Turno {unidad_clave_deletreada} {turno.numero}"
