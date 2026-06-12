@@ -23,6 +23,7 @@
     {% call detail.card(estatus=unidad.estatus) %}
         {{ detail.label_value_big('Clave', unidad.clave) }}
         {{ detail.label_value('Nombre', unidad.nombre) }}
+        {{ detail.label_value('Pronunciación', unidad.pronunciacion) }}
         {{ detail.label_value_boolean('Activo', unidad.es_activo) }}
     {% endcall %}
     {# Listado de Usuarios #}

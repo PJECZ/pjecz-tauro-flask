@@ -2,7 +2,7 @@
 Unidades, modelos
 """
 
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,6 +23,7 @@ class Unidad(database.Model, UniversalMixin):
     # Columnas
     clave: Mapped[str] = mapped_column(String(16), unique=True)
     nombre: Mapped[str] = mapped_column(String(256))
+    pronunciacion: Mapped[Optional[str]] = mapped_column(String(32))
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos

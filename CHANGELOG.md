@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Las unidades ahora incluyen un campo nuevo para indicar cómo pronunciarlo.
 - Nuevo estado de turno añadido: `ATENDIENDO EN CUBICULO`.
 - Añade vocear cuando el estado del turno es pasar a un cubículo. "PASE A VENTANILLA", "ATENDIENDO EN CUBICULO".
 - Añade personalización de CORS por variables de entorno.
@@ -24,6 +25,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ⚙️ Requerimiento
 
+- Ejecutar SQL:
+  - Añadir campo nuevo `pronunciacion` a la tabla `unidades`: `v1.3.0-01-add-campo-unidades.sql`.
 - Añadir nuevos tipos de estado turnos: `PASE A UBICACION` = 7, `PASE A CUBICULO` = 8.
 
 
