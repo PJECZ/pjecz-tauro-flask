@@ -7,13 +7,22 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Nuevo estado de turno añadido: `ATENDIENDO EN CUBICULO`.
 - Añade vocear cuando el estado del turno es pasar a un cubículo. "PASE A VENTANILLA", "ATENDIENDO EN CUBICULO".
 - Añade personalización de CORS por variables de entorno.
+
+### ✏️ Cambios
+
+- Se cambio el estado del turno: `PASE A VENTANILLA` a `PASE A UBICACION`.
 
 ### 🐞 Arreglado
 
 - Enviar el último turno al cambiar el estado de un turno en el _endpoint_ API-Key `consultar_configuracion_usuario`.
 - Quitar del voceador cuando se cambien a ciertos estados el turno. "ATENDIENDO", "EN ESPERA DE CUBICULO", "CANCELADO", "COMPLETADO".
+
+### ⚙️ Requerimiento
+
+- Añadir nuevos tipos de estado turnos: `PASE A UBICACION` = 7, `PASE A CUBICULO` = 8.
 
 
 ## [1.3.0] - 2026-06-09

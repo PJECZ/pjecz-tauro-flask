@@ -139,10 +139,10 @@ class VocearTurnos:
         # Si no tiene ubicación mencionar la unidad
         texto = f"El Turno {unidad_clave_deletreada} {turno.numero}"
 
-        if turno.numero_cubiculo == 0:
+        if turno.numero_cubiculo:
             texto = f" {texto} pase al cubículo número {turno.numero_cubiculo}"
         else:
-            texto = f" {texto} pase al cubículo número {turno.numero_cubiculo}"
+            texto = f" {texto} pase al cubículo"
 
         mensaje = Mensaje(
             id=turno.id,
