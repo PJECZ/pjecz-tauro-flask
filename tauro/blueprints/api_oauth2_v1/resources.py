@@ -31,6 +31,8 @@ origins = ["http://localhost:5000", "http://127.0.0.1:5000"]
 settings = get_settings()
 if settings.HOST:
     origins.append(settings.HOST)
+if settings.CORS:
+    origins.extend(settings.CORS.split(","))
 CORS(api_oauth2_v1, origins=origins)
 
 # Agregar los recursos a la API

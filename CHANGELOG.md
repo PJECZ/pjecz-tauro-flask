@@ -3,7 +3,7 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [1.3.0] - 2026-06-12 (Aún en desarrollo)
+## [1.3.0] - 2026-06-15 (Aún en desarrollo)
 
 ### ✨ Mejoras
 
@@ -20,6 +20,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### 🐞 Arreglado
 
+- La variable de entorno `CORS` ahora aceptar varios dominios separados por comas.
 - Enviar el último turno al cambiar el estado de un turno en el _endpoint_ API-Key `consultar_configuracion_usuario`.
 - Quitar del voceador cuando se cambien a ciertos estados el turno. "ATENDIENDO", "EN ESPERA DE CUBICULO", "CANCELADO", "COMPLETADO".
 
