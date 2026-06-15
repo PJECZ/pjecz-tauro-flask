@@ -31,7 +31,7 @@ settings = get_settings()
 if settings.HOST:
     origins.append(settings.HOST)
 if settings.CORS:
-    origins.append(settings.CORS)
+    origins.extend(settings.CORS.split(","))
 
 CORS(api_key_v1, origins=origins, supports_credentials=True)
 
