@@ -120,7 +120,7 @@ class VocearTurnos:
             unidad_clave_deletreada = ".".join(unidad.clave)
 
         # Si no tiene ubicación mencionar la unidad
-        texto = f"El Turno {unidad_clave_deletreada} {turno.numero}"
+        texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}"
 
         if turno.ubicacion.nombre == "NO DEFINIDO":
             texto = f" {texto} pase a {unidad.nombre}"
@@ -143,7 +143,7 @@ class VocearTurnos:
             unidad_clave_deletreada = ".".join(unidad.clave)
 
         # Si no tiene ubicación mencionar la unidad
-        texto = f"El Turno {unidad_clave_deletreada} {turno.numero}"
+        texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}"
 
         if turno.numero_cubiculo:
             texto = f" {texto} pase al cubículo número {turno.numero_cubiculo}"

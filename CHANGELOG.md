@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- La entrega de turnos por unidad también incluye los turnos en los nuevos estados.
 - Las unidades ahora incluyen un campo nuevo para indicar cómo pronunciarlo.
 - Nuevo estado de turno añadido: `ATENDIENDO EN CUBICULO`.
 - Añade vocear cuando el estado del turno es pasar a un cubículo. "PASE A VENTANILLA", "ATENDIENDO EN CUBICULO".
@@ -17,6 +18,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### ✏️ Cambios
 
 - Se cambio el estado del turno: `PASE A VENTANILLA` a `PASE A UBICACION`.
+- La pronunciación de la palabra 'Turno' no se oía bien, así que optamos por decir 'turrno'.
 
 ### 🐞 Arreglado
 
