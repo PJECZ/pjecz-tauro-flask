@@ -18,6 +18,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### ✏️ Cambios
 
 - Se cambio el estado del turno: `PASE A VENTANILLA` a `PASE A UBICACION`.
+- La pronunciación de la palabra 'Turno' no se oía bien, así que optamos por decir 'turrno'.
 
 ### 🐞 Arreglado
 
