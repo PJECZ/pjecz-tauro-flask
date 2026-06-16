@@ -22,24 +22,21 @@ from tauro.blueprints.unidades.models import Unidad
 
 
 class ConsultarTurnos(Resource):
-    """Consultar los turnos EN ESPERA y PASE A VENTANILLA"""
+    """Consultar los turnos en todos los estados menos CANCELADO y COMPLETADO"""
 
     def get(self) -> OneListTurnosOut:
-        """Consultar los turnos EN ESPERA y PASE A VENTANILLA, aquí NO SE USA el decorador porque es para pantallas"""
+        """Consultar los turnos aquí NO SE USA el decorador porque es para pantallas"""
 
         # Consultar los turnos...
-        # - Filtrar por los estados EN ESPERA o PASE A VENTANILLA o ATENDIENDO,
+        # - Filtrar por los estados que no sean: COMPLETADO y CANCELADO,
         # - Filtrar por el estatus A (activo),
         # - Y ordenar por el nombre de tipo de turno ATENCION URGENTE, CON CITA, NORMAL y luego por el número
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
             .filter(
-                or_(
-                    TurnoEstado.nombre == "EN ESPERA",
-                    TurnoEstado.nombre == "PASE A VENTANILLA",
-                    TurnoEstado.nombre == "ATENDIENDO",
-                )
+                TurnoEstado.nombre != "COMPLETADO",
+                TurnoEstado.nombre != "CANCELADO",
             )
             .filter(Turno.estatus == "A")
             .order_by(
