@@ -79,6 +79,8 @@ class ConsultarTurnosUnidad(Resource):
                 or_(
                     TurnoEstado.nombre == "ATENDIENDO",
                     TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                    TurnoEstado.nombre == "PASE A UBICACION",
+                    TurnoEstado.nombre == "PASE A CUBICULO",
                 )
             )
             .filter(Turno.estatus == "A")
