@@ -25,7 +25,6 @@ from tauro.blueprints.turnos_estados.models import TurnoEstado
 from tauro.blueprints.api_v1.schemas import OneTurnoOut, TurnoOut, TurnoEstadoOut, TurnoTipoOut, UbicacionOut, UnidadOut
 from tauro.extensions import socketio
 
-
 MODULO = "TURNOS"
 
 turnos = Blueprint("turnos", __name__, template_folder="templates")
@@ -100,11 +99,12 @@ def datatable_json():
                 },
                 "ubicacion": {
                     "nombre": (
-                        resultado.ubicacion.nombre + f"{ - resultado.ubicacion.numero}"
+                        resultado.ubicacion.nombre + f" - {resultado.ubicacion.numero}"
                         if resultado.ubicacion.numero is not None
                         else ""
                     ),
                     "url": url_for("ubicaciones.detail", ubicacion_id=resultado.ubicacion_id),
+                    "cubiculo": (f"CUBÍCULO - {resultado.numero_cubiculo}" if resultado.numero_cubiculo > 0 else ""),
                 },
             }
         )
