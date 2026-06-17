@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Añadida nueva columna de cubículo en listado de turnos.
 - Nuevos estados de turnos entran en la entrega del último turno.
 - La entrega de turnos por unidad también incluye los turnos en los nuevos estados.
 - Las unidades ahora incluyen un campo nuevo para indicar cómo pronunciarlo.
