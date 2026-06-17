@@ -69,7 +69,7 @@ class ConsultarTurnos(Resource):
         tipos_sql = TurnoTipo.query.all()
         tipos = {tipo.id: tipo for tipo in tipos_sql}
 
-        # Consultar Último turno en estado 'ATENDIENDO' o 'ATENDIENDO EN CUBÍCULO'
+        # Consultar Último turno
         ultimo_turno_atendiendo = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
@@ -77,10 +77,12 @@ class ConsultarTurnos(Resource):
                 or_(
                     TurnoEstado.nombre == "ATENDIENDO",
                     TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                    TurnoEstado.nombre == "PASE A UBICACION",
+                    TurnoEstado.nombre == "PASE A CUBICULO",
                 )
             )
             .filter(Turno.estatus == "A")
-            .order_by(Turno.modificado.desc())
+            .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
         )
         ultimo_turno = None
