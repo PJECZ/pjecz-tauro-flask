@@ -3,10 +3,11 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [1.3.0] - 2026-06-17 (Aún en desarrollo)
+## [1.3.0] - 2026-06-29 (Aún en desarrollo)
 
 ### ✨ Mejoras
 
+- Mejora en texto para una pronunciación más clara.
 - Añadida nueva columna de cubículo en listado de turnos.
 - Nuevos estados de turnos entran en la entrega del último turno.
 - La entrega de turnos por unidad también incluye los turnos en los nuevos estados.

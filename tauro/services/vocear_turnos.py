@@ -120,12 +120,12 @@ class VocearTurnos:
             unidad_clave_deletreada = ".".join(unidad.clave)
 
         # Si no tiene ubicación mencionar la unidad
-        texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}"
+        texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}."
 
         if turno.ubicacion.nombre == "NO DEFINIDO":
-            texto = f" {texto} pase a {unidad.nombre}"
+            texto = f" {texto} Ppase a {unidad.nombre}"
         else:
-            texto = f" {texto} pase a la {turno.ubicacion.nombre} número {turno.ubicacion.numero}"
+            texto = f" {texto} Ppase a la {turno.ubicacion.nombre} número {turno.ubicacion.numero}"
 
         mensaje = Mensaje(
             id=turno.id,
@@ -143,12 +143,12 @@ class VocearTurnos:
             unidad_clave_deletreada = ".".join(unidad.clave)
 
         # Si no tiene ubicación mencionar la unidad
-        texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}"
+        texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}."
 
         if turno.numero_cubiculo:
-            texto = f" {texto} pase al cubículo número {turno.numero_cubiculo}"
+            texto = f" {texto} Ppase al cubículo número {turno.numero_cubiculo}"
         else:
-            texto = f" {texto} pase al cubículo"
+            texto = f" {texto} Ppase al cubículo"
 
         mensaje = Mensaje(
             id=turno.id,
