@@ -15,7 +15,8 @@
             {% call f.form_group(form.clave) %}{% endcall %}
             {% call f.form_group(form.nombre) %}{% endcall %}
             {% call f.form_group(form.pronunciacion) %}{% endcall %}
-            <small>Utilice puntos para deletrear las palabras</small>
+            <small class="text-secondary mb-8">Utilice puntos para deletrear las palabras</small>
+            {% call f.form_group(form.es_voceable) %}{% endcall %}
             {% call f.form_group(form.es_activo) %}{% endcall %}
             {% call f.form_group(form.guardar) %}{% endcall %}
         {% endcall %}

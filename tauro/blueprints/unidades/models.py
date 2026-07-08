@@ -24,6 +24,7 @@ class Unidad(database.Model, UniversalMixin):
     clave: Mapped[str] = mapped_column(String(16), unique=True)
     nombre: Mapped[str] = mapped_column(String(256))
     pronunciacion: Mapped[Optional[str]] = mapped_column(String(32))
+    es_voceable: Mapped[bool] = mapped_column(default=False)
     es_activo: Mapped[bool] = mapped_column(default=True)
 
     # Hijos

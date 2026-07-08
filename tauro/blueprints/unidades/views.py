@@ -64,6 +64,7 @@ def datatable_json():
                     "url": url_for("unidades.detail", unidad_id=resultado.id),
                 },
                 "nombre": resultado.nombre,
+                "es_voceable": resultado.es_voceable,
                 "es_activo": resultado.es_activo,
             }
         )
@@ -117,6 +118,7 @@ def new():
             clave=safe_clave(form.clave.data),
             nombre=safe_string(form.nombre.data),
             pronunciacion=safe_message(form.pronunciacion.data, default_output_str=None),
+            es_voceable=form.es_voceable.data,
             es_activo=form.es_activo.data,
         )
         unidad.save()
@@ -129,6 +131,7 @@ def new():
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
+    form.es_voceable.data = True
     form.es_activo.data = True
     return render_template("unidades/new.jinja2", form=form)
 
@@ -153,6 +156,7 @@ def edit(unidad_id):
             unidad.clave = safe_clave(form.clave.data)
             unidad.nombre = safe_string(form.nombre.data)
             unidad.pronunciacion = safe_message(form.pronunciacion.data, default_output_str=None)
+            unidad.es_voceable = form.es_voceable.data
             unidad.es_activo = form.es_activo.data
             unidad.save()
             bitacora = Bitacora(
@@ -167,6 +171,7 @@ def edit(unidad_id):
     form.clave.data = unidad.clave
     form.nombre.data = unidad.nombre
     form.pronunciacion.data = unidad.pronunciacion
+    form.es_voceable.data = unidad.es_voceable
     form.es_activo.data = unidad.es_activo
     return render_template("unidades/edit.jinja2", form=form, unidad=unidad)
 
