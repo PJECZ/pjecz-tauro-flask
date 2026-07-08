@@ -29,50 +29,6 @@ class VocearTurnos:
         """Constructor: Inicializa variables"""
         self._voceador = Voceador(get_settings())
 
-    def vocear_turnos(self) -> Tuple[bool, str]:
-        """
-        Lógica de que mensajes enviar al servicio de voceador
-
-        Vocear los turnos es estado de 'PASE A VENTANILLA'.
-        """
-
-        # Consultar los turnos a vocear
-        turnos = (
-            Turno.query.join(TurnoEstado)
-            .join(TurnoTipo)
-            .filter(TurnoEstado.nombre == "PASE A VENTANILLA")
-            .filter(Turno.estatus == "A")
-            .order_by(
-                # 1. Prioridad por estado: PASE A VENTANILLA primero (valor 0), el resto después (valor 1)
-                case((TurnoEstado.nombre == "PASE A VENTANILLA", 0), else_=1),
-                # 2. Dentro de cada grupo, ordenar por número de turno
-                Turno.numero,
-            )
-            .all()
-        )
-
-        # Si no se encuentran turnos
-        if not turnos:
-            return True, "No hay turnos que anunciar"
-
-        # Consultar Unidades
-        unidades_sql = Unidad.query.all()
-        unidades = {unidad.id: unidad for unidad in unidades_sql}
-
-        # Generar los mensajes
-        for turno in turnos:
-            mensaje = self.contruir_mensaje_turno(turno, unidades[turno.unidad_id])
-
-            try:
-                respuesta, mensaje_resp = self._voceador.enviar_mensaje(mensaje)
-            except Exception as e:
-                return False, f"Ocurrió un error con el servicio de voceo: {e}"
-
-            if respuesta is False:
-                return False, f"Error con el servicio de voceador: {mensaje_resp}"
-
-        return True, "Mensaje enviado al voceador exitosamente"
-
     def agregar_mensaje(self, turno: Turno) -> Tuple[bool, str]:
         """
         Agregar mensaje de turno a la lista del voceador
@@ -81,11 +37,17 @@ class VocearTurnos:
         unidades_sql = Unidad.query.all()
         unidades = {unidad.id: unidad for unidad in unidades_sql}
 
+        # Validar si la unidad tiene activo el vocear
+        unidad_turno = unidades[turno.unidad_id]
+        if unidad_turno == 0 or unidad_turno is None or unidad_turno.es_voceable is False:
+            return True, f"La unidad {unidad_turno.clave} no es voceable"
+
+        # Construir mensaje voceable
         mensaje = ""
         if turno.numero_cubiculo == 0:
-            mensaje = self.contruir_mensaje_turno(turno, unidades[turno.unidad_id])
+            mensaje = self.contruir_mensaje_turno(turno, unidad_turno)
         else:
-            mensaje = self.construir_mensaje_cubiculo(turno, unidades[turno.unidad_id])
+            mensaje = self.construir_mensaje_cubiculo(turno, unidad_turno)
 
         try:
             respuesta, mensaje_resp = self._voceador.enviar_mensaje(mensaje)
