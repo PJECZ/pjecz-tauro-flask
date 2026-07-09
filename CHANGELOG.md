@@ -3,12 +3,12 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [1.3.0] - 2026-07-08 (Aún en desarrollo)
+## [1.3.0] - 2026-07-09 (Aún en desarrollo)
 
 ### ✨ Mejoras
 
-- Añadir campo `es_voceable` a la tabla `unidades`. Para activar/desactivar el voceo de los turnos de la unidad indicada.
 - Mejora en texto para una pronunciación más clara.
+- Añadir campo `es_voceable` a la tabla `unidades`. Para activar/desactivar el voceo de los turnos de la unidad indicada.
 - Añadida nueva columna de cubículo en listado de turnos.
 - Nuevos estados de turnos entran en la entrega del último turno.
 - La entrega de turnos por unidad también incluye los turnos en los nuevos estados.
