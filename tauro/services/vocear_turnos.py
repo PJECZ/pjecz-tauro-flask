@@ -85,9 +85,9 @@ class VocearTurnos:
         texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}."
 
         if turno.ubicacion.nombre == "NO DEFINIDO":
-            texto = f" {texto} Ppase a {unidad.nombre}"
+            texto = f" {texto} Pase a {unidad.nombre}"
         else:
-            texto = f" {texto} Ppase a la {turno.ubicacion.nombre} número {turno.ubicacion.numero}"
+            texto = f" {texto} Pase a la {turno.ubicacion.nombre} número {turno.ubicacion.numero}"
 
         mensaje = Mensaje(
             id=turno.id,
@@ -108,9 +108,9 @@ class VocearTurnos:
         texto = f"El Turrno {unidad_clave_deletreada} {turno.numero}."
 
         if turno.numero_cubiculo:
-            texto = f" {texto} Ppase al cubículo número {turno.numero_cubiculo}"
+            texto = f" {texto} Pase al cubículo número {turno.numero_cubiculo}"
         else:
-            texto = f" {texto} Ppase al cubículo"
+            texto = f" {texto} Pase al cubículo"
 
         mensaje = Mensaje(
             id=turno.id,
