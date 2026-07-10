@@ -44,7 +44,7 @@ class ActualizarUsuario(Resource):
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
-        except MultipleResultsFound, NoResultFound:
+        except (MultipleResultsFound, NoResultFound):
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -141,16 +141,25 @@ class ActualizarUsuario(Resource):
                 numero=ubicacion_sql.numero,
             )
 
-        # Consultar el último turno en "EN ESPERA" o "PASE A VENTANILLA" del usuario
+        # Consultar el último turno del usuario
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "PASE A VENTANILLA"))
+            .filter(
+                or_(
+                    TurnoEstado.nombre == "ATENDIENDO",
+                    TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                    TurnoEstado.nombre == "PASE A UBICACION",
+                    TurnoEstado.nombre == "PASE A CUBICULO",
+                )
+            )
+            .filter(Turno.estatus == "A")
             .filter(Turno.usuario_id == usuario.id)
-            .order_by(Turno.id.desc())
+            .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
         )
         ultimo_turno = None
+
         if turnos:
             # Consultar la unidad
             unidad_usuario = Unidad.query.get(turnos.unidad_id)
@@ -185,7 +194,7 @@ class ActualizarUsuario(Resource):
                 unidad=unidad_out,
             )
 
-        # # Extraer un único rol
+        # Extraer un único rol
         usuarios_roles = UsuarioRol.query.filter_by(usuario_id=usuario.id).filter_by(estatus="A").first()
         if usuarios_roles is None:
             return OneConfiguracionUsuarioOut(

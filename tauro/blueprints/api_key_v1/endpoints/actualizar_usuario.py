@@ -13,6 +13,7 @@ from tauro.blueprints.api_key_v1.endpoints.autenticar import api_key_required
 from tauro.blueprints.api_v1.schemas import (
     TurnoTipoOut,
     TurnoOut,
+    TurnoEstadoOut,
     UbicacionOut,
     UnidadOut,
     RolOut,
@@ -46,7 +47,7 @@ class ActualizarUsuario(Resource):
         # Consultar el usuario
         try:
             usuario = Usuario.query.filter_by(id=actualizar_usuario_in.usuario_id).filter_by(estatus="A").one()
-        except MultipleResultsFound, NoResultFound:
+        except (MultipleResultsFound, NoResultFound):
             return OneConfiguracionUsuarioOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -147,18 +148,28 @@ class ActualizarUsuario(Resource):
                 numero=ubicacion_sql.numero,
             )
 
-        # Consultar el último turno en "EN ESPERA" o "PASE A VENTANILLA" del usuario
-        turnos = (
+        # Consultar el último turno del usuario
+        turno = (
             Turno.query.join(TurnoEstado)
-            .filter(or_(TurnoEstado.nombre == "EN ESPERA", TurnoEstado.nombre == "PASE A VENTANILLA"))
+            .join(TurnoTipo)
+            .filter(
+                or_(
+                    TurnoEstado.nombre == "ATENDIENDO",
+                    TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                    TurnoEstado.nombre == "PASE A UBICACION",
+                    TurnoEstado.nombre == "PASE A CUBICULO",
+                )
+            )
+            .filter(Turno.estatus == "A")
             .filter(Turno.usuario_id == usuario.id)
-            .order_by(Turno.id.desc())
+            .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
         )
         ultimo_turno = None
-        if turnos:
+
+        if turno:
             # Consultar la unidad
-            unidad = Unidad.query.get(turnos.unidad_id)
+            unidad = Unidad.query.get(turno.unidad_id)
             # Extraer la unidad
             unidad_out = None
             if unidad:
@@ -168,18 +179,25 @@ class ActualizarUsuario(Resource):
                     nombre=unidad.nombre,
                 )
             ultimo_turno = TurnoOut(
-                turno_id=turnos.id,
-                turno_numero=turnos.numero,
-                turno_fecha=turnos.creado.isoformat(),
-                turno_estado=turnos.turno_estado.nombre,
-                turno_tipo_id=turnos.turno_tipo.id,
-                turno_telefono=turnos.telefono,
-                turno_numero_cubiculo=turnos.numero_cubiculo,
-                turno_comentarios=turnos.comentarios,
+                turno_id=turno.id,
+                turno_numero=turno.numero,
+                turno_fecha=turno.creado.isoformat(),
+                turno_estado=TurnoEstadoOut(
+                    id=turno.turno_estado.id,
+                    nombre=turno.turno_estado.nombre,
+                ),
+                turno_tipo=TurnoTipoOut(
+                    id=turno.turno_tipo.id,
+                    nombre=turno.turno_tipo.nombre,
+                    nivel=turno.turno_tipo.nivel,
+                ),
+                turno_telefono=turno.telefono,
+                turno_numero_cubiculo=turno.numero_cubiculo,
+                turno_comentarios=turno.comentarios,
                 ubicacion=UbicacionOut(
-                    id=turnos.ubicacion.id,
-                    nombre=turnos.ubicacion.nombre,
-                    numero=turnos.ubicacion.numero,
+                    id=turno.ubicacion.id,
+                    nombre=turno.ubicacion.nombre,
+                    numero=turno.ubicacion.numero,
                 ),
                 unidad=unidad_out,
             )

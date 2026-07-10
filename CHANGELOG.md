@@ -26,6 +26,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### 🐞 Arreglado
 
+- Corrección del objeto `JSON` entregado por el _endpoint_ `actualizar_usaurio`. No regresaba el último turno correcto.
 - La variable de entorno `CORS` ahora aceptar varios dominios separados por comas.
 - Enviar el último turno al cambiar el estado de un turno en el _endpoint_ API-Key `consultar_configuracion_usuario`.
 - Quitar del voceador cuando se cambien a ciertos estados el turno. "ATENDIENDO", "EN ESPERA DE CUBICULO", "CANCELADO", "COMPLETADO".
