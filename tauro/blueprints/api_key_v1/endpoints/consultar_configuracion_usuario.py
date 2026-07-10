@@ -60,26 +60,28 @@ class ConsultarConfiguracionUsuario(Resource):
                 for utt in usuarios_turnos_tipos
             ]
 
-        # Consultar el último turno en "EN ESPERA" o "PASE A VENTANILLA" o "ATENDIENDO" del usuario
-        turnos = (
+        # Consultar el último turno del usuario
+        turno = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
             .filter(
                 or_(
-                    TurnoEstado.nombre == "EN ESPERA",
-                    TurnoEstado.nombre == "PASE A VENTANILLA",
                     TurnoEstado.nombre == "ATENDIENDO",
+                    TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                    TurnoEstado.nombre == "PASE A UBICACION",
+                    TurnoEstado.nombre == "PASE A CUBICULO",
                 )
             )
-            .filter(Turno.usuario_id == usuario.id)
             .filter(Turno.estatus == "A")
-            .order_by(Turno.id.desc())
+            .filter(Turno.usuario_id == usuario.id)
+            .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
         )
         ultimo_turno = None
-        if turnos:
+
+        if turno:
             # Consultar la unidad
-            unidad = Unidad.query.get(turnos.unidad_id)
+            unidad = Unidad.query.get(turno.unidad_id)
             # Extraer la unidad
             unidad_out = None
             if unidad is not None:
@@ -90,25 +92,25 @@ class ConsultarConfiguracionUsuario(Resource):
                 )
 
             ultimo_turno = TurnoOut(
-                turno_id=turnos.id,
-                turno_numero=turnos.numero,
-                turno_fecha=turnos.creado.isoformat(),
-                turno_numero_cubiculo=turnos.numero_cubiculo,
-                turno_telefono=turnos.telefono,
-                turno_comentarios=turnos.comentarios,
+                turno_id=turno.id,
+                turno_numero=turno.numero,
+                turno_fecha=turno.creado.isoformat(),
+                turno_numero_cubiculo=turno.numero_cubiculo,
+                turno_telefono=turno.telefono,
+                turno_comentarios=turno.comentarios,
                 turno_estado=TurnoEstadoOut(
-                    id=turnos.turno_estado.id,
-                    nombre=turnos.turno_estado.nombre,
+                    id=turno.turno_estado.id,
+                    nombre=turno.turno_estado.nombre,
                 ),
                 turno_tipo=TurnoTipoOut(
-                    id=turnos.turno_tipo.id,
-                    nombre=turnos.turno_tipo.nombre,
-                    nivel=turnos.turno_tipo.nivel,
+                    id=turno.turno_tipo.id,
+                    nombre=turno.turno_tipo.nombre,
+                    nivel=turno.turno_tipo.nivel,
                 ),
                 ubicacion=UbicacionOut(
-                    id=turnos.ubicacion.id,
-                    nombre=turnos.ubicacion.nombre,
-                    numero=turnos.ubicacion.numero,
+                    id=turno.ubicacion.id,
+                    nombre=turno.ubicacion.nombre,
+                    numero=turno.ubicacion.numero,
                 ),
                 unidad=unidad_out,
             )
