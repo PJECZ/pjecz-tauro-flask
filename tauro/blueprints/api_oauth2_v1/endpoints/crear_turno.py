@@ -36,7 +36,7 @@ class CrearTurno(Resource):
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -76,7 +76,7 @@ class CrearTurno(Resource):
         # Consultar el estado de turno "EN ESPERA"
         try:
             turno_estado = TurnoEstado.query.filter_by(nombre="EN ESPERA").filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Estado de turno no encontrado",
@@ -85,7 +85,7 @@ class CrearTurno(Resource):
         # Consultar la ubicacion NO DEFINIDO
         try:
             ubicacion = Ubicacion.query.filter_by(nombre="NO DEFINIDO").filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Ubicacion no encontrada",

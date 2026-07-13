@@ -138,10 +138,17 @@
                 }
             },
             {
-                targets: [4, 5], // unidad, ubicacion
+                targets: 4, // unidad
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.nombre + '</a>';
+                }
+            },
+            {
+                targets: 5, // ubicacion
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.nombre + '</a><br />' + data.cubiculo;
                 }
             },
             {

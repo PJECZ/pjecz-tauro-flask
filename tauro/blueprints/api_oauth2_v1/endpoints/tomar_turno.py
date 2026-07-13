@@ -27,6 +27,8 @@ from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.bitacoras.models import Bitacora
 from tauro.blueprints.modulos.models import Modulo
 
+from tauro.services.vocear_turnos import VocearTurnos
+
 from tauro.extensions import socketio
 
 
@@ -82,16 +84,16 @@ class TomarTurno(Resource):
                 message="No hay turnos en espera",
             ).model_dump()
 
-        # Consultar el estado de turno "PASE A VENTANILLA"
+        # Consultar el estado de turno "PASE A UBICACION"
         try:
-            turno_estado = TurnoEstado.query.filter_by(nombre="PASE A VENTANILLA").one()
+            turno_estado = TurnoEstado.query.filter_by(nombre="PASE A UBICACION").one()
         except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Estado de turno no encontrado",
             ).model_dump()
 
-        # Cambiar el usuario, el estado a "PASE A VENTANILLA" y la ubicación, así como el tiempo de inicio
+        # Cambiar el usuario, el estado a "PASE A UBICACION" y la ubicación, así como el tiempo de inicio
         turno.usuario_id = usuario.id
         turno.turno_estado_id = turno_estado.id
         turno.ubicacion_id = usuario.ubicacion_id
@@ -150,6 +152,13 @@ class TomarTurno(Resource):
 
         # Enviar mensaje socketio
         socketio.send(one_turno_out)
+
+        # Pasar a la lista de voceador
+        voceador_turnos = VocearTurnos()
+        try:
+            resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
+        except Exception as e:
+            pass
 
         # Entregar JSON
         return one_turno_out

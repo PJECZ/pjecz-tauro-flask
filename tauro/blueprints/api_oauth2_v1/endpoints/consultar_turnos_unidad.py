@@ -22,10 +22,10 @@ from tauro.blueprints.unidades.models import Unidad
 
 
 class ConsultarTurnosUnidad(Resource):
-    """Consultar los turnos EN ESPERA y PASE A VENTANILLA de una unidad"""
+    """Consultar los turnos en todos los estados menos CANCELADO y COMPLETADO por unidad"""
 
     def get(self, unidad_id: int) -> OneUnidadTurnosOut:
-        """Consultar los turnos EN ESPERA y PASE A VENTANILLA de una unidad, aquí NO SE USA el decorador porque es para pantallas"""
+        """Consultar los turnos de una unidad, aquí NO SE USA el decorador porque es para pantallas"""
 
         # Validar el ID de la unidad
         unidad = Unidad.query.get(unidad_id)
@@ -37,18 +37,21 @@ class ConsultarTurnosUnidad(Resource):
 
         # Consultar los turnos...
         # - Filtrar por unidad,
-        # - Filtrar por los estados EN ESPERA y PASE A VENTANILLA,
+        # - Filtrar por los estados que no sean: COMPLETADO y CANCELADO,
         # - Filtrar por el estatus A (activo),
         # - Y ordenar por el nombre de tipo de turno ATENCIÓN URGENTE, CON CITA, NORMAL y luego por el número del turno
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
             .filter(Turno.unidad_id == unidad.id)
-            .filter(TurnoEstado.nombre != "COMPLETADO", TurnoEstado.nombre != "CANCELADO")
+            .filter(
+                TurnoEstado.nombre != "COMPLETADO",
+                TurnoEstado.nombre != "CANCELADO",
+            )
             .filter(Turno.estatus == "A")
             .order_by(
-                # 1. Prioridad por estado: PASE A VENTANILLA primero (valor 0), el resto después (valor 1)
-                case((TurnoEstado.nombre == "PASE A VENTANILLA", 0), else_=1),
+                # 1. Prioridad por estado: EN ESPERA primero (valor 0), el resto después (valor 1)
+                case((TurnoEstado.nombre == "EN ESPERA", 0), else_=1),
                 # 2. Dentro de cada grupo, ordenar por número de turno
                 Turno.numero,
             )
@@ -67,12 +70,19 @@ class ConsultarTurnosUnidad(Resource):
                 ),
             ).model_dump()
 
-        # Consultar Último turno en estado 'PASE A VENTANILLA'
+        # Consultar Último turno en estado 'ATENDIENDO' o 'ATENDIENDO EN CUBÍCULO'
         ultimo_turno_atendiendo = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
             .filter(Turno.unidad_id == unidad.id)
-            .filter(or_(TurnoEstado.nombre == "PASE A VENTANILLA", TurnoEstado.nombre == "ATENDIENDO EN CUBICULO"))
+            .filter(
+                or_(
+                    TurnoEstado.nombre == "ATENDIENDO",
+                    TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                    TurnoEstado.nombre == "PASE A UBICACION",
+                    TurnoEstado.nombre == "PASE A CUBICULO",
+                )
+            )
             .filter(Turno.estatus == "A")
             .order_by(TurnoTipo.nivel, Turno.numero)
             .first()

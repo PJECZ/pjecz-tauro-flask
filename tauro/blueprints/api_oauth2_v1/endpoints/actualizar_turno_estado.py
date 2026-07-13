@@ -26,6 +26,8 @@ from tauro.blueprints.unidades.models import Unidad
 from tauro.blueprints.modulos.models import Modulo
 from tauro.blueprints.bitacoras.models import Bitacora
 
+from tauro.services.vocear_turnos import VocearTurnos
+
 from tauro.extensions import socketio
 
 
@@ -40,7 +42,7 @@ class ActualizarTurnoEstado(Resource):
         username = g.current_user
         try:
             usuario = Usuario.query.filter_by(email=username).filter_by(estatus="A").one()
-        except (MultipleResultsFound, NoResultFound):
+        except MultipleResultsFound, NoResultFound:
             return OneTurnoOut(
                 success=False,
                 message="Usuario no encontrado",
@@ -134,6 +136,27 @@ class ActualizarTurnoEstado(Resource):
 
         # Enviar mensaje vía socketio
         socketio.send(one_turno_out)
+
+        # Añadir al voceador el turno
+        if turno.turno_estado.nombre in ["PASE A UBICACION", "PASE A CUBICULO"]:
+            voceador_turnos = VocearTurnos()
+            try:
+                resultado, mensaje_resp = voceador_turnos.agregar_mensaje(turno)
+            except Exception as e:
+                pass
+        # Quitar del voceador
+        elif turno.turno_estado.nombre in [
+            "EN ESPERA DE CUBICULO",
+            "ATENDIENDO",
+            "ATENDIENDO EN CUBICULO",
+            "CANCELADO",
+            "COMPLETADO",
+        ]:
+            voceador_turnos = VocearTurnos()
+            try:
+                resultado, mensaje_resp = voceador_turnos.quitar_mensaje(turno)
+            except Exception as e:
+                pass
 
         # Entregar JSON
         return one_turno_out

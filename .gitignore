@@ -8,7 +8,6 @@
 *.sqlite3
 *.sqlite3-journal
 *.session.sql
-*.sql
 *.xls
 *.xlsx
 *.XLS
@@ -18,6 +17,7 @@
 .zshrc
 .env
 poetry.lock
+uv.lock
 
 __pycache__/
 *.egg-info/

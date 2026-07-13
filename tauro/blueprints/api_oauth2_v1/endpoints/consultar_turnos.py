@@ -22,19 +22,22 @@ from tauro.blueprints.unidades.models import Unidad
 
 
 class ConsultarTurnos(Resource):
-    """Consultar los turnos EN ESPERA y PASE A VENTANILLA"""
+    """Consultar los turnos en todos los estados menos CANCELADO y COMPLETADO"""
 
     def get(self) -> OneListTurnosOut:
-        """Consultar los turnos EN ESPERA y PASE A VENTANILLA, aquí NO SE USA el decorador porque es para pantallas"""
+        """Consultar los turnos aquí NO SE USA el decorador porque es para pantallas"""
 
         # Consultar los turnos...
-        # - Filtrar por los estados EN ESPERA y PASE A VENTANILLA,
+        # - Filtrar por los estados que no sean: COMPLETADO y CANCELADO,
         # - Filtrar por el estatus A (activo),
         # - Y ordenar por el nombre de tipo de turno ATENCION URGENTE, CON CITA, NORMAL y luego por el número
         turnos = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
-            .filter(TurnoEstado.nombre != "ATENDIENDO", TurnoEstado.nombre != "COMPLETADO", TurnoEstado.nombre != "CANCELADO")
+            .filter(
+                TurnoEstado.nombre != "COMPLETADO",
+                TurnoEstado.nombre != "CANCELADO",
+            )
             .filter(Turno.estatus == "A")
             .order_by(
                 # 1. Prioridad por estado: EN ESPERA primero (valor 0), el resto después (valor 1)
@@ -66,19 +69,20 @@ class ConsultarTurnos(Resource):
         tipos_sql = TurnoTipo.query.all()
         tipos = {tipo.id: tipo for tipo in tipos_sql}
 
-        # Consultar Último turno en estado 'EN ESPERA' o 'PASE A VENTANILLA' o 'ATENDIENDO EN CUBÍCULO'
+        # Consultar Último turno
         ultimo_turno_atendiendo = (
             Turno.query.join(TurnoEstado)
             .join(TurnoTipo)
             .filter(
                 or_(
-                    TurnoEstado.nombre == "EN ESPERA",
-                    TurnoEstado.nombre == "PASE A VENTANILLA",
+                    TurnoEstado.nombre == "ATENDIENDO",
                     TurnoEstado.nombre == "ATENDIENDO EN CUBICULO",
+                    TurnoEstado.nombre == "PASE A UBICACION",
+                    TurnoEstado.nombre == "PASE A CUBICULO",
                 )
             )
             .filter(Turno.estatus == "A")
-            .order_by(Turno.modificado.desc())
+            .order_by(TurnoTipo.nivel, Turno.numero)
             .first()
         )
         ultimo_turno = None

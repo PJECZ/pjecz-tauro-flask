@@ -12,5 +12,7 @@ class UnidadForm(FlaskForm):
 
     clave = StringField("Clave", validators=[DataRequired(), Length(max=16)])
     nombre = StringField("Nombre", validators=[DataRequired(), Length(max=256)])
+    pronunciacion = StringField("Pronunciación", validators=[Optional(), Length(max=32)])
+    es_voceable = BooleanField("Vocear", validators=[Optional()])
     es_activo = BooleanField("Activo", validators=[Optional()])
     guardar = SubmitField("Guardar")
