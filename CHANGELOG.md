@@ -3,6 +3,17 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [1.4.0] - 2026-08-05 (Trabajando)
+
+### ✨ Mejoras
+
+- Añadir botón para enviar prueba de sonido al sistema `voceador`.
+
+### 🐞 Arreglado
+
+- Al eliminar un usuario, dejar con valor `NO DEFINIDO` el campo de `ubicación`.
+
+
 ## [1.3.0] - 2026-07-13
 
 ### ✨ Mejoras

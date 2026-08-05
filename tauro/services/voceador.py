@@ -2,6 +2,7 @@
 Servicio para conectar con la API del sistema voceador
 """
 
+import json
 import requests
 
 from datetime import datetime
@@ -93,6 +94,39 @@ class Voceador:
 
         try:
             response = requests.post(url, headers=headers, json={"id": id}, timeout=5)
+            response.raise_for_status()
+
+            try:
+                data = response.json()
+                self._last_response_data = data.get("data")
+                if "success" in data and "message" in data:
+                    return data["success"], data["message"]
+                return False, "Respuesta JSON inválida desde el servidor de voceo."
+
+            except JSONDecodeError:
+                return False, "No se pudo decodificar la respuesta JSON del servidor de voceo."
+
+        except RequestException as e:
+            return False, f"Error de conexión con el sistema de voceo: {e}"
+        except Exception as e:
+            return False, f"Ocurrió un error inesperado: {e}"
+
+    def vocear_texto(self, texto: str) -> Tuple[bool, str]:
+        """
+        Hacer que pronuncie un texto una sola vez.
+        :param texto: Texto que se desea pronunciar.
+        :return: Una tupla con el estado de éxito (bool) y un mensaje (str).
+        """
+
+        url = f"{self._settings.VOCEADOR_API_KEY_URL}/hablar"
+        headers = {
+            # "X-API-KEY": self._settings.VOCEADOR_API_KEY,
+            "Content-Type": "application/json",
+        }
+
+        try:
+            payload = json.dumps({"mensaje": texto})
+            response = requests.post(url, headers=headers, data=payload, timeout=5)
             response.raise_for_status()
 
             try:

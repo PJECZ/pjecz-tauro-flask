@@ -28,7 +28,8 @@
             {% endcall %}
             {% if current_user.can_admin('UBICACIONES') %}
                 {% call card.card() %}
-                    <a class="btn btn-success" href="{{ url_for('sistemas.refresh_screens') }}">Actualizar Pantallas</a>
+                    <a class="btn btn-secondary disabled" href="{{ url_for('sistemas.refresh_screens') }}">Actualizar Pantallas</a>
+                    <a class="btn btn-success" href="{{ url_for('sistemas.test_voceador') }}">Prueba de Voceador</a>
                 {% endcall %}
             {% endif %}
         </div>
