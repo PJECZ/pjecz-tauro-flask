@@ -295,6 +295,8 @@ def delete(usuario_id):
     """Eliminar Usuario"""
     usuario = Usuario.query.get_or_404(usuario_id)
     if usuario.estatus == "A":
+        # Quitar los valores de los campos comprometidos
+        usuario.ubicacion_id = 1  # NO DEFINIDO
         # Dar de baja al usuario
         usuario.delete()
         # Dar de baja los roles del usuario

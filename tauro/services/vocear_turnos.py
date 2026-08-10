@@ -73,6 +73,19 @@ class VocearTurnos:
 
         return True, "Mensaje eliminado del voceador exitosamente"
 
+    def probar_sonido(self, mensaje: str) -> Tuple[bool, str]:
+        """Prueba de sonido con el sistema voceador"""
+
+        try:
+            respuesta, mensaje_resp = self._voceador.vocear_texto(mensaje)
+        except Exception as e:
+            return False, f"Ocurrió un error con la API de voceo: {e}"
+
+        if respuesta is False:
+            return False, f"Error con la API voceador: {mensaje_resp}"
+
+        return True, "Mensaje enviado al voceador exitosamente"
+
     def contruir_mensaje_turno(self, turno: Turno, unidad: Unidad) -> Mensaje:
         """Construye el mensaje para cada turno que pasen a una ubicación"""
 
