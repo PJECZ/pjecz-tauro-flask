@@ -3,7 +3,14 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [1.4.0] - 2026-08-10
+## [1.4.1] Sin publicar
+
+### ✨ Mejoras
+
+- Añadido pequeño diagrama de documentación hecho con **Claude** y la _skill_ `Archify`. Se guardó en el directorio: `/docs/`.
+- Añadido `test` para probar con el cliente de APIs **Bruno**.
+
+## [1.4.0] 2026-08-10
 
 ### ✨ Mejoras
 
@@ -14,7 +21,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Al eliminar un usuario, dejar con valor `NO DEFINIDO` el campo de `ubicación`.
 
 
-## [1.3.0] - 2026-07-13
+## [1.3.0] 2026-07-13
 
 ### ✨ Mejoras
 
@@ -42,7 +49,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Enviar el último turno al cambiar el estado de un turno en el _endpoint_ API-Key `consultar_configuracion_usuario`.
 - Quitar del voceador cuando se cambien a ciertos estados el turno. "ATENDIENDO", "EN ESPERA DE CUBICULO", "CANCELADO", "COMPLETADO".
 
-### ⚙️ Requerimiento
+### ⚙️ Requerimientos
 
 - Ejecutar SQL:
   - Añadir campo nuevo `pronunciacion` a la tabla `unidades`: `v1.3.0-01-add-campo-unidades.sql`.
@@ -50,7 +57,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Añadir nuevos tipos de estado turnos: `PASE A UBICACION` = 7, `PASE A CUBICULO` = 8.
 
 
-## [1.2.0] - 2026-06-05
+## [1.2.0] 2026-06-05
 
 ### ✨ Mejoras
 
@@ -66,7 +73,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
   - `VOCEADOR_API_KEY_URL`: Es la URL de la API del sistema voceador.
 
 
-## [1.1.0] - 2026-05-29
+## [1.1.0] 2026-05-29
 
 ### ✨ Mejoras
 
@@ -74,7 +81,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Prueba de conexión por API-Key.
 
 
-## [1.0.0] - 2026-01-09
+## [1.0.0] 2026-01-09
 
 ### ✨ Mejoras
 

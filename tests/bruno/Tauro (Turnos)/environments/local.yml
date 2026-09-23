@@ -1,0 +1,15 @@
+name: local
+color: "#C77A0F"
+variables:
+  - name: host
+    value: http://127.0.0.1:5000
+  - name: version
+    value: v1
+  - name: version_last
+    value: v1
+  - name: url_api_key_base
+    value: api_key
+  - name: url_api_key
+    value: "{{host}}/api_key/{{version_last}}"
+  - secret: true
+    name: api_key
