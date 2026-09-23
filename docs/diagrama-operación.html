@@ -1,0 +1,341 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mapa de operación Tauro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --tint:#E6EDF2; --ink:#17212B; --muted:#5A6673; --line:#C6CFD8;
+  --key:#0B7A75; --oauth:#4450B8; --signal:#B26A00; --signal-bg:#FBF1E1;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E141A; --surface:#16202A; --tint:#1B2935; --ink:#E3E9EF; --muted:#94A1AE; --line:#2E3C49;
+    --key:#3CC2B8; --oauth:#98A3FF; --signal:#F0A83A; --signal-bg:#2E2413;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E141A; --surface:#16202A; --tint:#1B2935; --ink:#E3E9EF; --muted:#94A1AE; --line:#2E3C49;
+  --key:#3CC2B8; --oauth:#98A3FF; --signal:#F0A83A; --signal-bg:#2E2413;
+}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body);}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 64px;display:grid;gap:44px;}
+header{display:grid;gap:10px;max-width:68ch;}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+h1{font:700 44px/1.05 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance;}
+h2{font:600 24px/1.2 var(--display);margin:0;text-wrap:balance;}
+p{margin:0;}
+.lede{font-size:17px;color:var(--muted);}
+code,.mono{font-family:var(--mono);font-size:.88em;}
+.k{color:var(--key);font-weight:600;} .o{color:var(--oauth);font-weight:600;} .s{color:var(--signal);font-weight:600;}
+section{display:grid;gap:16px;}
+section > p{max-width:68ch;}
+
+/* Diagrama */
+figure{margin:0;display:grid;gap:12px;}
+.diagram{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;}
+.diagram svg{display:block;width:100%;min-width:860px;height:auto;color:var(--ink);}
+figcaption{font-size:13.5px;color:var(--muted);max-width:80ch;}
+svg text{font-family:var(--body);fill:var(--ink);}
+svg .t{font-weight:600;font-size:13px;}
+svg .sub{font-size:11px;fill:var(--muted);}
+svg .cap{font:600 10.5px var(--mono);letter-spacing:.08em;fill:var(--muted);}
+svg .p{font:10.5px var(--mono);fill:var(--ink);}
+svg .m{font:600 9.5px var(--mono);fill:var(--muted);letter-spacing:.03em;}
+svg .lbl{font:10.5px var(--mono);fill:var(--muted);}
+svg .lbl.sig{fill:var(--signal);}
+svg .cell{fill:var(--surface);stroke:var(--line);}
+svg .cell.hot{fill:var(--tint);}
+svg .cell.web{fill:none;stroke-dasharray:4 3;}
+svg .head-k{fill:none;stroke:var(--key);stroke-width:1.5;}
+svg .head-o{fill:none;stroke:var(--oauth);stroke-width:1.5;}
+svg .client{fill:var(--tint);stroke:var(--line);}
+svg .store{fill:var(--surface);stroke:var(--ink);stroke-width:1.2;}
+svg .fx{fill:var(--signal-bg);stroke:var(--signal);stroke-width:1.2;}
+svg .ktxt{fill:var(--key);} svg .otxt{fill:var(--oauth);}
+svg .ktxt, svg .otxt{font:600 13px var(--mono);}
+svg .ln{fill:none;stroke:var(--ink);stroke-width:1.2;}
+svg .ln.sig{stroke:var(--signal);stroke-width:1.5;}
+svg .ln.k{stroke:var(--key);stroke-width:1.5;} svg .ln.o{stroke:var(--oauth);stroke-width:1.5;}
+svg .ah{fill:var(--ink);} svg .ah.sig{fill:var(--signal);} svg .ah.k{fill:var(--key);} svg .ah.o{fill:var(--oauth);}
+svg .note{font:italic 10.5px var(--body);fill:var(--muted);}
+svg .note.sig{fill:var(--signal);font-style:normal;font-weight:600;}
+
+/* Diferencias */
+.diffs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+.diffs > div{background:var(--surface);padding:16px 18px;display:grid;gap:8px;align-content:start;}
+.diffs h3{margin:0;font:600 12px/1.2 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);}
+.diffs dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:14px;}
+.diffs dt{font:600 12px/1.9 var(--mono);}
+.diffs dd{margin:0;}
+
+/* Estados */
+.flow{display:grid;gap:10px;}
+.step{display:grid;grid-template-columns:minmax(190px,240px) 1fr;gap:6px 16px;align-items:center;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;}
+.step .ep{font:600 13px var(--mono);}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font:600 11.5px/1 var(--mono);padding:6px 9px;border-radius:4px;border:1px solid var(--line);background:var(--tint);letter-spacing:.02em;white-space:nowrap;}
+.chip.add{border-color:var(--signal);background:var(--signal-bg);color:var(--signal);}
+.chip.rm{border-style:dashed;color:var(--muted);background:transparent;}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted);align-items:center;}
+.legend span{display:inline-flex;gap:8px;align-items:center;}
+@media (max-width:560px){ .step{grid-template-columns:1fr;} h1{font-size:34px;} }
+
+/* Tabla */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px;}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+th{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--tint);}
+tbody tr:last-child td{border-bottom:0;}
+td.path{font:13px var(--mono);white-space:nowrap;}
+td.meth{font:600 11.5px var(--mono);white-space:nowrap;}
+td .dash{color:var(--muted);}
+tr.group td{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg);padding-block:6px;}
+footer{font-size:13px;color:var(--muted);}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">PJECZ · pjecz-tauro-flask · v1.4.0</div>
+  <h1>Mapa de operación</h1>
+  <p class="lede">Rutas que mueven turnos en Tauro: las dos APIs que usan kioscos y ventanillas, las rutas públicas de las pantallas y los dos botones de sistema. Cada operación indica qué escribe en la base, qué emite por Socket.IO y cuándo llama al voceador.</p>
+</header>
+
+<figure>
+  <div class="diagram">
+  <svg viewBox="0 0 1010 620" role="img" aria-label="Dos APIs, /api_key/v1 y /api_oauth2/v1, exponen los mismos grupos de operaciones. Las rutas de turnos de ambas guardan en PostgreSQL y emiten un mensaje Socket.IO a las pantallas; solo las de OAuth2 llaman al voceador. Las pantallas consultan rutas públicas de OAuth2 y reciben el push. Las rutas de sistema emiten refresh_screens y prueban el voceador.">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+      <marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah sig" d="M0 0L10 5L0 10z"/></marker>
+      <marker id="ak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah k" d="M0 0L10 5L0 10z"/></marker>
+      <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah o" d="M0 0L10 5L0 10z"/></marker>
+    </defs>
+
+    <!-- Clientes -->
+    <rect class="client" x="160" y="16" width="250" height="48" rx="6"/>
+    <text class="t" x="285" y="36" text-anchor="middle">Kiosco / sistema integrado</text>
+    <text class="sub" x="285" y="53" text-anchor="middle">manda usuario_id en el cuerpo JSON</text>
+    <rect class="client" x="420" y="16" width="250" height="48" rx="6"/>
+    <text class="t" x="545" y="36" text-anchor="middle">Ventanilla del operador</text>
+    <text class="sub" x="545" y="53" text-anchor="middle">el usuario sale del token (sub = email)</text>
+
+    <line class="ln k" x1="285" y1="64" x2="285" y2="94" marker-end="url(#ak)"/>
+    <text class="lbl" x="294" y="84">X-Api-Key</text>
+    <line class="ln o" x1="545" y1="64" x2="545" y2="94" marker-end="url(#ao)"/>
+    <text class="lbl" x="554" y="84">Authorization: Bearer</text>
+
+    <!-- Encabezados -->
+    <text class="cap" x="20" y="124">GRUPO</text>
+    <rect class="head-k" x="160" y="96" width="250" height="44" rx="4"/>
+    <text class="ktxt" x="172" y="115">/api_key/v1</text>
+    <text class="sub" x="172" y="132">@api_key_required · sin CSRF</text>
+    <rect class="head-o" x="420" y="96" width="250" height="44" rx="4"/>
+    <text class="otxt" x="432" y="115">/api_oauth2/v1</text>
+    <text class="sub" x="432" y="132">@token_required · JWT HS256, 1 h</text>
+    <text class="cap" x="740" y="124">EFECTOS</text>
+
+    <!-- R1 Acceso -->
+    <text class="t" x="20" y="174">Acceso</text>
+    <text class="sub" x="20" y="190">autenticar y probar</text>
+    <rect class="cell" x="160" y="150" width="250" height="56" rx="4"/>
+    <text class="m" x="172" y="174">GET</text><text class="p" x="210" y="174">test_conexion</text>
+    <rect class="cell" x="420" y="150" width="250" height="56" rx="4"/>
+    <text class="m" x="432" y="174">POST</text><text class="p" x="470" y="174">token</text>
+    <text class="m" x="432" y="192">GET</text><text class="p" x="470" y="192">validar_token</text>
+
+    <!-- R2 Catálogos -->
+    <text class="t" x="20" y="238">Catálogos</text>
+    <text class="sub" x="20" y="254">solo lectura</text>
+    <rect class="cell" x="160" y="214" width="250" height="92" rx="4"/>
+    <text class="m" x="172" y="238">GET</text><text class="p" x="210" y="238">consultar_turnos_estados</text>
+    <text class="m" x="172" y="256">GET</text><text class="p" x="210" y="256">consultar_turnos_tipos</text>
+    <text class="m" x="172" y="274">GET</text><text class="p" x="210" y="274">consultar_unidades</text>
+    <text class="m" x="172" y="292">GET</text><text class="p" x="210" y="292">consultar_ubicaciones</text>
+    <rect class="cell" x="420" y="214" width="250" height="92" rx="4"/>
+    <text class="m" x="432" y="238">GET</text><text class="p" x="470" y="238">consultar_turnos_estados</text>
+    <text class="m" x="432" y="256">GET</text><text class="p" x="470" y="256">consultar_turnos_tipos</text>
+    <text class="m" x="432" y="274">GET</text><text class="p" x="470" y="274">consultar_unidades</text>
+    <text class="m" x="432" y="292">GET</text><text class="p" x="470" y="292">consultar_ubicaciones</text>
+
+    <!-- R3 Usuario -->
+    <text class="t" x="20" y="338">Usuario</text>
+    <text class="sub" x="20" y="354">ubicación y tipos que atiende</text>
+    <rect class="cell" x="160" y="314" width="250" height="56" rx="4"/>
+    <text class="m" x="172" y="338">POST</text><text class="p" x="210" y="338">consultar_configuracion_usuario</text>
+    <text class="m" x="172" y="356">POST</text><text class="p" x="210" y="356">actualizar_usuario</text>
+    <rect class="cell" x="420" y="314" width="250" height="56" rx="4"/>
+    <text class="m" x="432" y="338">GET</text><text class="p" x="470" y="338">consultar_configuracion_usuario</text>
+    <text class="m" x="432" y="356">POST</text><text class="p" x="470" y="356">actualizar_usuario</text>
+
+    <!-- R4 Turnos -->
+    <text class="t" x="20" y="402">Turnos</text>
+    <text class="sub" x="20" y="418">cambian el estado</text>
+    <rect class="cell hot" x="160" y="378" width="250" height="110" rx="4"/>
+    <text class="m" x="172" y="402">POST</text><text class="p" x="210" y="402">crear_turno</text>
+    <text class="m" x="172" y="420">POST</text><text class="p" x="210" y="420">tomar_turno</text>
+    <text class="m" x="172" y="438">POST</text><text class="p" x="210" y="438">actualizar_turno_estado</text>
+    <text class="m" x="172" y="456">POST</text><text class="p" x="210" y="456">test_crear_turno</text>
+    <text class="note" x="172" y="476">no llama al voceador</text>
+    <rect class="cell hot" x="420" y="378" width="250" height="110" rx="4"/>
+    <text class="m" x="432" y="402">POST</text><text class="p" x="470" y="402">crear_turno</text>
+    <text class="m" x="432" y="420">GET</text><text class="p" x="470" y="420">tomar_turno</text>
+    <text class="m" x="432" y="438">POST</text><text class="p" x="470" y="438">actualizar_turno_estado</text>
+    <text class="note sig" x="432" y="476">tomar y actualizar vocean</text>
+
+    <!-- R5 Pantallas -->
+    <text class="t" x="20" y="520">Pantallas</text>
+    <text class="sub" x="20" y="536">sin autenticación</text>
+    <rect class="cell" x="160" y="496" width="250" height="56" rx="4"/>
+    <text class="note" x="172" y="520">no existe en esta API</text>
+    <rect class="cell" x="420" y="496" width="250" height="56" rx="4"/>
+    <text class="m" x="432" y="520">GET</text><text class="p" x="470" y="520">consultar_turnos</text>
+    <text class="m" x="432" y="538">GET</text><text class="p" x="470" y="538">consultar_turnos/&lt;unidad_id&gt;</text>
+
+    <!-- R6 Sistemas -->
+    <text class="t" x="20" y="584">Sistemas</text>
+    <text class="sub" x="20" y="600">sesión web del administrador</text>
+    <rect class="cell web" x="160" y="560" width="510" height="38" rx="4"/>
+    <text class="m" x="172" y="584">GET</text><text class="p" x="210" y="584">/refresh_screens</text>
+    <text class="m" x="432" y="584">GET</text><text class="p" x="470" y="584">/test_voceador</text>
+
+    <!-- Efectos: PostgreSQL -->
+    <rect class="store" x="740" y="150" width="220" height="210" rx="6"/>
+    <text class="t" x="850" y="246" text-anchor="middle">PostgreSQL</text>
+    <text class="sub" x="850" y="264" text-anchor="middle">turnos · usuarios · api_keys</text>
+    <text class="sub" x="850" y="280" text-anchor="middle">catálogos · bitácoras</text>
+    <line class="ln" x1="670" y1="178" x2="738" y2="178" marker-end="url(#a)"/>
+    <text class="lbl" x="704" y="172" text-anchor="middle">valida</text>
+    <line class="ln" x1="670" y1="260" x2="738" y2="260" marker-end="url(#a)"/>
+    <text class="lbl" x="704" y="254" text-anchor="middle">lee</text>
+    <line class="ln" x1="670" y1="342" x2="738" y2="342" marker-end="url(#a)"/>
+    <text class="lbl" x="704" y="336" text-anchor="middle">actualiza</text>
+    <path class="ln" d="M670 392H760V362" marker-end="url(#a)"/>
+    <text class="lbl" x="770" y="385">guarda + bitácora</text>
+
+    <!-- Efectos: Voceador -->
+    <rect class="fx" x="790" y="400" width="170" height="40" rx="6"/>
+    <text class="t" x="875" y="417" text-anchor="middle">Voceador</text>
+    <text class="sub" x="875" y="432" text-anchor="middle">solo desde OAuth2</text>
+    <line class="ln sig" x1="670" y1="420" x2="788" y2="420" marker-end="url(#as)"/>
+    <text class="lbl sig" x="729" y="414" text-anchor="middle">vocear</text>
+
+    <!-- Efectos: Socket.IO -->
+    <rect class="fx" x="790" y="456" width="170" height="40" rx="6"/>
+    <text class="t" x="875" y="473" text-anchor="middle">Socket.IO</text>
+    <text class="sub" x="875" y="488" text-anchor="middle">a todos los clientes</text>
+    <line class="ln sig" x1="670" y1="476" x2="788" y2="476" marker-end="url(#as)"/>
+    <text class="lbl sig" x="729" y="470" text-anchor="middle">send(turno)</text>
+
+    <!-- Pantallas -->
+    <rect class="client" x="790" y="512" width="170" height="40" rx="6"/>
+    <text class="t" x="875" y="529" text-anchor="middle">Pantallas de turnos</text>
+    <text class="sub" x="875" y="544" text-anchor="middle">escuchan y consultan</text>
+    <line class="ln sig" x1="875" y1="496" x2="875" y2="510" marker-end="url(#as)"/>
+    <line class="ln" x1="790" y1="532" x2="672" y2="532" marker-end="url(#a)"/>
+    <text class="lbl" x="731" y="526" text-anchor="middle">GET al abrir</text>
+
+    <!-- Sistemas hacia efectos -->
+    <path class="ln sig" d="M670 572H980V476H962" marker-end="url(#as)"/>
+    <text class="lbl sig" x="680" y="567">emit refresh_screens</text>
+    <path class="ln sig" d="M670 590H995V420H962" marker-end="url(#as)"/>
+    <text class="lbl sig" x="680" y="606">probar_sonido()</text>
+  </svg>
+  </div>
+  <figcaption>Las dos APIs ofrecen casi las mismas operaciones. Lo que cambia es cómo se identifica al usuario y quién avisa al voceador. Toda ruta de turnos guarda en la base, deja registro en bitácora y emite el turno por Socket.IO; las pantallas lo reciben al instante y solo consultan la API al abrirse.</figcaption>
+</figure>
+
+<section>
+  <h2>Dos APIs, mismas operaciones</h2>
+  <div class="diffs">
+    <div>
+      <h3>Quién opera</h3>
+      <dl>
+        <dt class="k">API-Key</dt><dd><code>usuario_id</code> en el JSON; cualquier llave activa puede actuar por cualquier usuario.</dd>
+        <dt class="o">OAuth2</dt><dd>El token lleva el email en <code>sub</code>; solo usuarios con acceso al front-end y un rol activo lo obtienen.</dd>
+      </dl>
+    </div>
+    <div>
+      <h3>Voceo</h3>
+      <dl>
+        <dt class="k">API-Key</dt><dd>No llama al voceador en ninguna ruta.</dd>
+        <dt class="o">OAuth2</dt><dd><code>tomar_turno</code> siempre agrega el mensaje; <code>actualizar_turno_estado</code> lo agrega o lo quita según el estado nuevo.</dd>
+      </dl>
+    </div>
+    <div>
+      <h3>Métodos distintos</h3>
+      <dl>
+        <dt class="k">API-Key</dt><dd><code>POST</code> en <code>tomar_turno</code> y <code>consultar_configuracion_usuario</code>, porque necesitan el <code>usuario_id</code>.</dd>
+        <dt class="o">OAuth2</dt><dd><code>GET</code> en esas mismas dos rutas: el token ya dice quién es.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Qué estado deja cada operación</h2>
+  <p><code>crear_turno</code> y <code>tomar_turno</code> fijan un estado. <code>actualizar_turno_estado</code> acepta cualquier <code>turno_estado_id</code>; no hay transiciones validadas en el servidor. En OAuth2, el estado nuevo decide si el turno entra o sale de la lista del voceador.</p>
+  <div class="flow">
+    <div class="step">
+      <span class="ep">crear_turno</span>
+      <div class="chips"><span class="chip">EN ESPERA</span><span class="note mono" style="color:var(--muted)">número = turnos creados hoy + 1 · ubicación NO DEFINIDO</span></div>
+    </div>
+    <div class="step">
+      <span class="ep">tomar_turno</span>
+      <div class="chips"><span class="chip add">PASE A UBICACION</span><span class="mono" style="color:var(--muted)">el primero EN ESPERA de la unidad del usuario, de los tipos que atiende, ordenado por tipo y número</span></div>
+    </div>
+    <div class="step">
+      <span class="ep">actualizar_turno_estado</span>
+      <div class="chips">
+        <span class="chip add">PASE A UBICACION</span><span class="chip add">PASE A CUBICULO</span>
+        <span class="chip rm">EN ESPERA DE CUBICULO</span><span class="chip rm">ATENDIENDO</span><span class="chip rm">ATENDIENDO EN CUBICULO</span><span class="chip rm">COMPLETADO</span><span class="chip rm">CANCELADO</span>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><span class="chip add">ESTADO</span> agrega el mensaje al voceador</span>
+    <span><span class="chip rm">ESTADO</span> lo quita</span>
+    <span>Las pantallas muestran todo excepto COMPLETADO y CANCELADO, con EN ESPERA primero.</span>
+  </div>
+</section>
+
+<section>
+  <h2>Referencia de rutas</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Ruta</th><th>API-Key</th><th>OAuth2</th><th>Entrada</th><th>Efecto</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="5">Acceso</td></tr>
+      <tr><td class="path">token</td><td class="meth"><span class="dash">—</span></td><td class="meth o">POST</td><td>username (email), password</td><td>JWT de 1 h con rol, unidad y ubicación</td></tr>
+      <tr><td class="path">validar_token</td><td class="meth"><span class="dash">—</span></td><td class="meth o">GET</td><td>Bearer</td><td>Confirma que el token sigue vigente</td></tr>
+      <tr><td class="path">test_conexion</td><td class="meth k">GET</td><td class="meth"><span class="dash">—</span></td><td>X-Api-Key</td><td>Comprueba la llave</td></tr>
+      <tr class="group"><td colspan="5">Catálogos</td></tr>
+      <tr><td class="path">consultar_turnos_estados<br>consultar_turnos_tipos<br>consultar_unidades<br>consultar_ubicaciones</td><td class="meth k">GET</td><td class="meth o">GET</td><td>—</td><td>Listas para llenar los formularios del cliente</td></tr>
+      <tr class="group"><td colspan="5">Usuario</td></tr>
+      <tr><td class="path">consultar_configuracion_usuario</td><td class="meth k">POST</td><td class="meth o">GET</td><td><span class="k">usuario_id</span></td><td>Unidad, ubicación y tipos de turno que atiende</td></tr>
+      <tr><td class="path">actualizar_usuario</td><td class="meth k">POST</td><td class="meth o">POST</td><td><span class="k">usuario_id</span>, ubicacion_id, turnos_tipos_ids</td><td>Reasigna ubicación y tipos; bitácora</td></tr>
+      <tr class="group"><td colspan="5">Turnos</td></tr>
+      <tr><td class="path">crear_turno</td><td class="meth k">POST</td><td class="meth o">POST</td><td><span class="k">usuario_id</span>, turno_tipo_id, unidad_id, turno_telefono, comentarios</td><td>Turno EN ESPERA; bitácora; <span class="s">Socket.IO</span></td></tr>
+      <tr><td class="path">tomar_turno</td><td class="meth k">POST</td><td class="meth o">GET</td><td><span class="k">usuario_id</span></td><td>PASE A UBICACION; bitácora; <span class="s">Socket.IO</span>; <span class="s">voceador</span> solo OAuth2</td></tr>
+      <tr><td class="path">actualizar_turno_estado</td><td class="meth k">POST</td><td class="meth o">POST</td><td><span class="k">usuario_id</span>, turno_id, turno_estado_id, turno_numero_cubiculo</td><td>Estado nuevo; bitácora; <span class="s">Socket.IO</span>; <span class="s">voceador</span> solo OAuth2</td></tr>
+      <tr><td class="path">test_crear_turno</td><td class="meth k">POST</td><td class="meth"><span class="dash">—</span></td><td>como crear_turno</td><td>Turno de prueba; <span class="s">Socket.IO</span></td></tr>
+      <tr class="group"><td colspan="5">Pantallas · sin autenticación</td></tr>
+      <tr><td class="path">consultar_turnos</td><td class="meth"><span class="dash">—</span></td><td class="meth o">GET</td><td>—</td><td>Turnos activos de todas las unidades</td></tr>
+      <tr><td class="path">consultar_turnos/&lt;unidad_id&gt;</td><td class="meth"><span class="dash">—</span></td><td class="meth o">GET</td><td>unidad_id en la ruta</td><td>Turnos activos y último turno de una unidad</td></tr>
+      <tr class="group"><td colspan="5">Sistemas · sesión web</td></tr>
+      <tr><td class="path">/refresh_screens</td><td colspan="2" class="meth">GET</td><td>—</td><td><span class="s">emit refresh_screens</span> a todas las pantallas</td></tr>
+      <tr><td class="path">/test_voceador</td><td colspan="2" class="meth">GET</td><td>—</td><td>Mensaje de prueba de sonido al <span class="s">voceador</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="mono" style="color:var(--muted)"><span class="k">usuario_id</span> solo viaja en API-Key; en OAuth2 se toma del token.</p>
+</section>
+
+<footer>Fuente: <code>tauro/blueprints/api_key_v1/resources.py</code>, <code>api_oauth2_v1/resources.py</code>, <code>sistemas/views.py</code> y <code>services/vocear_turnos.py</code> en la rama <code>tests_bruno</code>.</footer>
+</div>
+
+</body></html>

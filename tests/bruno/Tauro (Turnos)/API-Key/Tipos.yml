@@ -1,0 +1,53 @@
+info:
+  name: Tipos
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{url_api_key}}/consultar_turnos_tipos"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Cada 'tipo' debe tener id, nombre y nivel", function() {
+          const data = res.getBody().data;
+
+          data.forEach(function(item) {
+            expect(item).to.have.property("id");
+            expect(item).to.have.property("nombre");
+            expect(item).to.have.property("nivel");
+          });
+        });
+
+        test("Verificar el tipo de variable de cada propiedad del objeto tipo", function() {
+          const data = res.getBody().data;
+          const tipo = data[0];
+          
+          expect(tipo.id).to.be.a("number");
+          expect(tipo.nombre).to.be.a("string");
+          expect(tipo.nivel).to.be.a("number");
+        });
+
+        test("Debe incluir todos los nombres esperados", function() {
+          const nombres = res.getBody().data.map(item => item.nombre);
+
+          const esperados = [
+            "NORMAL",
+            "CON CITA",
+            "ATENCION URGENTE",
+          ];
+
+          expect(nombres).to.include.members(esperados);
+          
+          console.log("Nombre de tipos: " + esperados)
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

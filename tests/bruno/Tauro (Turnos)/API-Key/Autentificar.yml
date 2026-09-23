@@ -1,0 +1,28 @@
+info:
+  name: Autentificar
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{url_api_key}}/test_conexion"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.success
+      operator: isTruthy
+    - expression: res.body.message
+      operator: isDefined
+    - expression: res.body.data
+      operator: isNull
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,45 @@
+info:
+  name: Unidades
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{url_api_key}}/consultar_unidades"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Cada 'unidad' debe tener id, clave y nombre", function() {
+          const data = res.getBody().data;
+
+          data.forEach(function(item) {
+            expect(item).to.have.property("id");
+            expect(item).to.have.property("clave");
+            expect(item).to.have.property("nombre");
+          });
+        });
+
+        test("Verificar el tipo de variable de cada propiedad del objeto unidad", function() {
+          const data = res.getBody().data;
+          const tipo = data[0];
+          
+          expect(tipo.id).to.be.a("number");
+          expect(tipo.clave).to.be.a("string");
+          expect(tipo.nombre).to.be.a("string");
+        });
+
+        test("Debe incluir al menos la unidad INAMD", function() {
+          const data = res.getBody().data;
+          const existe = data.some(item => item.clave === "INAMD");
+          expect(existe).to.be.true;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
