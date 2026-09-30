@@ -12,9 +12,23 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            {% call card.card(title='Sistema de Turnos') %}
-                <h4>Política Integral</h4>
+            {% call card.card(title='Introducción') %}
                 <p class="lead">
+                    El Sistema de Turnos (Tauro) es una aplicación web desarrollada para el Poder Judicial del Estado de Coahuila de Zaragoza.
+                    Su objetivo principal es gestionar y organizar los turnos de atención al público en las diferentes áreas y dependencias del Poder Judicial.
+                </p>
+            {% endcall %}
+            {% if current_user.can_admin('UBICACIONES') %}
+                {% call card.card(title='Accionadores') %}
+                    <a class="btn btn-secondary disabled" href="{{ url_for('sistemas.refresh_screens') }}">Actualizar Pantallas</a>
+                    <a class="btn btn-success" href="{{ url_for('sistemas.test_voceador') }}">Prueba de Voceador</a>
+                {% endcall %}
+            {% endif %}
+            {% call card.card() %}
+                <a class="btn btn-primary" href="{{ url_for('sistemas.about') }}">Más información sobre el proyecto</a>
+            {% endcall %}
+            {% call card.card(title='Política Integral') %}
+                <p class="small text-muted">
                     El Poder Judicial del Estado de Coahuila de Zaragoza
                     basado en los principios de una justicia
                     <span class="roboto-bold">
@@ -26,12 +40,7 @@
                     con un enfoque centrado en la persona y sus derechos humanos.
                 </p>
             {% endcall %}
-            {% if current_user.can_admin('UBICACIONES') %}
-                {% call card.card() %}
-                    <a class="btn btn-secondary disabled" href="{{ url_for('sistemas.refresh_screens') }}">Actualizar Pantallas</a>
-                    <a class="btn btn-success" href="{{ url_for('sistemas.test_voceador') }}">Prueba de Voceador</a>
-                {% endcall %}
-            {% endif %}
+
         </div>
     </div>
 {% endblock %}
