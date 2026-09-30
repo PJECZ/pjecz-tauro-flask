@@ -3,10 +3,12 @@ Sistemas
 """
 
 import locale
+import re
 from datetime import datetime
+from pathlib import Path
 
-from flask import Blueprint, redirect, render_template, send_from_directory, url_for, flash
-from flask_login import current_user
+from flask import Blueprint, current_app, redirect, render_template, send_from_directory, url_for, flash
+from flask_login import current_user, login_required
 
 from tauro.extensions import socketio
 from tauro.blueprints.api_v1.schemas import ResponseSchema
@@ -25,6 +27,51 @@ def start():
 
     # No está autenticado, debe de iniciar sesión
     return redirect(url_for("usuarios.login"))
+
+
+def leer_changelog(maximo=None):
+    """Lee CHANGELOG.md y regresa una lista de versiones con sus secciones y cambios"""
+    versiones = []
+    archivo = Path(current_app.root_path).parent / "CHANGELOG.md"
+    try:
+        texto = archivo.read_text(encoding="utf-8")
+    except OSError:
+        return versiones
+    version_actual = None
+    seccion = None
+    for linea in texto.splitlines():
+        linea = linea.strip()
+        if linea.startswith("## ["):
+            if maximo is not None and len(versiones) >= maximo:
+                break
+            coincidencia = re.match(r"## \[(.+?)\]\s*(.*)", linea)
+            version_actual = {"version": coincidencia.group(1), "fecha": coincidencia.group(2), "secciones": []}
+            versiones.append(version_actual)
+            seccion = None
+        elif linea.startswith("### ") and version_actual is not None:
+            seccion = {"titulo": linea[4:], "items": []}
+            version_actual["secciones"].append(seccion)
+        elif linea.startswith("- ") and seccion is not None:
+            seccion["items"].append(linea[2:])
+    return versiones
+
+
+@sistemas.route("/acerca_de")
+@login_required
+def about():
+    """Acerca de: versión, autores y última novedad del CHANGELOG"""
+    return render_template(
+        "sistemas/acerca_de.jinja2",
+        autores=["Ing. Ricardo Valdés - Backend", "Ing. Carlos Hernández - Frontend"],
+        novedades=leer_changelog(maximo=1),
+    )
+
+
+@sistemas.route("/historial_de_cambios")
+@login_required
+def changelog():
+    """Listado completo de novedades del CHANGELOG"""
+    return render_template("sistemas/novedades.jinja2", novedades=leer_changelog())
 
 
 @sistemas.route("/refresh_screens")

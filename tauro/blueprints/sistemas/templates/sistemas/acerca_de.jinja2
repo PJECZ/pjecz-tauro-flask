@@ -1,0 +1,56 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/card.jinja2' as card %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Acerca de{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Acerca de') }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% call card.card(title='Acerca del Proyecto') %}
+                <h2 class="mb-1">Sistema de Turnos</h2>
+                <p class="lead text-muted">Proyecto pjecz-tauro</p>
+                <p>
+                    <span class="badge text-bg-primary fs-6">Versión Actual: v1.4.1 (2026-09-30)</span>
+                </p>
+                <p class="mb-0">
+                    <strong>Desarrollado por:</strong><br>
+                    {% for autor in autores %}{{ autor }}<br>{% endfor %}
+                    <small class="text-muted">
+                        2026
+                    </small>
+                </p>
+            {% endcall %}
+
+            {% call card.card(title='Últimas novedades') %}
+                <div class="text-start">
+                    {% for n in novedades %}
+                        <h5 class="{% if not loop.first %}mt-4{% endif %}">
+                            Versión {{ n.version }}
+                            {% if n.fecha %}<small class="text-muted">({{ n.fecha }})</small>{% endif %}
+                        </h5>
+                        {% for seccion in n.secciones %}
+                            <h6 class="mt-3">{{ seccion.titulo }}</h6>
+                            <ul>
+                                {% for item in seccion['items'] %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No hay novedades disponibles.</p>
+                    {% endfor %}
+                </div>
+                <a class="btn btn-outline-primary" href="{{ url_for('sistemas.changelog') }}">Ver todo el listado de cambios</a>
+            {% endcall %}
+
+            <p class="text-center text-muted mt-4">
+                <strong>Poder Judicial del Estado de Coahuila de Zaragoza</strong>
+            </p>
+        </div>
+    </div>
+{% endblock %}

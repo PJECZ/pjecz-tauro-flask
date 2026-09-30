@@ -7,6 +7,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Añadida página de "Historial de cambios", para visualizar la evolución del sistema.
+- Añadido página de "Acerca de", que ayuda a identificar los desarrolladores involucrados y las últimas novedades añadidas.
 - Añadido pequeño diagrama de documentación hecho con **Claude** y la _skill_ `Archify`. Se guardó en el directorio: `/docs/`.
 - Añadido `test` para probar con el cliente de APIs **Bruno**.
 
