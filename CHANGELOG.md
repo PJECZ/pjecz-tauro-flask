@@ -10,6 +10,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Añadido pequeño diagrama de documentación hecho con **Claude** y la _skill_ `Archify`. Se guardó en el directorio: `/docs/`.
 - Añadido `test` para probar con el cliente de APIs **Bruno**.
 
+### ✏️ Cambios
+
+- Se cambió el orden del listado de usuarios.
+
 ## [1.4.0] 2026-08-10
 
 ### ✨ Mejoras
@@ -19,7 +23,6 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### 🐞 Arreglado
 
 - Al eliminar un usuario, dejar con valor `NO DEFINIDO` el campo de `ubicación`.
-
 
 ## [1.3.0] 2026-07-13
 
@@ -56,7 +59,6 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
   - Añadir campo nuevo `es_voceable` a la tabla `unidades`: `v1.3.0-02-add-campo-es_voceable.sql`.
 - Añadir nuevos tipos de estado turnos: `PASE A UBICACION` = 7, `PASE A CUBICULO` = 8.
 
-
 ## [1.2.0] 2026-06-05
 
 ### ✨ Mejoras
@@ -72,7 +74,6 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
   - `VOCEADOR_API_KEY`: Es la API-Key para autentificarse con el sistema voceador.
   - `VOCEADOR_API_KEY_URL`: Es la URL de la API del sistema voceador.
 
-
 ## [1.1.0] 2026-05-29
 
 ### ✨ Mejoras
@@ -80,9 +81,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Creación de turno de prueba por API-Key.
 - Prueba de conexión por API-Key.
 
-
 ## [1.0.0] 2026-01-09
 
 ### ✨ Mejoras
 
-  - Aumentar el tiempo de vida del token en la api oauth2.
+- Aumentar el tiempo de vida del token en la api oauth2.

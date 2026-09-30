@@ -121,7 +121,7 @@ def datatable_json():
     if "unidad_id" in request.form:
         consulta = consulta.filter(Usuario.unidad_id == request.form["unidad_id"])
     # Ordenar y paginar
-    registros = consulta.order_by(Usuario.email).offset(start).limit(rows_per_page).all()
+    registros = consulta.order_by(Usuario.id).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
