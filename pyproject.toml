@@ -1,6 +1,6 @@
 [project]
 name = "pjecz-tauro-flask"
-version = "1.4.0"
+version = "1.4.1"
 description = "Sistema de Turnos - Backend"
 authors = ["ricval <ricardo.valdes@pjecz.gob.mx>", "Carlos Hdz <carlos.hernandez@pjecz.gob.mx>"]
 license = "AGPL3"
@@ -54,3 +54,6 @@ line-length = 128
 [tool.isort]
 line_length = 128
 profile = "black"
+
+[tool.pylint.format]
+max-line-length = 128
