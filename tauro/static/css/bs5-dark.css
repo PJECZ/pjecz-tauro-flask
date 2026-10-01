@@ -16,7 +16,10 @@ html[data-theme="dark"] body {
   color: var(--dk-text);
 }
 
-html[data-theme="dark"] a:not(.btn):not(.nav-link):not(.dropdown-item):not(.navbar-brand):not(.page-link) {
+html[data-theme="dark"]
+  a:not(.btn):not(.nav-link):not(.dropdown-item):not(.navbar-brand):not(
+    .page-link
+  ) {
   color: var(--dk-link);
 }
 
@@ -178,6 +181,17 @@ html[data-theme="dark"] .page-item.disabled .page-link {
   background-color: var(--dk-surface);
   border-color: var(--dk-border);
   color: var(--dk-muted);
+}
+
+/* Colores de filas según el estado del turno, más tenues en el tema oscuro */
+html[data-theme="dark"] table.dataTable > tbody > tr.fila-atendiendo {
+  background-color: #2d4c6b;
+}
+html[data-theme="dark"] table.dataTable > tbody > tr.fila-completado {
+  background-color: #31604a;
+}
+html[data-theme="dark"] table.dataTable > tbody > tr.fila-cancelado {
+  background-color: #63262d;
 }
 
 /* Switch del tema en la barra superior */

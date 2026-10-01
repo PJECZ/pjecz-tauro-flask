@@ -168,11 +168,13 @@
         ];
         // Colores filas
         configDataTable['rowCallback'] = function(row, data) {
-            switch (data.estado)    {
-                case "EN ESPERA":                                               break;
-                case "ATENDIENDO":  $(row).css("background-color", "#ebf5fb");  break;
-                case "COMPLETADO":  $(row).css("background-color", "#eafaf1");  break;
-                case "CANCELADO":   $(row).css("background-color", "#fdedec");  break;
+            // Los colores se definen en CSS (bs5-dashboard.css y bs5-dark.css) para respetar el tema
+            $(row).removeClass("fila-atendiendo fila-completado fila-cancelado");
+            switch (data.estado) {
+                case "EN ESPERA":                                       break;
+                case "ATENDIENDO":  $(row).addClass("fila-atendiendo"); break;
+                case "COMPLETADO":  $(row).addClass("fila-completado"); break;
+                case "CANCELADO":   $(row).addClass("fila-cancelado");  break;
             }
         };
         // Filtros turnos

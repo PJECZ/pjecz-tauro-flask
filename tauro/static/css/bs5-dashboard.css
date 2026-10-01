@@ -211,3 +211,15 @@ header + .container-fluid {
   color: #212529;
   border-color: #c1c5ca;
 }
+
+/* Colores de filas según el estado del turno
+   (el selector es más específico que "table.dataTable > tbody > tr" de DataTables, que los deja transparentes) */
+table.dataTable > tbody > tr.fila-atendiendo {
+  background-color: #ebf5fb;
+}
+table.dataTable > tbody > tr.fila-completado {
+  background-color: #eafaf1;
+}
+table.dataTable > tbody > tr.fila-cancelado {
+  background-color: #fdedec;
+}
