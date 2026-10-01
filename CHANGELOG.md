@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Resaltado de sintaxis **Markdown** en las páginas que lo muestran.
 - Añadido nuevo campo `nombre` en la tabla `api_keys`, para hacer más descriptivo los movimientos a través de las operaciones con ella.
 - Página de inicio mejor organizada y más informativa
 - Añadida página de "Historial de cambios", para visualizar la evolución del sistema.
@@ -22,6 +23,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 - Ejecutar SQL:
   - Añadir campo nuevo `nombre` a la tabla `api_keys`: `v1.4.0-01-add-campo-nombre-api_key.sql`.
+- Nuevos paquetes a instalar:
+  - `markdown-it-py` - Resaltador de sintaxis para formato **Markdown**.
 
 ## [1.4.0] 2026-08-10
 

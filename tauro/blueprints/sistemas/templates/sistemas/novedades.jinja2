@@ -9,19 +9,16 @@
 {% endblock %}
 
 {% block content %}
+    <style>
+        .changelog h6 { margin-top: 1rem; font-weight: 600; }
+        .changelog h6:first-child { margin-top: 0; }
+    </style>
     <div class="row">
         <div class="col-md-12">
             {% for n in novedades %}
                 {% call card.card(title='Versión ' ~ n.version ~ (' (' ~ n.fecha ~ ')' if n.fecha else '')) %}
                     <div class="text-start">
-                        {% for seccion in n.secciones %}
-                            <h6 class="{% if not loop.first %}mt-3{% endif %}">{{ seccion.titulo }}</h6>
-                            <ul>
-                                {% for item in seccion['items'] %}
-                                    <li>{{ item }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endfor %}
+                        <div class="changelog">{{ n.html }}</div>
                     </div>
                 {% endcall %}
             {% else %}

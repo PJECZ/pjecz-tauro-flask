@@ -9,12 +9,17 @@ from pathlib import Path
 
 from flask import Blueprint, current_app, redirect, render_template, send_from_directory, url_for, flash
 from flask_login import current_user, login_required
+from markdown_it import MarkdownIt
+from markupsafe import Markup
 
 from tauro.extensions import socketio
 from tauro.blueprints.api_v1.schemas import ResponseSchema
 from tauro.services.vocear_turnos import VocearTurnos
 
 sistemas = Blueprint("sistemas", __name__, template_folder="templates")
+
+# El HTML crudo dentro del markdown se escapa (html=False)
+_markdown = MarkdownIt("commonmark", {"html": False})
 
 
 @sistemas.route("/")
@@ -30,29 +35,29 @@ def start():
 
 
 def leer_changelog(maximo=None):
-    """Lee CHANGELOG.md y regresa una lista de versiones con sus secciones y cambios"""
-    versiones = []
+    """Lee CHANGELOG.md y regresa una lista de versiones, con su contenido markdown convertido a HTML"""
     archivo = Path(current_app.root_path).parent / "CHANGELOG.md"
     try:
         texto = archivo.read_text(encoding="utf-8")
     except OSError:
-        return versiones
-    version_actual = None
-    seccion = None
-    for linea in texto.splitlines():
-        linea = linea.strip()
-        if linea.startswith("## ["):
-            if maximo is not None and len(versiones) >= maximo:
-                break
-            coincidencia = re.match(r"## \[(.+?)\]\s*(.*)", linea)
-            version_actual = {"version": coincidencia.group(1), "fecha": coincidencia.group(2), "secciones": []}
-            versiones.append(version_actual)
-            seccion = None
-        elif linea.startswith("### ") and version_actual is not None:
-            seccion = {"titulo": linea[4:], "items": []}
-            version_actual["secciones"].append(seccion)
-        elif linea.startswith("- ") and seccion is not None:
-            seccion["items"].append(linea[2:])
+        return []
+    versiones = []
+    for bloque in re.split(r"^(?=## \[)", texto, flags=re.MULTILINE):
+        coincidencia = re.match(r"## \[(.+?)\]\s*(.*)", bloque)
+        if coincidencia is None:
+            continue
+        if maximo is not None and len(versiones) >= maximo:
+            break
+        cuerpo = bloque.split("\n", 1)[1] if "\n" in bloque else ""
+        # Bajar los encabezados "###" a "######" para que no compitan con el título de la tarjeta
+        cuerpo = re.sub(r"^### ", "###### ", cuerpo, flags=re.MULTILINE)
+        versiones.append(
+            {
+                "version": coincidencia.group(1),
+                "fecha": coincidencia.group(2),
+                "html": Markup(_markdown.render(cuerpo)),
+            }
+        )
     return versiones
 
 
