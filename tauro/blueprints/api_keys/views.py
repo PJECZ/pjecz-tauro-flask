@@ -119,7 +119,7 @@ def new():
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Nueva API Key {api_key.id}"),
+            descripcion=safe_message(f"Nueva API Key {api_key.nombre}"),
             url=url_for("api_keys.detail", api_key_id=api_key.id),
         )
         bitacora.save()
@@ -147,7 +147,7 @@ def edit(api_key_id):
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Editado API Key {api_key.api_key}"),
+            descripcion=safe_message(f"Editado API Key {api_key.nombre}"),
             url=url_for("api_keys.detail", api_key_id=api_key.id),
         )
         bitacora.save()
@@ -170,7 +170,7 @@ def delete(api_key_id):
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Eliminado API Key {api_key.id}"),
+            descripcion=safe_message(f"Eliminado API Key {api_key.nombre}"),
             url=url_for("api_keys.detail", api_key_id=api_key.id),
         )
         bitacora.save()
@@ -188,7 +188,7 @@ def recover(api_key_id):
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Recuperado API Key {api_key.id}"),
+            descripcion=safe_message(f"Recuperado API Key {api_key.nombre}"),
             url=url_for("api_keys.detail", api_key_id=api_key.id),
         )
         bitacora.save()
