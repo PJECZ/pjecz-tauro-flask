@@ -3,10 +3,9 @@ API-Keys, modelos
 """
 
 from datetime import datetime
-from typing import List, Optional
 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
