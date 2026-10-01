@@ -5,6 +5,14 @@ body {
   height: 100%;
 }
 
+:root {
+  --header-h: 54px; /* Alto fijo del header superior */
+}
+
+header.navbar {
+  height: var(--header-h);
+}
+
 body {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   background-color: #eee;
@@ -52,10 +60,29 @@ body {
   }
 }
 
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex !important;
+    flex-direction: column;
+    /* Ocupa solo el alto visible debajo del header y se queda fija al hacer scroll */
+    position: sticky;
+    top: var(--header-h);
+    align-self: flex-start;
+    height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+  }
+}
+
+/* El contenedor ocupa el alto visible menos el header, para evitar scroll innecesario */
+header + .container-fluid {
+  height: auto !important;
+  min-height: calc(100vh - var(--header-h));
+}
+
 .sidebar-sticky {
   position: relative;
   top: 0;
-  height: calc(100vh - 48px);
+  height: calc(100vh - var(--header-h));
   padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
@@ -118,6 +145,7 @@ body {
 }
 
 #version {
+  margin-top: auto; /* Fijado al fondo del menú lateral */
   text-align: center;
   color: #e1e1e9;
   font-size: small;
