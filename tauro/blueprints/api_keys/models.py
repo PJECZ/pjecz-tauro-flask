@@ -22,8 +22,8 @@ class APIKey(database.Model, UniversalMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Columnas
-    nombre: Mapped[str] = mapped_column(String(128), default="", server_default="")
-    api_key: Mapped[str] = mapped_column(String(128))
+    nombre: Mapped[str] = mapped_column(String(128), unique=True)
+    api_key: Mapped[str] = mapped_column(String(128), unique=True)
     api_key_expiracion: Mapped[datetime]
     es_activo: Mapped[bool] = mapped_column(default=False)
 

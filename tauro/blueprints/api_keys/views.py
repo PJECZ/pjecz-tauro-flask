@@ -111,9 +111,18 @@ def new():
     """Nueva API Key"""
     form = APIKeyForm()
     if form.validate_on_submit():
+        # Validar que el nombre y la API Key no se repitan
+        nombre = safe_string(form.nombre.data)
+        valor = safe_string(form.api_key.data)
+        if APIKey.query.filter_by(nombre=nombre).first():
+            flash("El nombre ya está en uso. Debe de ser único.", "warning")
+            return render_template("api_keys/new.jinja2", form=form)
+        if APIKey.query.filter_by(api_key=valor).first():
+            flash("La API Key ya está en uso. Debe de ser única.", "warning")
+            return render_template("api_keys/new.jinja2", form=form)
         api_key = APIKey(
-            nombre=safe_string(form.nombre.data),
-            api_key=safe_string(form.api_key.data),
+            nombre=nombre,
+            api_key=valor,
             api_key_expiracion=form.api_key_expiracion.data,
             es_activo=form.es_activo.data,
         )
@@ -141,20 +150,34 @@ def edit(api_key_id):
     api_key = APIKey.query.get_or_404(api_key_id)
     form = APIKeyForm()
     if form.validate_on_submit():
-        api_key.nombre = safe_string(form.nombre.data)
-        api_key.api_key = safe_string(form.api_key.data)
-        api_key.api_key_expiracion = form.api_key_expiracion.data
-        api_key.es_activo = form.es_activo.data
-        api_key.save()
-        bitacora = Bitacora(
-            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
-            usuario=current_user,
-            descripcion=safe_message(f"Editado API Key {api_key.nombre}"),
-            url=url_for("api_keys.detail", api_key_id=api_key.id),
-        )
-        bitacora.save()
-        flash(bitacora.descripcion, "success")
-        return redirect(bitacora.url)
+        # Si cambian el nombre o la API Key verificar que no estén en uso
+        nombre = safe_string(form.nombre.data)
+        valor = safe_string(form.api_key.data)
+        es_valido = True
+        existente = APIKey.query.filter_by(nombre=nombre).first()
+        if existente and existente.id != api_key.id:
+            es_valido = False
+            flash("El nombre ya está en uso. Debe de ser único.", "warning")
+        existente = APIKey.query.filter_by(api_key=valor).first()
+        if existente and existente.id != api_key.id:
+            es_valido = False
+            flash("La API Key ya está en uso. Debe de ser única.", "warning")
+        if es_valido:
+            api_key.nombre = nombre
+            api_key.api_key = valor
+            api_key.api_key_expiracion = form.api_key_expiracion.data
+            api_key.es_activo = form.es_activo.data
+            api_key.save()
+            bitacora = Bitacora(
+                modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+                usuario=current_user,
+                descripcion=safe_message(f"Editado API Key {api_key.nombre}"),
+                url=url_for("api_keys.detail", api_key_id=api_key.id),
+            )
+            bitacora.save()
+            flash(bitacora.descripcion, "success")
+            return redirect(bitacora.url)
+        return render_template("api_keys/edit.jinja2", form=form, api_key=api_key)
     form.nombre.data = api_key.nombre
     form.api_key.data = api_key.api_key
     form.api_key_expiracion.data = api_key.api_key_expiracion
