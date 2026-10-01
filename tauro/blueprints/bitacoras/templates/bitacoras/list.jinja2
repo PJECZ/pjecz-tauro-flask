@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons(titulo) %}
+    {% call topbar.page_buttons(titulo, icono) %}
         {% if current_user.can_view('BITACORAS APIS') %}
             {{ topbar.button('Bitácoras APIs', url_for('bitacoras_apis.list_active'), 'mdi:calendar-clock') }}
         {% endif %}

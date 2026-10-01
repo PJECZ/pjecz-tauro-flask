@@ -154,6 +154,7 @@ def list_active():
         "usuarios/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Usuarios",
+        icono="mdi:account-key",
         estatus="A",
     )
 
@@ -167,6 +168,7 @@ def list_inactive():
         "usuarios/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Usuarios inactivos",
+        icono="mdi:account-key",
         estatus="B",
     )
 

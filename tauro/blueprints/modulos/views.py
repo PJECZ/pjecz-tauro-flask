@@ -71,6 +71,7 @@ def list_active():
         "modulos/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Módulos",
+        icono="mdi:toy-brick",
         estatus="A",
     )
 
@@ -83,6 +84,7 @@ def list_inactive():
         "modulos/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Módulos inactivos",
+        icono="mdi:toy-brick",
         estatus="B",
     )
 

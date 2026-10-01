@@ -5,7 +5,7 @@
 {% block title %}{{ titulo }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons(titulo) %}
+    {% call topbar.page_buttons(titulo, icono) %}
         {% if current_user.can_view('TURNOS ESTADOS') %}
             {{ topbar.button('Turnos Estados', url_for('turnos_estados.list_active'), 'mdi:rhombus-split') }}
         {% endif %}

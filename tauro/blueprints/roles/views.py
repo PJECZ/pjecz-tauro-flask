@@ -70,6 +70,7 @@ def list_active():
         "roles/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Roles",
+        icono="mdi:gamepad",
         estatus="A",
     )
 
@@ -82,6 +83,7 @@ def list_inactive():
         "roles/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Roles inactivos",
+        icono="mdi:gamepad",
         estatus="B",
     )
 

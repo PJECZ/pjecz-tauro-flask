@@ -80,6 +80,7 @@ def list_active():
         "api_keys/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="API Keys",
+        icono="mdi:key",
         estatus="A",
     )
 
@@ -92,6 +93,7 @@ def list_inactive():
         "api_keys/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="API Keys inactivos",
+        icono="mdi:key",
         estatus="B",
     )
 

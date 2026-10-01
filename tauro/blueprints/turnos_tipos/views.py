@@ -76,6 +76,7 @@ def list_active():
         "turnos_tipos/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Turnos Tipos",
+        icono="mdi:shape",
         estatus="A",
     )
 
@@ -88,6 +89,7 @@ def list_inactive():
         "turnos_tipos/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Turnos Tipos inactivos",
+        icono="mdi:shape",
         estatus="B",
     )
 

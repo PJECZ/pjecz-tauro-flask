@@ -95,6 +95,7 @@ def list_active():
         "permisos/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Permisos",
+        icono="mdi:lock",
         estatus="A",
     )
 
@@ -107,6 +108,7 @@ def list_inactive():
         "permisos/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Permisos inactivos",
+        icono="mdi:lock",
         estatus="B",
     )
 

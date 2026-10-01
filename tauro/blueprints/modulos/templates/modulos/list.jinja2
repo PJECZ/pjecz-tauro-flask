@@ -5,7 +5,7 @@
 {% block title %}Módulos{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons(titulo) %}
+    {% call topbar.page_buttons(titulo, icono) %}
         {% if current_user.can_view('ROLES') %}
             {{ topbar.button('Roles', url_for('roles.list_active'), 'mdi:gamepad') }}
         {% endif %}

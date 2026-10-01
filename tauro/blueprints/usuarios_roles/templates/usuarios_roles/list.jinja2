@@ -5,7 +5,7 @@
 {% block title %}{{ titulo }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons(titulo) %}
+    {% call topbar.page_buttons(titulo, icono) %}
         {% if current_user.can_view('MODULOS') %}
             {{ topbar.button('Módulos', url_for('modulos.list_active'), 'mdi:toy-brick') }}
         {% endif %}
