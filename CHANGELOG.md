@@ -7,6 +7,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Incorporaciónd el **tema oscuro**.
+- Mejora en el color de las tablas inactivas.
 - Cada página de listado de módulo lleva su icono para mayor claridad.
 - El menú desplegable con el nombre del usuario se pasó al menú superior, cargado a la derecha, para mejor acceso.
 - Resaltado de sintaxis **Markdown** en las páginas que lo muestran.

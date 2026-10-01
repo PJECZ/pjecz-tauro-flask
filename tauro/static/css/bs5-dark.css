@@ -1,0 +1,188 @@
+/* Tema oscuro, se activa con html[data-theme="dark"] (ver js/theme.js) */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --dk-bg: #12141f;
+  --dk-surface: #1c1f2e;
+  --dk-surface-2: #252940;
+  --dk-border: #353a55;
+  --dk-text: #e1e1e9;
+  --dk-muted: #9a9db3;
+  --dk-link: #6ea8fe;
+}
+
+html[data-theme="dark"] body {
+  background-color: var(--dk-bg);
+  color: var(--dk-text);
+}
+
+html[data-theme="dark"] a:not(.btn):not(.nav-link):not(.dropdown-item):not(.navbar-brand):not(.page-link) {
+  color: var(--dk-link);
+}
+
+html[data-theme="dark"] .border-bottom,
+html[data-theme="dark"] .border-top,
+html[data-theme="dark"] hr {
+  border-color: var(--dk-border) !important;
+}
+
+html[data-theme="dark"] .text-muted {
+  color: var(--dk-muted) !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
+  color: var(--dk-text);
+}
+
+/* Tarjetas */
+html[data-theme="dark"] .card {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .card-header {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+
+/* Tablas */
+html[data-theme="dark"] .table {
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.04);
+  --bs-table-active-bg: rgba(255, 255, 255, 0.1);
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.07);
+  color: var(--dk-text);
+  border-color: var(--dk-border);
+}
+html[data-theme="dark"] .table > :not(caption) > * > * {
+  color: var(--dk-text);
+  border-bottom-color: var(--dk-border);
+}
+html[data-theme="dark"] .table-dark {
+  --bs-table-bg: #2c3150;
+  --bs-table-striped-bg: #323858;
+  --bs-table-active-bg: #3a4163;
+  --bs-table-hover-bg: #363c5c;
+  color: var(--dk-text);
+  border-color: var(--dk-border);
+}
+
+/* Formularios */
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .form-control:focus,
+html[data-theme="dark"] .form-select:focus {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-link);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .form-control::placeholder {
+  color: var(--dk-muted);
+}
+html[data-theme="dark"] .form-floating > label,
+html[data-theme="dark"] label {
+  color: var(--dk-muted);
+}
+html[data-theme="dark"] .form-control:disabled,
+html[data-theme="dark"] .form-control[readonly] {
+  background-color: var(--dk-surface);
+}
+html[data-theme="dark"] .input-group-text {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+
+/* Botones */
+html[data-theme="dark"] .btn-outline-secondary {
+  color: var(--dk-text);
+  border-color: var(--dk-muted);
+}
+html[data-theme="dark"] .btn-outline-secondary:hover {
+  background-color: var(--dk-muted);
+  color: #000;
+}
+html[data-theme="dark"] .btn-outline-primary {
+  color: var(--dk-link);
+  border-color: var(--dk-link);
+}
+html[data-theme="dark"] .btn-outline-primary:hover {
+  background-color: var(--dk-link);
+  color: #000;
+}
+
+/* Menús desplegables, modales, listas y alertas */
+html[data-theme="dark"] .dropdown-menu {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+}
+html[data-theme="dark"] .dropdown-item {
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .dropdown-item:hover,
+html[data-theme="dark"] .dropdown-item:focus {
+  background-color: var(--dk-border);
+}
+html[data-theme="dark"] .modal-content {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .modal-header,
+html[data-theme="dark"] .modal-footer {
+  border-color: var(--dk-border);
+}
+html[data-theme="dark"] .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+html[data-theme="dark"] .list-group-item {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .accordion-item,
+html[data-theme="dark"] .accordion-button {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+
+/* DataTables */
+html[data-theme="dark"] .dataTables_wrapper,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_info,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_length,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_filter {
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .page-link {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-link);
+}
+html[data-theme="dark"] .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+html[data-theme="dark"] .page-item.disabled .page-link {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-muted);
+}
+
+/* Switch del tema en la barra superior */
+#themeSwitch {
+  margin: 0 0.4rem;
+  float: none;
+  cursor: pointer;
+}
