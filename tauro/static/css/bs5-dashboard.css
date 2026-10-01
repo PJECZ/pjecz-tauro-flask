@@ -201,3 +201,13 @@ header + .container-fluid {
   color: rgb(37, 37, 37);
   background-color: #64cb90;
 }
+
+/* Tablas de registros inactivos, un gris claro en lugar del oscuro por defecto de Bootstrap */
+.table-dark {
+  --bs-table-bg: #dee2e6;
+  --bs-table-striped-bg: #d3d7dc;
+  --bs-table-active-bg: #c8ccd1;
+  --bs-table-hover-bg: #cdd1d6;
+  color: #212529;
+  border-color: #c1c5ca;
+}
