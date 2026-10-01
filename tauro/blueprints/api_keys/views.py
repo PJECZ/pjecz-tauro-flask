@@ -61,6 +61,7 @@ def datatable_json():
         data.append(
             {
                 "detalle": {
+                    "nombre": resultado.nombre,
                     "api_key": resultado.api_key,
                     "url": url_for("api_keys.detail", api_key_id=resultado.id),
                 },
@@ -109,6 +110,7 @@ def new():
     form = APIKeyForm()
     if form.validate_on_submit():
         api_key = APIKey(
+            nombre=safe_string(form.nombre.data),
             api_key=safe_string(form.api_key.data),
             api_key_expiracion=form.api_key_expiracion.data,
             es_activo=form.es_activo.data,
@@ -137,6 +139,7 @@ def edit(api_key_id):
     api_key = APIKey.query.get_or_404(api_key_id)
     form = APIKeyForm()
     if form.validate_on_submit():
+        api_key.nombre = safe_string(form.nombre.data)
         api_key.api_key = safe_string(form.api_key.data)
         api_key.api_key_expiracion = form.api_key_expiracion.data
         api_key.es_activo = form.es_activo.data
@@ -150,6 +153,7 @@ def edit(api_key_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
+    form.nombre.data = api_key.nombre
     form.api_key.data = api_key.api_key
     form.api_key_expiracion.data = api_key.api_key_expiracion
     form.es_activo.data = api_key.es_activo

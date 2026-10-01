@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Añadido nuevo campo `nombre` en la tabla `api_keys`, para hacer más descriptivo los movimientos a través de las operaciones con ella.
 - Página de inicio mejor organizada y más informativa
 - Añadida página de "Historial de cambios", para visualizar la evolución del sistema.
 - Añadido página de "Acerca de", que ayuda a identificar los desarrolladores involucrados y las últimas novedades añadidas.
@@ -16,6 +17,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### ✏️ Cambios
 
 - Se cambió el orden del listado de usuarios.
+
+### ⚙️ Requerimientos
+
+- Ejecutar SQL:
+  - Añadir campo nuevo `nombre` a la tabla `api_keys`: `v1.4.0-01-add-campo-nombre-api_key.sql`.
 
 ## [1.4.0] 2026-08-10
 

@@ -39,7 +39,7 @@
         <table id="api_keys_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th>API Key</th>
+                    <th>Nombre/API Key</th>
                     <th>Fecha de expiración</th>
                     <th>Activo</th>
                 </tr>
@@ -67,7 +67,7 @@
                 targets: 0, // detalle
                 data: null,
                 render: function(data, type, row, meta) {
-                    return '<a href="' + data.url + '">' + data.api_key + '</a>';
+                    return '<a href="' + data.url + '">' + data.nombre + '</a><br><small class="text-secondary">' + data.api_key + '</small>';
                 }
             },
             {
