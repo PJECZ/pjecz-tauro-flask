@@ -4,7 +4,10 @@
 Thumbs.db
 .~lock.*
 /.idea/
-/.vscode/
+# .vscode/ guarda los snippets del proyecto (versionados); solo se ignora lo personal
+/.vscode/*
+!/.vscode/settings.json
+!/.vscode/*.code-snippets
 
 # --- Secretos y configuración local (NUNCA subir) ---
 .env

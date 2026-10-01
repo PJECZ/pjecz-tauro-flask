@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Actualizados los archivos `README.md` y `CONTRIBUTING.md`.
 - Mejoras en el archivo `.gitignore`, ahora se incluye el archivo `uv.lock`.
 - Creación de documentación `/docs`. Utiliza la librería de JavaScript `mermaid`.
 - Mejor descripción de las acciones hechas por la API-Key en registros de la bitácora.
@@ -38,6 +39,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 - Se eliminaron los archivos **SQL** de migración de la versión v1.3.x
   - Añadió campo nuevo `pronunciacion` a la tabla `unidades`: `v1.3.0-01-add-campo-unidades.sql`.
   - Añadió campo nuevo `es_voceable` a la tabla `unidades`: `v1.3.0-02-add-campo-es_voceable.sql`.
+- Archivo manejador de paquetes anterior para utilizar con `poetry`. `pyproyect.toml.old`.
 
 ## [1.4.0] 2026-08-10
 

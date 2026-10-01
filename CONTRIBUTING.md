@@ -7,16 +7,25 @@
 Antes de empezar, asegúrate de tener tu entorno listo:
 
 1.  **Haz un Fork** de este repositorio a tu cuenta personal.
-2.  **Clona tu Fork** localmente:
+2.  **Clona tu Fork** localmente (cambia `tu-usuario` por tu usuario de GitHub):
 
 ```bash
-git clone https://github.com/PJECZ/pjecz-tauro-flask.git
+git clone https://github.com/tu-usuario/pjecz-tauro-flask.git
+cd pjecz-tauro-flask
 ```
 
 3.  **Configura el repositorio original** como `upstream` para recibir actualizaciones:
 
 ```bash
 git remote add upstream https://github.com/PJECZ/pjecz-tauro-flask.git
+```
+
+4.  **Prepara el entorno** (ver el [README](README.md) para el detalle):
+
+```bash
+cp .env.example .env      # edita con tus valores locales, nunca lo subas
+uv sync                   # instala dependencias, incluidas las de desarrollo
+uv run pre-commit install # activa isort, black y revisiones antes de cada commit
 ```
 
 ## 📈 Flujo de Trabajo (Git Flow)
@@ -36,13 +45,13 @@ git pull upstream dev
 
 Usa nombres descriptivos como `mejora/nombre-mejora` o `fix/bug-sesion`:
 
-```Bash
-git checkout -b mejora/mi-nueva-mejora
+```bash
+git switch -c mejora/mi-nueva-mejora
 ```
 
 ### 3. Haz tus cambios y súbelos
 
-Realiza tus _commits_ siguiendo el estándar de [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) si es posible.
+Realiza tus _commits_ siguiendo el estándar de [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/) si es posible (por ejemplo `fix: corrige el orden de turnos`).
 Luego, sube la rama a **tu Fork**:
 
 ```bash
@@ -56,11 +65,24 @@ Ve al repositorio original en GitHub y abre un PR:
 - **Base:** `dev` (¡Importante! No envíes directamente a `main`).
 - **Compare:** `tu-usuario:mejora/mi-nueva-mejora`.
 
+## 🎨 Estilo de código
+
+- Formato con **black** e **isort** (líneas de hasta 128 caracteres, configurado en `pyproject.toml`); `pre-commit` los aplica solo.
+- Análisis con **pylint** (`uv run pylint tauro lib cli`).
+- Nombres, comentarios y mensajes en **español**, igual que el resto del proyecto.
+- Los módulos nuevos siguen la estructura de `tauro/blueprints/<módulo>/` (`models.py`, `views.py`, `forms.py`, `templates/`). Hay _snippets_ de VS Code en `.vscode/` para generarlos.
+
+## 🔒 Seguridad
+
+- **Nunca** subas `.env`, contraseñas, `SECRET_KEY`, `SALT`, API-Keys, IPs internas ni respaldos de la base de datos. Antes de cada commit revisa con `git diff --staged`.
+- Si una credencial se expone, avisa al equipo para rotarla; borrar el commit no es suficiente.
+- Para dependencias: si cambias `pyproject.toml`, ejecuta `uv lock` y **sube también `uv.lock`**.
+
 ## 📋 Reglas de Oro
 
 - **No toques `main`:** Solo el equipo de despliegue hace _merges_ de `dev` a `main`.
-- **Tests:** Asegúrate de que tu código pasa todos los _tests_ locales antes de enviar el PR.
-- **Documentación:** Si añades una funcionalidad nueva, actualiza el `README.md` de ser necesario y `CHANGELOG.md` para organizar los cambios añadidos.
+- **Tests:** Asegúrate de que tu código pasa los _tests_ locales (`uv run pytest`, necesitan la API en ejecución y las variables descritas en el README) antes de enviar el PR.
+- **Documentación:** Si añades una funcionalidad nueva, actualiza el `README.md` y la carpeta [`docs/`](docs/README.md) de ser necesario, y `CHANGELOG.md` para organizar los cambios añadidos.
 - **Un PR por tarea:** No mezcles correcciones de errores con nuevas funcionalidades en el mismo PR.
 
 ## 🚀 Despliegue a Producción
@@ -69,7 +91,11 @@ Una vez que las funciones en `dev` son estables y han sido probadas, el administ
 
 Revisando y añadiendo los cambios en el archivo `CHANGELOG.md`, subiendo la versión según sea el caso, borrar la rama `dev` después del _merge_ y crear una nueva rama `dev` cuando ya todo haya terminado.
 
+La versión se define en `pyproject.toml` y debe coincidir con la entrada del `CHANGELOG.md`.
+
 ```bash
-git tag -a v1.0.0 -m "Lanzamiento versión 1.0"
-git push origin v1.0.0
+git tag -a v1.5.0 -m "Lanzamiento versión 1.5.0"
+git push origin v1.5.0
 ```
+
+Después, en el servidor de producción se ejecuta `actualizar-proyecto-tauro` (ver [operación](docs/05-operacion-y-mantenimiento.md#-despliegue)).
