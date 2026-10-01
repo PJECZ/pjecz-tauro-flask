@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- El menú desplegable con el nombre del usuario se pasó al menú superior, cargado a la derecha, para mejor acceso.
 - Resaltado de sintaxis **Markdown** en las páginas que lo muestran.
 - Añadido nuevo campo `nombre` en la tabla `api_keys`, para hacer más descriptivo los movimientos a través de las operaciones con ella.
 - Página de inicio mejor organizada y más informativa
