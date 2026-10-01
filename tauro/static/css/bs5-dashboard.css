@@ -119,9 +119,11 @@ body {
 
 #version {
   text-align: center;
-  color: #727272;
+  color: #e1e1e9;
   font-size: small;
   padding-top: 10px;
+  margin-left: 10px;
+  text-decoration: none;
 }
 
 /* Currency */
@@ -160,14 +162,14 @@ body {
 /* DataTables rows backgrounds colors */
 
 .bg-yellow {
-    color: rgb(6, 6, 6);
-    background-color: #f3ebb3;
+  color: rgb(6, 6, 6);
+  background-color: #f3ebb3;
 }
 .bg-blue {
-    color: rgb(42, 42, 42);
-    background-color: #7ebdf7;
+  color: rgb(42, 42, 42);
+  background-color: #7ebdf7;
 }
 .bg-green {
-    color: rgb(37, 37, 37);
-    background-color: #64cb90;
+  color: rgb(37, 37, 37);
+  background-color: #64cb90;
 }
