@@ -8,10 +8,13 @@ Antes de empezar, asegúrate de tener tu entorno listo:
 
 1.  **Haz un Fork** de este repositorio a tu cuenta personal.
 2.  **Clona tu Fork** localmente:
+
 ```bash
 git clone https://github.com/PJECZ/pjecz-tauro-flask.git
 ```
+
 3.  **Configura el repositorio original** como `upstream` para recibir actualizaciones:
+
 ```bash
 git remote add upstream https://github.com/PJECZ/pjecz-tauro-flask.git
 ```
@@ -19,7 +22,9 @@ git remote add upstream https://github.com/PJECZ/pjecz-tauro-flask.git
 ## 📈 Flujo de Trabajo (Git Flow)
 
 ### 1. Sincroniza tu rama `dev`
+
 Antes de crear una nueva funcionalidad, asegúrate de tener lo último del proyecto principal:
+
 ```bash
 # Cambia a la rama dev
 git switch dev
@@ -28,24 +33,28 @@ git pull upstream dev
 ```
 
 ### 2. Crea una rama para tu tarea
-Usa nombres descriptivos como `feature/nombre-mejora` o `fix/bug-sesion`:
+
+Usa nombres descriptivos como `mejora/nombre-mejora` o `fix/bug-sesion`:
+
 ```Bash
-git checkout -b feature/mi-nueva-mejora
+git checkout -b mejora/mi-nueva-mejora
 ```
 
 ### 3. Haz tus cambios y súbelos
+
 Realiza tus _commits_ siguiendo el estándar de [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) si es posible.
 Luego, sube la rama a **tu Fork**:
 
 ```bash
-git push origin feature/mi-nueva-mejora
+git push origin mejora/mi-nueva-mejora
 ```
 
 ### 4. Abre un _Pull Request_ (PR)
 
 Ve al repositorio original en GitHub y abre un PR:
+
 - **Base:** `dev` (¡Importante! No envíes directamente a `main`).
-- **Compare:** `tu-usuario:feature/mi-nueva-mejora`.
+- **Compare:** `tu-usuario:mejora/mi-nueva-mejora`.
 
 ## 📋 Reglas de Oro
 
