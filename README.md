@@ -1,7 +1,8 @@
-# 🏛️ [pjecz-tauro-flask]
+# 🏛️ pjecz-tauro-flask
 
 > Aplicación Web para la administración y control de los turnos dentro del PJECZ Ciudad Judicial.
 > Proyectos relaccionados:
+>
 > - [pjecz-tauro-reactjs](https://github.com/PJECZ/pjecz-tauro-reactjs) (Sistema _Frontend_)
 > - [pjecz-columba-cli-typer](https://github.com/ricval/pjecz-columba-cli-typer) (Sistema de Voceo)
 > - pjecz-casiopea (Sistema de Citas)
@@ -16,15 +17,16 @@ Puedes crear, tomar, o cambiar el estado a uno ya definido de un turno. El lista
 
 ## 🛠️ Tecnologías Utilizadas
 
-* **Lenguaje:** Python 3.14
-* **Framework:** Flask
-* **Base de Datos:** PostgreSQL
-* **Servidor:** Nginx
-* **Otros:** SocketIO
+- **Lenguaje:** Python 3.14
+- **Framework:** Flask
+- **Base de Datos:** PostgreSQL
+- **Servidor:** Nginx
+- **Otros:** SocketIO
 
 ## ⚙️ Requisitos Previos
 
 Lista de herramientas necesarias para correr el proyecto localmente:
+
 - Git
 - Python
 - uv - manejador de paquetes para Python
@@ -32,23 +34,28 @@ Lista de herramientas necesarias para correr el proyecto localmente:
 ## 🚀 Instalación y Configuración
 
 ### 1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/PJECZ/pjecz-tauro-flask.git
-   cd pjecz-tauro-flask
-   ```
+
+```bash
+git clone https://github.com/PJECZ/pjecz-tauro-flask.git
+cd pjecz-tauro-flask
+```
 
 ### 2. Configurar variables de entorno:
+
 Copia el archivo de ejemplo y edita las credenciales necesarias (Base de datos, API Keys):
+
 ```
 cp .env.example .env
 ```
 
 ### 3. Instalar dependencias:
+
 ```bash
 uv sync
 ```
 
 ### 4. Iniciar el servidor de desarrollo:
+
 ```bash
 uv run flask run --host=0.0.0.0 --port=5020
 ```
@@ -56,6 +63,7 @@ uv run flask run --host=0.0.0.0 --port=5020
 ## 🌿 Estructura de Ramas
 
 Este proyecto sigue el flujo de trabajo institucional:
+
 - `main`: Rama de producción (Solo código estable).
 - `dev`: Rama de integración y pruebas (_Staging_).
 - `feature/*`: Ramas temporales para nuevas funcionalidades.
@@ -76,7 +84,6 @@ actualizar-proyecto-tauro
 
 - **Departamento:** Dirección de Informática - PJECZ
 - **Responsable:** Dir. Guillermo Valdés, Carlos Hernández y Ricardo Valdés
-- **Email:** [correo@pjecz.gob.mx]
 
 ---
 
