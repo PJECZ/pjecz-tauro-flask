@@ -4,7 +4,7 @@ API-Key v1 Endpoint: Crear Turno
 
 from datetime import datetime
 
-from flask import current_app, request, url_for
+from flask import current_app, g, request, url_for
 from flask_restful import Resource
 from pytz import timezone
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -120,7 +120,7 @@ class CrearTurno(Resource):
         Bitacora(
             modulo=Modulo.query.filter_by(nombre="TURNOS").first(),
             usuario=usuario,
-            descripcion=safe_message(f"El turno {turno.id} ha sido creado por Api-Key"),
+            descripcion=safe_message(f"El turno {turno.id} ha sido creado por Api-Key utilizando la api-key: {g.api_key.nombre}"),
             url=url_for("turnos.detail", turno_id=turno.id),
         ).save()
 

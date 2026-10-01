@@ -3,7 +3,7 @@ API-Key v1 Endpoint: Tomar Turno
 """
 
 from datetime import datetime
-from flask import request, url_for
+from flask import g, request, url_for
 from flask_restful import Resource
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 from lib.safe_string import safe_message
@@ -102,7 +102,7 @@ class TomarTurno(Resource):
         Bitacora(
             modulo=Modulo.query.filter_by(nombre="TURNOS").first(),
             usuario=usuario,
-            descripcion=safe_message(f"El turno {turno.id} ha sido tomado utilizando Api-Key"),
+            descripcion=safe_message(f"El turno {turno.id} ha sido tomado utilizando Api-Key utilizando la api-key: {g.api_key.nombre}"),
             url=url_for("turnos.detail", turno_id=turno.id),
         ).save()
 

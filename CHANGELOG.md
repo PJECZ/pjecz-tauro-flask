@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Mejor descripción de las acciones hechas por la API-Key en registros de la bitácora.
 - Incorporación del **tema oscuro**.
 - Mejora en el color de las tablas inactivas.
 - Cada página de listado de módulo lleva su icono para mayor claridad.
