@@ -1,28 +1,61 @@
+# --- Sistema operativo y editores ---
 .directory
 .DS_Store
+Thumbs.db
 .~lock.*
+/.idea/
+# .vscode/ guarda los snippets del proyecto (versionados); solo se ignora lo personal
+/.vscode/*
+!/.vscode/settings.json
+!/.vscode/*.code-snippets
 
-*.csv
-*.log
+# --- Secretos y configuración local (NUNCA subir) ---
+.env
+.env.*
+!.env.example
+/.bashrc
+/.zshrc
+*.pem
+*.key
+
+# --- Entornos virtuales ---
+/.venv/
+/venv/
+
+# --- Python ---
+__pycache__/
 *.py[cod]
-*.sqlite3
-*.sqlite3-journal
-*.session.sql
+*.egg-info/
+build/
+dist/
+
+# --- Pruebas y herramientas de calidad ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- Datos, respaldos y registros ---
+*.csv
 *.xls
 *.xlsx
 *.XLS
 *.XLSX
-
-.bashrc
-.zshrc
-.env
-poetry.lock
-uv.lock
-
-__pycache__/
-*.egg-info/
-
-/.idea/
-/.venv/
+*.log
+*.sqlite3
+*.sqlite3-journal
+*.session.sql
+*.backup
+*.dump
 /seed/
-/venv/
+
+# --- Gestores de paquetes ---
+# uv.lock SÍ se versiona (despliegues reproducibles); poetry no se usa en este proyecto
+poetry.lock
+
+# --- Notas personales y archivos temporales ---
+/tmp/
+
+# --- Claude Code (configuración local) ---
+.claude/settings.local.json

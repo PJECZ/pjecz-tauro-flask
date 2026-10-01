@@ -3,10 +3,9 @@ API-Keys, modelos
 """
 
 from datetime import datetime
-from typing import List, Optional
 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from lib.universal_mixin import UniversalMixin
 from tauro.extensions import database
@@ -22,7 +21,8 @@ class APIKey(database.Model, UniversalMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Columnas
-    api_key: Mapped[str] = mapped_column(String(128))
+    nombre: Mapped[str] = mapped_column(String(128), unique=True)
+    api_key: Mapped[str] = mapped_column(String(128), unique=True)
     api_key_expiracion: Mapped[datetime]
     es_activo: Mapped[bool] = mapped_column(default=False)
 

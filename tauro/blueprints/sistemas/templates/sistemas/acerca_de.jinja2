@@ -9,14 +9,16 @@
 {% endblock %}
 
 {% block content %}
+    <style>
+        .changelog h6 { margin-top: 1rem; font-weight: 600; }
+        .changelog h6:first-child { margin-top: 0; }
+    </style>
     <div class="row">
         <div class="col-md-12">
             {% call card.card(title='Acerca del Proyecto') %}
                 <h2 class="mb-1">Sistema de Turnos</h2>
-                <p class="lead text-muted">Proyecto pjecz-tauro</p>
-                <p>
-                    <span class="badge text-bg-primary fs-6">Versión Actual: v1.4.1 (2026-09-30)</span>
-                </p>
+                <p class="lead text-muted mb-0">Proyecto pjecz-tauro</p>
+                <p class="badge text-primary fs-6">Versión Actual: v1.5.0 (2026-10-01)</p>
                 <p class="mb-0">
                     <strong>Desarrollado por:</strong><br>
                     {% for autor in autores %}{{ autor }}<br>{% endfor %}
@@ -33,14 +35,7 @@
                             Versión {{ n.version }}
                             {% if n.fecha %}<small class="text-muted">({{ n.fecha }})</small>{% endif %}
                         </h5>
-                        {% for seccion in n.secciones %}
-                            <h6 class="mt-3">{{ seccion.titulo }}</h6>
-                            <ul>
-                                {% for item in seccion['items'] %}
-                                    <li>{{ item }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endfor %}
+                        <div class="changelog">{{ n.html }}</div>
                     {% else %}
                         <p class="text-muted text-center">No hay novedades disponibles.</p>
                     {% endfor %}

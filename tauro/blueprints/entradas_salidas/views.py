@@ -90,4 +90,5 @@ def list_active():
         "entradas_salidas/list.jinja2",
         filtros=json.dumps(filtros),
         titulo=titulo,
+        icono="mdi:transit-transfer",
     )

@@ -20,6 +20,7 @@
 
 {% block content %}
     {% call detail.card(estatus=api_key.estatus) %}
+        {{ detail.label_value('Nombre', api_key.nombre) }}
         {{ detail.label_value('API Key', api_key.api_key) }}
         {{ detail.label_value('Fecha de Expiración', api_key.api_key_expiracion) }}
         {{ detail.label_value('Activo', api_key.es_activo) }}

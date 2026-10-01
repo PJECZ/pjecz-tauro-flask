@@ -79,6 +79,7 @@ def list_active():
         "unidades/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Unidades",
+        icono="mdi:chart-pie",
         estatus="A",
     )
 
@@ -91,6 +92,7 @@ def list_inactive():
         "unidades/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Unidades inactivas",
+        icono="mdi:chart-pie",
         estatus="B",
     )
 

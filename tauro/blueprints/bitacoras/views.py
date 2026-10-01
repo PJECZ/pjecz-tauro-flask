@@ -98,4 +98,5 @@ def list_active():
         "bitacoras/list.jinja2",
         filtros=json.dumps(filtros),
         titulo=titulo,
+        icono="mdi:clipboard-text-clock-outline",
     )

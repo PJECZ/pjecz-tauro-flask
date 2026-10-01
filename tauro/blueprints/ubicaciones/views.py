@@ -78,6 +78,7 @@ def list_active():
         "ubicaciones/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Ubicaciones",
+        icono="mdi:storefront",
         estatus="A",
     )
 
@@ -90,6 +91,7 @@ def list_inactive():
         "ubicaciones/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Ubicaciones inactivas",
+        icono="mdi:storefront",
         estatus="B",
     )
 

@@ -1,0 +1,13 @@
+# Archivo para crear llamados a comandos personalizados para el Sistema Tauro (Turnos)
+
+# Carga el proyecto pjecz-tauro-flask y levanta el entorno virtual junto a sus variables de entorno del proyecto
+alias cargar-tauro-flask='cd "${HOME}/github/pjecz/pjecz-tauro-flask" && source .bashrc'
+
+# Va al directo del proyecto pjecz-tauro-reactjs
+alias cargar-tauro-reactjs='cd "${HOME}/github/pjecz/pjecz-tauro-reactjs"'
+
+# Ejecuta de nuevo la pantalla de bienvenida para recordar los comandos personalizados
+alias comandos='source ${HOME}/.bashrc.d/90-pantalla-bienvenida.sh'
+
+# Comando para ejecutar apps del proyecto
+alias cli-turnos='${HOME}/.local/bin/cli-turnos.sh 2>&1 | tee -a ${HOME}/logs/cli-turnos.log'

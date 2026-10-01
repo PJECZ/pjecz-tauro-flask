@@ -1,16 +1,16 @@
 {# Bootstrap 5 Dashboard #}
 
 {# Page #}
-{%- macro page(title) -%}
+{%- macro page(title, icono=None) -%}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h3">{{ title }}</h1>
+        <h1 class="h3">{% if icono %}<span class="iconify" data-icon="{{ icono }}"></span> {% endif %}{{ title }}</h1>
     </div>
 {%- endmacro -%}
 
 {# Page with buttons #}
-{%- macro page_buttons(title) -%}
+{%- macro page_buttons(title, icono=None) -%}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h3">{{ title }}</h1>
+        <h1 class="h3">{% if icono %}<span class="iconify" data-icon="{{ icono }}"></span> {% endif %}{{ title }}</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
                 {{ caller () }}

@@ -1,0 +1,52 @@
+#
+# Servidor Web con tres sitios para sistema de Turnos (Tauro)
+# Frontend: turnos.pjecz.gob.mx
+# Backend : turnos.pjecz.gob.mx/admin/ puerto=5020
+# Sockets: turnos.pjecz.gob.mx/socket.io/ puerto=5020
+#
+server {
+	server_name turnos.pjecz.gob.mx;
+
+    # Servidor Web para Tauro Flask - Backend de Administracion
+    location /admin/ {
+        proxy_pass              http://localhost:5020/admin/;
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+		proxy_connect_timeout	300s;
+		proxy_read_timeout	    300s;
+    }
+    
+    # Configuración del Servicio de Sockets a través del puerto 5020
+    location /socket.io/    {
+        proxy_pass              http://localhost:5020;
+		proxy_http_version	    1.1;
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+        proxy_set_header        Upgrade $http_upgrade;
+        proxy_set_header        Connection "upgrade";
+        proxy_buffering         off;
+        proxy_read_timeout      86400s;
+		proxy_send_timeout	    86400s;
+
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST';
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+    }
+
+    # Sitio Raíz / Proxy a localhost:80 - ReactJS
+    location / {
+		root /home/pjecz-tauro/github/PJECZ/pjecz-tauro-reactjs/build;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+}
+
+server {
+	listen 80;
+	server_name turnos.pjecz.gob.mx;
+	return 301 https://$host$request_uri; # Redirige todo a HTTPS
+}

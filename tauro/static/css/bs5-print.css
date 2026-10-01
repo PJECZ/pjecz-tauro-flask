@@ -41,7 +41,11 @@ h3 {
 }
 body {
   min-width: 992px !important;
-  font: 13pt "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font:
+    13pt "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
   line-height: 1.3;
   background: #fff !important;
   color: #000;
@@ -65,12 +69,15 @@ body {
   border: 1px solid #dee2e6 !important;
 }
 .table-dark {
-  color: inherit;
+  color: #4b5157;
+  --bs-table-bg: #afc1d3 !important;
 }
 .table-dark th,
 .table-dark td,
 .table-dark thead th,
 .table-dark tbody + tbody {
+  color: #4b5157;
+  background-color: #e9ecef !important;
   border-color: #dee2e6;
 }
 

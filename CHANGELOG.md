@@ -3,10 +3,20 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [1.4.1] Sin publicar
+## [1.5.0] Sin publicar
 
 ### ✨ Mejoras
 
+- Actualizados los archivos `README.md` y `CONTRIBUTING.md`.
+- Mejoras en el archivo `.gitignore`, ahora se incluye el archivo `uv.lock`.
+- Creación de documentación `/docs`. Utiliza la librería de JavaScript `mermaid`.
+- Mejor descripción de las acciones hechas por la API-Key en registros de la bitácora.
+- Incorporación del **tema oscuro**.
+- Mejora en el color de las tablas inactivas.
+- Cada página de listado de módulo lleva su icono para mayor claridad.
+- El menú desplegable con el nombre del usuario se pasó al menú superior, cargado a la derecha, para mejor acceso.
+- Resaltado de sintaxis **Markdown** en las páginas que lo muestran.
+- Añadido nuevo campo `nombre` en la tabla `api_keys`, para hacer más descriptivo los movimientos a través de las operaciones con ella.
 - Página de inicio mejor organizada y más informativa
 - Añadida página de "Historial de cambios", para visualizar la evolución del sistema.
 - Añadido página de "Acerca de", que ayuda a identificar los desarrolladores involucrados y las últimas novedades añadidas.
@@ -16,6 +26,20 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### ✏️ Cambios
 
 - Se cambió el orden del listado de usuarios.
+
+### ⚙️ Requerimientos
+
+- Ejecutar SQL:
+  - Añadir campo nuevo `nombre` a la tabla `api_keys`: `v1.4.0-01-add-campo-nombre-api_key.sql`.
+- Nuevos paquetes a instalar:
+  - `markdown-it-py` - Resaltador de sintaxis para formato **Markdown**.
+
+### ❌ Eliminaciones
+
+- Se eliminaron los archivos **SQL** de migración de la versión v1.3.x
+  - Añadió campo nuevo `pronunciacion` a la tabla `unidades`: `v1.3.0-01-add-campo-unidades.sql`.
+  - Añadió campo nuevo `es_voceable` a la tabla `unidades`: `v1.3.0-02-add-campo-es_voceable.sql`.
+- Archivo manejador de paquetes anterior para utilizar con `poetry`. `pyproyect.toml.old`.
 
 ## [1.4.0] 2026-08-10
 

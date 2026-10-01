@@ -75,6 +75,7 @@ def list_active():
         "turnos_estados/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Turnos Estados",
+        icono="mdi:traffic-light-outline",
         estatus="A",
     )
 
@@ -87,6 +88,7 @@ def list_inactive():
         "turnos_estados/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Turnos Estados inactivos",
+        icono="mdi:traffic-light-outline",
         estatus="B",
     )
 

@@ -5,6 +5,14 @@ body {
   height: 100%;
 }
 
+:root {
+  --header-h: 54px; /* Alto fijo del header superior */
+}
+
+header.navbar {
+  height: var(--header-h);
+}
+
 body {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   background-color: #eee;
@@ -52,10 +60,29 @@ body {
   }
 }
 
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex !important;
+    flex-direction: column;
+    /* Ocupa solo el alto visible debajo del header y se queda fija al hacer scroll */
+    position: sticky;
+    top: var(--header-h);
+    align-self: flex-start;
+    height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+  }
+}
+
+/* El contenedor ocupa el alto visible menos el header, para evitar scroll innecesario */
+header + .container-fluid {
+  height: auto !important;
+  min-height: calc(100vh - var(--header-h));
+}
+
 .sidebar-sticky {
   position: relative;
   top: 0;
-  height: calc(100vh - 48px);
+  height: calc(100vh - var(--header-h));
   padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
@@ -118,10 +145,13 @@ body {
 }
 
 #version {
+  margin-top: auto; /* Fijado al fondo del menú lateral */
   text-align: center;
-  color: #727272;
+  color: #e1e1e9;
   font-size: small;
   padding-top: 10px;
+  margin-left: 10px;
+  text-decoration: none;
 }
 
 /* Currency */
@@ -160,14 +190,36 @@ body {
 /* DataTables rows backgrounds colors */
 
 .bg-yellow {
-    color: rgb(6, 6, 6);
-    background-color: #f3ebb3;
+  color: rgb(6, 6, 6);
+  background-color: #f3ebb3;
 }
 .bg-blue {
-    color: rgb(42, 42, 42);
-    background-color: #7ebdf7;
+  color: rgb(42, 42, 42);
+  background-color: #7ebdf7;
 }
 .bg-green {
-    color: rgb(37, 37, 37);
-    background-color: #64cb90;
+  color: rgb(37, 37, 37);
+  background-color: #64cb90;
+}
+
+/* Tablas de registros inactivos, un gris claro en lugar del oscuro por defecto de Bootstrap */
+.table-dark {
+  --bs-table-bg: #dee2e6;
+  --bs-table-striped-bg: #d3d7dc;
+  --bs-table-active-bg: #c8ccd1;
+  --bs-table-hover-bg: #cdd1d6;
+  color: #212529;
+  border-color: #c1c5ca;
+}
+
+/* Colores de filas según el estado del turno
+   (el selector es más específico que "table.dataTable > tbody > tr" de DataTables, que los deja transparentes) */
+table.dataTable > tbody > tr.fila-atendiendo {
+  background-color: #ebf5fb;
+}
+table.dataTable > tbody > tr.fila-completado {
+  background-color: #eafaf1;
+}
+table.dataTable > tbody > tr.fila-cancelado {
+  background-color: #fdedec;
 }

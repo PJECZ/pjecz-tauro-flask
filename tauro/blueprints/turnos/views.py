@@ -119,6 +119,7 @@ def list_active():
         "turnos/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Turnos",
+        icono="mdi:ticket",
         turnos_tipos=TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoTipo.nombre).all(),
         turnos_estados=TurnoEstado.query.filter_by(estatus="A").filter_by(es_activo=True).order_by(TurnoEstado.nombre).all(),
         unidades=Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
@@ -139,6 +140,7 @@ def list_inactive():
         unidades=Unidad.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
         ubicaciones=Ubicacion.query.filter_by(estatus="A").filter_by(es_activo=True).all(),
         titulo="Turnos inactivos",
+        icono="mdi:ticket",
         estatus="B",
     )
 
