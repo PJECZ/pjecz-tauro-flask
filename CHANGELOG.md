@@ -7,7 +7,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
-- Creación de documentación `/docs`.
+- Mejoras en el archivo `.gitignore`, ahora se incluye el archivo `uv.lock`.
+- Creación de documentación `/docs`. Utiliza la librería de JavaScript `mermaid`.
 - Mejor descripción de las acciones hechas por la API-Key en registros de la bitácora.
 - Incorporación del **tema oscuro**.
 - Mejora en el color de las tablas inactivas.

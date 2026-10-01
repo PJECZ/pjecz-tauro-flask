@@ -76,15 +76,18 @@ npm run build      # genera build/, que nginx sirve como sitio raíz
 ## 4. Instalar el *backend*
 
 ```bash
-# Producción (sin dependencias de desarrollo)
-uv sync --no-dev
+# Producción: versiones exactas de uv.lock, sin dependencias de desarrollo
+uv sync --frozen --no-dev
 
 # Desarrollo
 uv sync
 
-# Reinstalación limpia
-rm -rf .venv uv.lock && uv sync
+# Actualizar dependencias (genera un nuevo uv.lock que se sube al repositorio)
+uv lock --upgrade && uv sync
 ```
+
+> [!NOTE]
+> `uv.lock` **se versiona**: así desarrollo y producción instalan exactamente las mismas versiones. `--frozen` falla si el `.lock` no coincide con `pyproject.toml` en lugar de modificarlo.
 
 ## 5. Ejecutar
 
