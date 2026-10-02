@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Documentación de `APIs` más explicita.
 - Actualizados los archivos `README.md` y `CONTRIBUTING.md`.
 - Mejoras en el archivo `.gitignore`, ahora se incluye el archivo `uv.lock`.
 - Creación de documentación `/docs`. Utiliza la librería de JavaScript `mermaid`.
