@@ -91,6 +91,7 @@ La documentación técnica está en [`docs/`](docs/README.md):
 - [Arquitectura](docs/01-arquitectura.md)
 - [Base de datos](docs/02-base-de-datos.md)
 - [APIs](docs/03-apis.md)
+  - [API-Key](docs/03-01-api-key.md) · [API-OAuth2](docs/03-02-api-oauth2.md)
 - [Instalación y configuración](docs/04-instalacion-y-configuracion.md)
 - [Operación y mantenimiento](docs/05-operacion-y-mantenimiento.md)
 

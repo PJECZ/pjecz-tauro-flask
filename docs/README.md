@@ -12,6 +12,8 @@ Documentación técnica del _backend_ **pjecz-tauro-flask**. Está pensada para 
 | 1   | [Visión general y arquitectura](01-arquitectura.md)              | Qué es Tauro, componentes, rutas públicas, flujo de un turno                     |
 | 2   | [Base de datos](02-base-de-datos.md)                             | Diagrama entidad-relación y descripción de las tablas                            |
 | 3   | [APIs](03-apis.md)                                               | API-Key (sistemas de gestión) y API-OAuth2 (_frontend_), _endpoints_ y WebSocket |
+| 3.1 | [API-Key v1](03-01-api-key.md)                                   | Índice y detalle de cada _endpoint_ para sistemas de gestión                     |
+| 3.2 | [API-OAuth2 v1](03-02-api-oauth2.md)                             | Índice y detalle de cada _endpoint_ para el _frontend_ y las pantallas           |
 | 4   | [Instalación y configuración](04-instalacion-y-configuracion.md) | Variables de entorno, instalación, arranque, servicio systemd, nginx             |
 | 5   | [Operación y mantenimiento](05-operacion-y-mantenimiento.md)     | Tareas programadas, CLI, respaldos, despliegue, scripts del servidor             |
 
