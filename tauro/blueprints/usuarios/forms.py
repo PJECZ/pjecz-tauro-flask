@@ -30,12 +30,12 @@ class AccesoForm(FlaskForm):
 class UsuarioForm(FlaskForm):
     """Formulario Usuario"""
 
-    email = StringField("e-mail", validators=[DataRequired(), Email()])
+    email = StringField("e-mail", validators=[DataRequired(), Email()], render_kw={"autocomplete": "off"})
     nombres = StringField("Nombres", validators=[DataRequired(), Length(max=256)])
     apellido_paterno = StringField("Apellido primero", validators=[DataRequired(), Length(max=256)])
     apellido_materno = StringField("Apellido segundo", validators=[Optional(), Length(max=256)])
     contrasena = PasswordField(
-        "Contraseña",
+        "Contraseña (No necesario para recepcionista)", render_kw={"autocomplete": "new-password"},
         validators=[Optional(), Length(8, 48), Regexp(CONTRASENA_REGEXP, 0, CONTRASENA_MENSAJE)],
     )
     unidad = SelectField("Unidad", coerce=int, validators=[DataRequired()])

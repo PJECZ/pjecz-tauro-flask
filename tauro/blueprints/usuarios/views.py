@@ -110,18 +110,26 @@ def datatable_json():
     else:
         consulta = consulta.filter(Usuario.estatus == "A")
     # Filtrar por las columnas de texto de Usuario
-    if "nombres" in request.form:
-        consulta = consulta.filter(Usuario.nombres.contains(safe_string(request.form["nombres"])))
-    if "apellido_paterno" in request.form:
-        consulta = consulta.filter(Usuario.apellido_paterno.contains(safe_string(request.form["apellido_paterno"])))
-    if "apellido_materno" in request.form:
-        consulta = consulta.filter(Usuario.apellido_materno.contains(safe_string(request.form["apellido_materno"])))
+    if "nombre_completo" in request.form:
+        nombre_completo = safe_string(request.form["nombre_completo"])
+        if nombre_completo != "":
+            palabras = nombre_completo.split()
+            for palabra in palabras:
+                consulta = consulta.filter(
+                    (Usuario.nombres + " " + Usuario.apellido_paterno + " " + Usuario.apellido_materno).contains(palabra)
+                )
     if "email" in request.form:
         consulta = consulta.filter(Usuario.email.contains(safe_email(request.form["email"], search_fragment=True)))
     if "unidad_id" in request.form:
         consulta = consulta.filter(Usuario.unidad_id == request.form["unidad_id"])
     # Ordenar y paginar
-    registros = consulta.order_by(Usuario.id).offset(start).limit(rows_per_page).all()
+    if "con_ubicacion" in request.form:
+        # Excluir usuarios con ubicación NO DEFINIDO y ordenar por el nombre y número de la ubicación
+        consulta = consulta.join(Ubicacion, Usuario.ubicacion_id == Ubicacion.id).filter(Ubicacion.nombre != "NO DEFINIDO")
+        consulta = consulta.order_by(Ubicacion.nombre, Ubicacion.numero, Usuario.id)
+    else:
+        consulta = consulta.order_by(Usuario.id)
+    registros = consulta.offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
@@ -200,8 +208,12 @@ def new():
             contrasena = pwd_context.hash(form.contrasena.data.strip())
         else:
             contrasena = pwd_context.hash(generar_contrasena())
-        # Determinar Ubicacion como NO DEFINIDO
-        ubicacion_nd = Ubicacion.query.filter_by(nombre="NO DEFINIDO").first()
+        # Determinar Ubicación como NO DEFINIDO
+        ubicacion = form.ubicacion.data
+        if ubicacion:
+            ubicacion = Ubicacion.query.get(ubicacion)
+        if not ubicacion:
+            ubicacion = Ubicacion.query.filter_by(nombre="NO DEFINIDO").first()
         # Guardar
         if es_valido:
             usuario = Usuario(
@@ -211,8 +223,8 @@ def new():
                 apellido_materno=safe_string(form.apellido_materno.data, save_enie=True),
                 contrasena=contrasena,
                 unidad_id=form.unidad.data,
+                ubicacion=ubicacion,
                 es_acceso_frontend=form.es_acceso_frontend.data,
-                ubicacion=ubicacion_nd,
             )
             usuario.save()
             bitacora = Bitacora(

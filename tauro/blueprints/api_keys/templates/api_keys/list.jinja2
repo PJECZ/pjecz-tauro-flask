@@ -25,7 +25,7 @@
                     <div class="col-6">
                         <div class="form-floating">
                             <input id="filtroApiKey" type="text" class="form-control" aria-label="ApiKey" style="text-transform: uppercase;">
-                            <label for="filtroApiKey">API Key</label>
+                            <label for="filtroApiKey">API Key Nombre</label>
                         </div>
                     </div>
                     <div class="col-2 text-end">
@@ -83,7 +83,7 @@
         ];
         // Filtros apiKeys
         const filtrosApiKeys = new FiltrosDataTable('#api_keys_datatable', configDataTable);
-        filtrosApiKeys.agregarInput('filtroApiKey', 'ApiKey');
+        filtrosApiKeys.agregarInput('filtroApiKey', 'nombre');
         filtrosApiKeys.precargar();
     </script>
 {% endblock %}

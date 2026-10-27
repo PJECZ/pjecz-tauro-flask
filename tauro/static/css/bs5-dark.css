@@ -89,6 +89,44 @@ html[data-theme="dark"] .form-select:focus {
   border-color: var(--dk-link);
   color: var(--dk-text);
 }
+/* Select2 */
+html[data-theme="dark"] .select2-container--default .select2-selection--single,
+html[data-theme="dark"] .js-select2-filter + .select2-container .select2-selection--single {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .js-select2-filter + .select2-container .select2-selection--single {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e1e1e9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+html[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: var(--dk-muted);
+}
+html[data-theme="dark"] .select2-container--default.select2-container--focus .select2-selection--single,
+html[data-theme="dark"] .select2-container--default.select2-container--open .select2-selection--single {
+  border-color: var(--dk-link);
+}
+html[data-theme="dark"] .select2-dropdown {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .select2-container--default .select2-search--dropdown .select2-search__field {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .select2-container--default .select2-results__option--selected {
+  background-color: var(--dk-surface);
+}
+html[data-theme="dark"] .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: var(--dk-link);
+  color: #12141f;
+}
+
 html[data-theme="dark"] .form-control::placeholder {
   color: var(--dk-muted);
 }

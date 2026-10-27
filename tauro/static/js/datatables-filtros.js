@@ -52,6 +52,12 @@ class FiltrosDataTable {
   // Leer los valores de los inputs
   leerValoresInputs() {
     for (let i = 0; i < this.inputs.length; i++) {
+      // Si es checkbox envía su valor solo si está marcado
+      if (this.inputs[i].object && this.inputs[i].object.type == "checkbox") {
+        this.inputs[i].value = this.inputs[i].object.checked
+          ? this.inputs[i].object.value
+          : "";
+      } else
       switch (this.inputs[i].case) {
         case UPPER:
           this.inputs[i].value = this.inputs[i].object.value.toUpperCase();
