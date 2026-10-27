@@ -200,8 +200,12 @@ def new():
             contrasena = pwd_context.hash(form.contrasena.data.strip())
         else:
             contrasena = pwd_context.hash(generar_contrasena())
-        # Determinar Ubicacion como NO DEFINIDO
-        ubicacion_nd = Ubicacion.query.filter_by(nombre="NO DEFINIDO").first()
+        # Determinar Ubicación como NO DEFINIDO
+        ubicacion = form.ubicacion.data
+        if ubicacion:
+            ubicacion = Ubicacion.query.get(ubicacion)
+        if not ubicacion:
+            ubicacion = Ubicacion.query.filter_by(nombre="NO DEFINIDO").first()
         # Guardar
         if es_valido:
             usuario = Usuario(
@@ -211,8 +215,8 @@ def new():
                 apellido_materno=safe_string(form.apellido_materno.data, save_enie=True),
                 contrasena=contrasena,
                 unidad_id=form.unidad.data,
+                ubicacion=ubicacion,
                 es_acceso_frontend=form.es_acceso_frontend.data,
-                ubicacion=ubicacion_nd,
             )
             usuario.save()
             bitacora = Bitacora(
