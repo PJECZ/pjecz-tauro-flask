@@ -131,6 +131,56 @@ def new_with_usuario(usuario_id):
     )
 
 
+@usuarios_turnos_tipos.route("/usuarios_turnos_tipos/nuevo_todos/<int:usuario_id>", methods=["GET", "POST"])
+@permission_required(MODULO, Permiso.CREAR)
+def new_with_usuario_all(usuario_id):
+    """Nuevo Usuario-TurnoTipo añadir todos"""
+    usuario = Usuario.query.get_or_404(usuario_id)
+
+    # Consultar todos los turnos-tipos activos
+    turnos_tipos_activos = TurnoTipo.query.filter_by(estatus="A").filter_by(es_activo=True).all()
+    count = 0
+
+    for turno_tipo in turnos_tipos_activos:
+        # Validar si este usuario ya tiene asignado este mismo tipo de turno
+        tipo_turno_repetido = (
+            UsuarioTurnoTipo.query.filter_by(usuario_id=usuario_id).filter_by(turno_tipo_id=turno_tipo.id).first()
+        )
+        if tipo_turno_repetido:
+            if tipo_turno_repetido.estatus == 'B':
+                tipo_turno_repetido.estatus = 'A'
+                tipo_turno_repetido.es_activo = True
+                tipo_turno_repetido.save()
+                count += 1
+            if tipo_turno_repetido.es_activo is False:
+                tipo_turno_repetido.es_activo = True
+                tipo_turno_repetido.save()
+                count += 1
+            continue
+
+        usuario_turno_tipo = UsuarioTurnoTipo(
+            usuario=usuario,
+            turno_tipo_id=turno_tipo.id,
+            es_activo=True,
+        )
+        usuario_turno_tipo.save()
+        count += 1
+
+    if count > 0:
+        bitacora = Bitacora(
+            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+            usuario=current_user,
+            descripcion=safe_message(
+                f"Se asignaron todos los Turnos-Tipos al usuario {usuario.nombre}"
+            ),
+            url=url_for("usuarios.detail", usuario_id=usuario.id),
+        )
+        bitacora.save()
+        flash(bitacora.descripcion, "success")
+
+    return redirect(url_for("usuarios.detail", usuario_id=usuario.id))
+
+
 @usuarios_turnos_tipos.route("/usuarios_turnos_tipos/toggle_estatus_json/<int:usuario_turno_tipo_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def toggle_estatus_json(usuario_turno_tipo_id):
