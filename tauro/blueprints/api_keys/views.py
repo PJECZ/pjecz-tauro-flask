@@ -44,10 +44,10 @@ def datatable_json():
         consulta = consulta.filter_by(estatus=request.form["estatus"])
     else:
         consulta = consulta.filter_by(estatus="A")
-    if "ApiKey" in request.form:
-        api_key = safe_string(request.form["ApiKey"])
-        if api_key:
-            consulta = consulta.filter(APIKey.api_key.contains(api_key))
+    if "nombre" in request.form:
+        nombre = safe_string(request.form["nombre"])
+        if nombre:
+            consulta = consulta.filter(APIKey.nombre.contains(nombre))
     # Luego filtrar por columnas de otras tablas
     # if "persona_rfc" in request.form:
     #     consulta = consulta.join(Persona)

@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Filtro `API Key Nombre` en listado de `api_key` ahora busca por el nombre del "**API Key**" en lugar de la **clave**.
 - Tema oscuro para los _inputs_ `select2`.
 - Documentación de `APIs` más explicita.
 - Actualizados los archivos `README.md` y `CONTRIBUTING.md`.
