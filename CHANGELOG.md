@@ -7,6 +7,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ### ✨ Mejoras
 
+- Añadido filtro `ConUbicación` en listado de usuarios. Con esto se puede ver más rápido los usuarios que están asignados a una ventanilla o son recepcionistas.
 - Añadido botón `Agregar todos los tipos` a el detalle de `usuario`. Con esto se pueden añadir todos los tipos de turnos a atender por ese usuario sin añadir uno por uno.
 - Añadido campo `Ubicación` en formulario de **nuevo usuario**.
 - Filtro `API Key Nombre` en listado de `api_key` ahora busca por el nombre del "**API Key**" en lugar de la **clave**.
