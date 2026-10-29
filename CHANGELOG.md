@@ -3,10 +3,13 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+> [!info] Basado en plantilla v1.1.0 (2026-10-28)
+
 ## [1.5.0] Sin publicar
 
 ### ✨ Mejoras
 
+- Se añadieron y mejoraron las guías de documentación: `CONTRIBUTING`, `DEPLOY` y `DOCS`.
 - Añadido filtro `ConUbicación` en listado de usuarios. Con esto se puede ver más rápido los usuarios que están asignados a una ventanilla o son recepcionistas.
 - Añadido botón `Agregar todos los tipos` a el detalle de `usuario`. Con esto se pueden añadir todos los tipos de turnos a atender por ese usuario sin añadir uno por uno.
 - Añadido campo `Ubicación` en formulario de **nuevo usuario**.
@@ -119,3 +122,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### ✨ Mejoras
 
 - Aumentar el tiempo de vida del token en la api oauth2.
+
+---
+
+© 2026 Poder Judicial del Estado de Coahuila de Zaragoza.

@@ -1,0 +1,44 @@
+{
+	"files": [
+		{
+			"path": "CHANGELOG.md",
+			"bookmarks": [
+				{
+					"line": 7,
+					"column": 9,
+					"label": "version-actual"
+				}
+			]
+		},
+		{
+			"path": "tauro/templates/layouts/app.jinja2",
+			"bookmarks": [
+				{
+					"line": 47,
+					"column": 0,
+					"label": "version-actual"
+				}
+			]
+		},
+		{
+			"path": "pyproject.toml",
+			"bookmarks": [
+				{
+					"line": 2,
+					"column": 0,
+					"label": "version-actual"
+				}
+			]
+		},
+		{
+			"path": "tauro/blueprints/sistemas/templates/sistemas/acerca_de.jinja2",
+			"bookmarks": [
+				{
+					"line": 20,
+					"column": 0,
+					"label": "version-actual"
+				}
+			]
+		}
+	]
+}

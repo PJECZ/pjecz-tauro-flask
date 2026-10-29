@@ -80,14 +80,14 @@ flowchart LR
 
 ### Componentes
 
-| Componente            | Descripción                                                                                                                                                                                            |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **nginx**             | Termina HTTPS (certificado con Certbot), sirve el _frontend_ estático y hace _proxy_ a Flask en `localhost:5020`. Configurado también para _upgrade_ de WebSocket.                                     |
-| **Flask**             | Una sola aplicación (`tauro.app:create_app`) con _blueprints_ por módulo. El arranque para WSGI está en [`appserver.py`](../appserver.py).                                                             |
-| **Flask-SocketIO**    | Cada vez que se crea, toma o cambia un turno se emite el mensaje a las pantallas conectadas. También existe el evento `refresh_screens`, que fuerza recargar las pantallas desde el módulo _Sistemas_. |
-| **PostgreSQL**        | Base `pjecz_tauro`. Todas las tablas heredan de `UniversalMixin` (estatus, creado, modificado).                                                                                                        |
-| **CLI**               | Comandos con Click en [`cli/`](../cli), ejecutados por cron o a mano. Ver [operación](05-operacion-y-mantenimiento.md).                                                                                |
-| **Servicio de voceo** | [`tauro/services/`](../tauro/services): `VocearTurnos` decide qué anunciar y `Voceador` envía el mensaje al sistema de voceo con su propia API-Key.                                                    |
+| Componente                    | Descripción                                                                                                                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **nginx**                     | Termina HTTPS (certificado con Certbot), sirve el _frontend_ estático y hace _proxy_ a Flask en `localhost:5020`. Configurado también para _upgrade_ de WebSocket.                                     |
+| **Flask**                     | Una sola aplicación (`tauro.app:create_app`) con _blueprints_ por módulo. El arranque para WSGI está en [`appserver.py`](../appserver.py).                                                             |
+| **Flask-SocketIO**            | Cada vez que se crea, toma o cambia un turno se emite el mensaje a las pantallas conectadas. También existe el evento `refresh_screens`, que fuerza recargar las pantallas desde el módulo _Sistemas_. |
+| **PostgreSQL**                | Base `pjecz_tauro`. Todas las tablas heredan de `UniversalMixin` (estatus, creado, modificado).                                                                                                        |
+| **CLI**                       | Comandos con Click en [`cli/`](../cli), ejecutados por cron o a mano. Ver [operación](05-operacion-y-mantenimiento.md).                                                                                |
+| **Servicio externo de voceo** | [`tauro/services/`](../tauro/services): `VocearTurnos` decide qué anunciar y `Voceador` envía el mensaje al sistema de voceo con su propia API-Key.                                                    |
 
 ## 🔄 Ciclo de vida de un turno
 
@@ -134,7 +134,7 @@ De este modo cada jornada empieza sin turnos pendientes del día anterior y sin 
 
 ## 🗂️ Estructura del repositorio
 
-```
+```bash
 pjecz-tauro-flask/
 ├── appserver.py          # Punto de entrada WSGI (gunicorn / uvicorn)
 ├── config/               # settings.py (pydantic-settings) y gunicorn_config.py
