@@ -7,6 +7,7 @@ Thumbs.db
 # .vscode/ guarda los snippets del proyecto (versionados); solo se ignora lo personal
 /.vscode/*
 !/.vscode/settings.json
+!/.vscode/bookmarks.json
 !/.vscode/*.code-snippets
 
 # --- Secretos y configuración local (NUNCA subir) ---
